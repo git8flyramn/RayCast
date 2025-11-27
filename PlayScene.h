@@ -1,7 +1,7 @@
 #pragma once
 #include "Engine/GameObject.h"
 #include "Engine//Fbx.h"
-class PlayScene : GameObject
+class PlayScene : public GameObject
 {
 public:
 	PlayScene(GameObject* parent);

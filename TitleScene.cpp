@@ -4,7 +4,7 @@
 #include "Engine/Texture.h"
 #include "Engine/Model.h"
 TitleScene::TitleScene(GameObject* parent)
-	: GameObject(parent,"TitleScene"),fbx(nullptr)
+	: GameObject(parent,"TitleScene")
 {
 }
 

@@ -15,8 +15,8 @@ void PlayScene::Initialize()
 	transform_.scale_.x = 0.5f;
 	transform_.scale_.y = 0.5f;
 	transform_.scale_.z = 0.5f;
-	fbx->Load("Lenga.fbx");
-	transform_.position_ = { 0.0f,0.0f,0.0f };
+	fbx->Load("Water.fbx");
+	transform_.position_ = { 0.0f,1.0f,-8.0f };
 }
 
 void PlayScene::Draw()
@@ -26,6 +26,7 @@ void PlayScene::Draw()
 
 void PlayScene::Update()
 {
+
 }
 
 void PlayScene::Release()
