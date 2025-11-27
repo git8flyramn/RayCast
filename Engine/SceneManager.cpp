@@ -3,6 +3,7 @@
 #include "../TestScene.h"
 #include "Direct3D.h"
 #include "Model.h"
+#include "../TitleScene.h"
 SceneManager::SceneManager(GameObject* parent)
 	:GameObject(parent, "SceneManager")
 {
@@ -16,7 +17,7 @@ void SceneManager::Initialize()
 {
 	currentSceneID_ = SCENE_ID_TEST;
 	nextSceneID_ = currentSceneID_;
-	Instantiate<TestScene>(this);
+	Instantiate<TitleScene>(this);
 
 }
 
@@ -36,7 +37,7 @@ void SceneManager::Update()
 			//Instantiate<PlayScene>(this);
 			break;
 		case SCENE_ID_TEST:
-			Instantiate<TestScene>(this);
+			Instantiate<TitleScene>(this);
 			break;
 		}
 		//今のシーンを次のシーンに更新する

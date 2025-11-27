@@ -2,7 +2,7 @@
 #include "Engine//SphereCollider.h"
 #include "Engine/Input.h"
 #include "Engine/Model.h"
-#include "Player.h"
+//#include "Player.h"
 Bullet::Bullet(GameObject* parent) 
 	:GameObject(parent, "Bullet"), pFbx(nullptr), isShot(false),life(60)
 {
