@@ -1,16 +1,16 @@
 #pragma once
 #include "Engine//GameObject.h"
+#include "vector"
+#include "Engine//Fbx.h"
 enum BLOCK_TYPE
 
 {
-
     DEFAULT,
-
     WATER,
-
-    SAND
+    SAND,
+    GLASS,
+    LENGA
 };
-
 
 struct sData
 
@@ -19,7 +19,6 @@ struct sData
     BLOCK_TYPE type;//ブロックのタイプ
 
     int height;//ブロックを積む高さ
-    int sTable;
    
     
 };
@@ -32,13 +31,15 @@ public:
 public:
     Stage(GameObject* parent);
     ~Stage();
+    void Initialize() override;
     void Draw() override;
     void Update()override;
     void Release()override;
 private:
-   
-    //  sData sTable[XSIZE][ZSIZE];
-    sData sTable[5][5];
+    std::vector<string> ModelName;
+    //sData sTable[XSIZE][ZSIZE];
+      sData sTable[5][5];
+      Fbx* fbx;
 };
 
 
