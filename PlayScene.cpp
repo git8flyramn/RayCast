@@ -17,7 +17,7 @@ void PlayScene::Initialize()
 	transform_.scale_.y = 0.5f;
 	transform_.scale_.z = 0.5f;
     fbx->Load("Water.fbx");
-	transform_.position_ = { 0.0f,1.0f,0.0f };
+	transform_.position_ = { 0.0f,0.0f,0.0f };
 }
 
 void PlayScene::Draw()
@@ -34,15 +34,15 @@ void PlayScene::Draw()
 		             { 1,1,1,1,1,1,1,1,1,1 },
 	};
 	
-	for (int i = 0; i < 10; i++)
+	for (float i = 0.1f; i < 1.0; i += 0.1f)
 	{
-		//transform_.position_.x = 0.1f * i;
-		for (int j = 0; j < 10; j++)
+		for (float j = 0.1f; j < 1.0; j+= 0.1f)
 		{
 			fbx->Draw(transform_);
 			
-			transform_.position_.z = i;
+			transform_.position_.x = j;
 		}
+		transform_.position_.z = i;
 	}
 		
 }
