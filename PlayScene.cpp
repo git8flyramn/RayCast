@@ -12,6 +12,7 @@ PlayScene::~PlayScene()
 
 void PlayScene::Initialize()
 {
+
 	fbx = new Fbx;
 	transform_.scale_.x = 0.5f;
 	transform_.scale_.y = 0.5f;

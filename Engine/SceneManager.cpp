@@ -35,6 +35,7 @@ void SceneManager::Update()
 		{
 		case SCENE_ID_PLAY:
 			Instantiate<PlayScene>(this);
+	      //Instantiate<Controller>(this);
 			break;
 		case SCENE_ID_TEST:
 			Instantiate<TitleScene>(this);
