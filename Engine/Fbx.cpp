@@ -317,3 +317,7 @@ void Fbx::InitMaterial(FbxNode* pNode)
 	}
 
 }
+
+void Fbx::RayCast(RayCastData& rayData)
+{
+}

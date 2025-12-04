@@ -1,5 +1,5 @@
 #include "Controller.h"
-
+#include "Engine/Input.h"
 Controller::Controller(GameObject* parent)
 {
 }
@@ -14,6 +14,7 @@ void Controller::Initialize()
 
 void Controller::Update()
 {
+	
 }
 
 void Controller::Draw()
