@@ -320,4 +320,15 @@ void Fbx::InitMaterial(FbxNode* pNode)
 
 void Fbx::RayCast(RayCastData& rayData)
 {
+	for (int material = 0; material < materialCount_; material++)
+	{
+		//グループ語とに全ポリゴンに対して
+	   // 頂点を3つ取ってくる
+	   
+		XMVECTOR start = XMLoadFloat4(&rayData.start);
+		XMVECTOR dir = XMLoadFloat4(&rayData.dir);
+		XMVECTOR dirN = XMVector4Normalize(dir); //dirの単位ベクトル
+		//rayData.isHit = InterSects();
+
+	}
 }

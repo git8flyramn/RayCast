@@ -49,10 +49,6 @@ void PlayScene::Draw()
 
 void PlayScene::Update()
 {
-	if (Input::IsKey(DIK_LEFT))
-	{
-		transform_.position_.x = 0.5f;
-	}
 }
 
 void PlayScene::Release()
