@@ -65,6 +65,11 @@ private:
 	int polygonCount_;
 	int materialCount_;
 
-	void RayCast(RayCastData& rayData);
+	//前のデータの復活
+	std::vector<VERTEX> pVertices_;
+	std::vector<std::vector<int>> ppIndex_; //マテリアルごとのインデックスデータ[material][index]
+	//auto& arr = ppIndex_[1];
+	//arr[0]からarr[index - 1]までになる
+    void RayCast(RayCastData& rayData);
 
 };
