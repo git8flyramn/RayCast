@@ -40,6 +40,7 @@ private:
     //sData sTable[XSIZE][ZSIZE];
       sData sTable[5][5];
       Fbx* fbx;
+
 };
 
 

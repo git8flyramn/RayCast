@@ -11,13 +11,21 @@
 #pragma comment(lib, "LibXml2-MD.lib")
 #pragma comment(lib, "zlib-MD.lib")
 
+namespace Math
+{
+	//行列式を解く関数
+	float Det(XMFLOAT3 a, XMFLOAT3 b, XMFLOAT3 c);
+	//Rayと三角形との当たり判定
+	bool Intersect(XMFLOAT3 origin, XMFLOAT3 ray, XMFLOAT3  v1, XMFLOAT3 v2, float& dist);
+}
 //RayCastのためのデータを用意
 struct RayCastData
 {
-	bool isHit;
-	float dist;
-	XMFLOAT4 start;
-	XMFLOAT4 dir;
+	XMFLOAT4 start;//Rayの始点
+	XMFLOAT4 dir; //Rayの方向
+	bool isHit;  //当たったかどうか
+	float dist; //始点からの距離
+
 };
 
 class Fbx

@@ -340,11 +340,13 @@ void Fbx::RayCast(RayCastData& rayData)
 			VERTEX& V2 = pVertices_[ indices[i + 2] ];
 			
 		}
-		rayData.isHit = InterSects(V0,V1,V2);//レイキャストのデータ
+		//rayData.isHit = InterSects(V0,V1,V2,レイキャストのデータ);//レイキャストのデータ
 		if (rayData.isHit)
 		{
 			return;
 		}
+
+
 		////グループ語とに全ポリゴンに対して
 	 //  // 頂点を3つ取ってくる
 	 //  
@@ -355,4 +357,14 @@ void Fbx::RayCast(RayCastData& rayData)
 
 	}
 	rayData.isHit = false;
+}
+
+float Math::Det(XMFLOAT3 a, XMFLOAT3 b, XMFLOAT3 c)
+{
+	return 0.0f;
+}
+
+bool Math::Intersect(XMFLOAT3 origin, XMFLOAT3 ray, XMFLOAT3 v1, XMFLOAT3 v2, float& dist)
+{
+	return false;
 }

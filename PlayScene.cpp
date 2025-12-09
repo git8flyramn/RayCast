@@ -1,6 +1,7 @@
 #include "PlayScene.h"
 #include "Engine/Model.h"
 #include "Engine/Texture.h"
+#include "Engine/Fbx.h"
 PlayScene::PlayScene(GameObject* parent)
 	: GameObject(parent, "PlayScene"), fbx(nullptr)
 {

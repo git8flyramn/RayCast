@@ -28,7 +28,7 @@ void Stage::Initialize()
 
 void Stage::Draw()
 {
-	for (int i = 0; i < ModelName.size(); i++)
+	/*for (int i = 0; i < ZSIZE; i++)
 	{
 		for (int j = 0; j < ModelName.size(); j++)
 		{
@@ -36,7 +36,7 @@ void Stage::Draw()
 
 		}
 		
-	}
+	}*/
 }
 
 void Stage::Update()
