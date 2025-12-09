@@ -16,7 +16,7 @@ namespace Math
 	//行列式を解く関数
 	float Det(XMFLOAT3 a, XMFLOAT3 b, XMFLOAT3 c);
 	//Rayと三角形との当たり判定
-	bool Intersect(XMFLOAT3 origin, XMFLOAT3 ray, XMFLOAT3  v1, XMFLOAT3 v2, float& dist);
+	bool Intersect(XMFLOAT3 origin, XMFLOAT3 ray,XMFLOAT3 v0, XMFLOAT3  v1, XMFLOAT3 v2, float& dist);
 }
 //RayCastのためのデータを用意
 struct RayCastData
