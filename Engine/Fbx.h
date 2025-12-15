@@ -21,11 +21,11 @@ namespace Math
 //RayCastのためのデータを用意
 struct RayCastData
 {
-	XMFLOAT4 start;//Rayの始点
+	
 	XMFLOAT4 dir; //Rayの方向
 	bool isHit;  //当たったかどうか
 	float dist; //始点からの距離
-
+	XMFLOAT4 start;//Rayの始点
 };
 
 class Fbx
@@ -40,7 +40,7 @@ public:
 	void InitIndex(FbxMesh* mesh);
 	void InitConstantBuffer();
 	void InitMaterial(FbxNode* pNode);
-
+	void RayCast(RayCastData& rayData);
 private:
 	struct MATERIAL
 	{
@@ -78,6 +78,6 @@ private:
 	std::vector<std::vector<int>> ppIndex_; //マテリアルごとのインデックスデータ[material][index]
 	//auto& arr = ppIndex_[1];
 	//arr[0]からarr[index - 1]までになる
-    void RayCast(RayCastData& rayData);
+   
 
 };

@@ -2,6 +2,7 @@
 #include "Engine//GameObject.h"
 #include "vector"
 #include "Engine//Fbx.h"
+#include "Engine/Model.h"
 enum BLOCK_TYPE
 
 {
@@ -38,8 +39,11 @@ public:
 private:
     std::vector<string> ModelName;
     //sData sTable[XSIZE][ZSIZE];
-      sData sTable[5][5];
+    const int XSIZE = 5;
+    const int ZSIZE = 5;
+    sData sTable[5][5];
       Fbx* fbx;
+      std::vector<int> hModel;
 
 };
 

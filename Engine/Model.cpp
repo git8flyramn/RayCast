@@ -62,3 +62,25 @@ void Model::Release()
 	}
 	modelList.clear(); //配列の中身を空にする(念のために)
 }
+
+void Model::Raycast(int hModel, RayCastData& rayData)
+{
+	modelList[hModel]->transform_.Calculation();
+    //ワールド行列取得
+	XMMATRIX worldMatrix = modelList[hModel]->transform_.GetWorldMatrix();
+   //ワールド行列の逆行列
+	XMMATRIX wInv = modelList[hModel]->transform_.GetNormalMatrix();
+
+	//レイの通過点を求める(ワールド空間のレイの始点からdir方向に進む直線上の点を計算)
+	XMVECTOR vDirVec;
+
+	XMVECTOR vstart = XMLoadFloat4(&rayData.start);
+	vstart =
+	XMStoreFloat4(&rayData.start, vstart);
+	//rayData.dirからrayData.start - (始点から方向ベクトルをちょい伸ばした先)に向かうベクトルにする
+	XMVECTOR dirAtLocal = vDirVec - vstart;
+	XMStoreFloat4(&rayData.dir, vDirVec);
+
+	//指定したモデル番号のFBXにレイキャスト
+	modelList[hModel]->pfbx_->RayCast(rayData);
+}
