@@ -72,11 +72,13 @@ void Model::Raycast(int hModel, RayCastData& rayData)
 	XMMATRIX wInv = modelList[hModel]->transform_.GetNormalMatrix();
 
 	//レイの通過点を求める(ワールド空間のレイの始点からdir方向に進む直線上の点を計算)
-	XMVECTOR vDirVec;
+	XMVECTOR vDirVec = XMPlaneIntersectLine();
 
 	XMVECTOR vstart = XMLoadFloat4(&rayData.start);
-	vstart =
+	//vstartをワールド逆行列に変換
+	vstart = XMVector3TransformCoord(vstart, wInv);
 	XMStoreFloat4(&rayData.start, vstart);
+	
 	//rayData.dirからrayData.start - (始点から方向ベクトルをちょい伸ばした先)に向かうベクトルにする
 	XMVECTOR dirAtLocal = vDirVec - vstart;
 	XMStoreFloat4(&rayData.dir, vDirVec);

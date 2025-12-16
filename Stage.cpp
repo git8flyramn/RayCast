@@ -56,6 +56,32 @@ void Stage::Draw()
 
 void Stage::Update()
 {
+	RayCastData data;
+// XMStoreFloat4(&data.start, transform_.position_.y);
+	//XMStoreFloat4(&data.dir,)
+	Transform trans;
+
+	trans.position_.x = transform_.position_.x;
+	trans.position_.y = transform_.position_.y;
+	trans.position_.z = transform_.position_.z;
+	int type = BLOCK_TYPE::WATER;
+	Model::SetTransform(hModel[type], trans);
+	Model::Draw(hModel[type]);
+	RayCastData rayData
+	{
+		{0.0f,0.0f,5.0f,0.0f},
+		//{0.0f,-1.0f,0.0f,0.0f},
+		false,
+		0.0f
+	};
+
+	Model::Raycast(hModel[type], data);
+
+	if(data.isHit)
+	{
+		//MessageBoxA(NULL,"hit","Info",MB_OK);
+	
+	}
 }
 
 void Stage::Release()
