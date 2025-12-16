@@ -1,12 +1,18 @@
 #include "Stage.h"
-#include <iostream>
+#include <string>
 #include "vector"
-void Stage::SetBlockHeight(int x, int z, int height)
-{
-}
+#include "Engine/Model.h"
 
-Stage::Stage(GameObject* parent) : fbx(nullptr)
+Stage::Stage(GameObject* parent) : GameObject(parent,"Stage")
 {
+	for (int j = 0; j < ZSIZE; j++)
+	{
+		for (int i = 0; i < XSIZE; i++)
+		{
+			SetBlock(BLOCK_TYPE::WATER, i, j);
+			SetBlockHeight(i, j, 1 + rand() % 14);
+		}
+	}
 }
 
 Stage::~Stage()
@@ -15,7 +21,6 @@ Stage::~Stage()
 
 void Stage::Initialize()
 {
-	fbx = new Fbx();
 	std::vector<string> ModelName
 	{
 		"default.fbx",
@@ -33,7 +38,7 @@ void Stage::Initialize()
 
 void Stage::Draw()
 {
-	for (int i = 0; i < ZSIZE; i++)
+	/*for (int i = 0; i < ZSIZE; i++)
 	{
 		for (int j = 0; j < XSIZE; j++)
 		{
@@ -51,14 +56,9 @@ void Stage::Draw()
 
 		}
 		
-	}
-}
+	}*/
 
-void Stage::Update()
-{
 	RayCastData data;
-// XMStoreFloat4(&data.start, transform_.position_.y);
-	//XMStoreFloat4(&data.dir,)
 	Transform trans;
 
 	trans.position_.x = transform_.position_.x;
@@ -70,18 +70,23 @@ void Stage::Update()
 	RayCastData rayData
 	{
 		{0.0f,0.0f,5.0f,0.0f},
-		//{0.0f,-1.0f,0.0f,0.0f},
+		{ 0.0f,-1.0f, 0.0f,0.0f},
 		false,
 		0.0f
 	};
 
 	Model::Raycast(hModel[type], data);
 
-	if(data.isHit)
+	if (data.isHit)
 	{
-		//MessageBoxA(NULL,"hit","Info",MB_OK);
-	
+		MessageBoxA(NULL,"hit","Info",MB_OK);
+
 	}
+}
+
+void Stage::Update()
+{
+	
 }
 
 void Stage::Release()

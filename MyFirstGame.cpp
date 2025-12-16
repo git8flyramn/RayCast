@@ -10,7 +10,6 @@
 #include "Engine/Input.h"
 #include "Engine/RootJob.h"
 #include "Engine/Model.h"
-#include "Engine/Quad.h"
 #pragma comment(lib, "winmm.lib")
 
 HWND hWnd = nullptr;
@@ -24,7 +23,6 @@ const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 
 RootJob* pRootJob = nullptr;
-Quad* pQuad = nullptr;
 // グローバル変数:
 HINSTANCE hInst;                                // 現在のインターフェイス
 WCHAR szTitle[MAX_LOADSTRING];                  // タイトル バーのテキスト
@@ -89,10 +87,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg = {};
     //メンバ変数の物
     pRootJob = new RootJob(nullptr);
-    pQuad = new Quad();
    //ゲームで増える物
     pRootJob->Initialize();
-    pQuad->Initialize();
+  
 
    
  

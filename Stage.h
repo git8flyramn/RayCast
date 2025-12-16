@@ -1,8 +1,13 @@
 #pragma once
 #include "Engine//GameObject.h"
-#include "vector"
-#include "Engine//Fbx.h"
-#include "Engine/Model.h"
+
+
+namespace
+{
+    const int XSIZE{ 15 };
+    const int ZSIZE{ 15 };
+    const int MODEL_NUM{ 5 };
+}
 enum BLOCK_TYPE
 
 {
@@ -27,7 +32,7 @@ class Stage : public GameObject
 { 
 public:
     void SetBlock(BLOCK_TYPE type, int x, int z) { GetT(x, z).type = type; }
-    void SetBlockHeight(int x, int z, int height);
+    void SetBlockHeight(int x, int z, int height) { GetT(x, z).height = height;}
     sData& GetT(int x, int z) { return sTable[z][x]; }
 public:
     Stage(GameObject* parent);
@@ -39,11 +44,9 @@ public:
 private:
     std::vector<string> ModelName;
     //sData sTable[XSIZE][ZSIZE];
-    const int XSIZE = 5;
-    const int ZSIZE = 5;
-    sData sTable[5][5];
+    sData sTable[ZSIZE][XSIZE];
       Fbx* fbx;
-      std::vector<int> hModel;
+     int hModel[MODEL_NUM];
 
 };
 

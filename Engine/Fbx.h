@@ -22,10 +22,11 @@ namespace Math
 struct RayCastData
 {
 	
-	XMFLOAT4 dir; //Rayの方向
+	XMFLOAT4  dir; //Rayの方向
+	XMFLOAT4 start;//Rayの始点
 	bool isHit;  //当たったかどうか
 	float dist; //始点からの距離
-	XMFLOAT4 start;//Rayの始点
+	
 };
 
 class Fbx

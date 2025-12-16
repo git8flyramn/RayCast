@@ -1,8 +1,6 @@
 #include "TestScene.h"
 #include "Engine/Input.h"
 #include "Engine//SceneManager.h"
-#include "Engine/Texture.h"
-#include "Engine/Model.h"
 #include "Stage.h"
 TestScene::TestScene(GameObject* parent)
 	: GameObject(parent,"TestScene"), fbx(nullptr)
@@ -17,7 +15,7 @@ TestScene::~TestScene()
 
 void TestScene::Initialize()
 {
-	
+	Instantiate<Stage>(this);
 }
 
 void TestScene::Update()
