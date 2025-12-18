@@ -338,15 +338,14 @@ void Fbx::RayCast(RayCastData& rayData)
 			VERTEX& V0 = pVertices_[ indices[i + 0] ];
 			VERTEX& V1 = pVertices_[ indices[i + 1] ];
 			VERTEX& V2 = pVertices_[ indices[i + 2] ];
+	
 			
 		}
-		//rayData.isHit = InterSects(V0,V1,V2,レイキャストのデータ);//レイキャストのデータ
+		//rayData.isHit = InterSects(V0, V1, V2, レイキャストのデータ);
 		if (rayData.isHit)
 		{
 			return;
 		}
-
-
 		////グループ語とに全ポリゴンに対して
 	 //  // 頂点を3つ取ってくる
 	 //  
@@ -354,7 +353,6 @@ void Fbx::RayCast(RayCastData& rayData)
 		//XMVECTOR dir = XMLoadFloat4(&rayData.dir);
 		//XMVECTOR dirN = XMVector4Normalize(dir); //dirの単位ベクトル
 		////rayData.isHit = InterSects();
-
 	}
 	rayData.isHit = false;
 }

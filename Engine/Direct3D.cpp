@@ -12,10 +12,10 @@ namespace Direct3D
 
     struct SHADER_BUNDOLE
     {
-        ID3D11VertexShader* pVertexShader;
-        ID3D11PixelShader* pPixelShader;
-        ID3D11InputLayout* pVertexLayout;
-        ID3D11RasterizerState* pRasterizerState;
+        ID3D11VertexShader* pVertexShader; //頂点シェーダ
+        ID3D11PixelShader* pPixelShader;   //ピクセルシェーダ
+        ID3D11InputLayout* pVertexLayout;  //頂点インプットレイアウト
+        ID3D11RasterizerState* pRasterizerState; //ラスタライザ-
     };
 
     ID3D11VertexShader* pVertexShader = nullptr;	//頂点シェーダー
@@ -87,10 +87,6 @@ HRESULT Direct3D::InitShader3D()
     }
     pCompileVS->Release();
     pCompilePS->Release();
-  
-
-
-
     //ラスタライザ作成
     D3D11_RASTERIZER_DESC rdc = {};
     rdc.CullMode = D3D11_CULL_BACK;
