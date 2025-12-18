@@ -38,7 +38,7 @@ void Stage::Initialize()
 
 void Stage::Draw()
 {
-	for (int i = 0; i < ZSIZE; i++)
+	/*for (int i = 0; i < ZSIZE; i++)
 	{
 		for (int j = 0; j < XSIZE; j++)
 		{
@@ -56,8 +56,8 @@ void Stage::Draw()
 
 		}
 		
-	}
-
+	}*/
+	
 	RayCastData data;
 	Transform trans;
 
@@ -66,7 +66,20 @@ void Stage::Draw()
 	trans.position_.z = transform_.position_.z;
 	int type = BLOCK_TYPE::DEFAULT;
 	Model::SetTransform(hModel[type], trans);
-	//Model::Draw(hModel[type]);
+	for (int i = 0; i < ZSIZE; i++)
+	{
+		for (int j = 0; j < XSIZE; j++)
+		{
+			
+		  Model::Draw(hModel[type]);
+		  trans.position_.x += 1.0f;
+		  Model::SetTransform(hModel[type], trans);
+		}
+		
+		trans.position_.z += 1.0f;
+		Model::Draw(hModel[type]);
+	}
+	
 	RayCastData rayData
 	{
 		{0.0f,0.0f,5.0f,0.0f},
