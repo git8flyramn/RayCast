@@ -1,6 +1,7 @@
 //───────────────────────────────────────
 // テクスチャ＆サンプラーデータのグローバル変数定義
 //───────────────────────────────────────
+//(頂点シェーダ)
 Texture2D g_texture : register(t0); //テクスチャー
 SamplerState g_sampler : register(s0); //サンプラー
 
@@ -34,10 +35,8 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD)
 	//ローカル座標に、ワールド・ビュー・プロジェクション行列をかけて
 	//スクリーン座標に変換し、ピクセルシェーダーへ
     //法線を回転
-    //nomal = matW;
     outData.pos = mul(pos, matWorld);
     outData.uv = uv.xy; //UV座標はそのまま
-  //  outData.color = float4(1, 1, 1, 1);
     //まとめて出力
     return outData;
 }

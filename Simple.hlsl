@@ -2,7 +2,7 @@
 // テクスチャ＆サンプラーデータのグローバル変数定義
 //───────────────────────────────────────
 
-//  Sample3D.hlsl
+//  Sample3D.hlsl (頂点シェーダ)
 Texture2D g_texture : register(t0); //テクスチャー
 SamplerState g_sampler : register(s0); //サンプラー
 
