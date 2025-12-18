@@ -85,8 +85,9 @@ HRESULT Direct3D::InitShader3D()
         MessageBox(nullptr, L"頂点インプットレイアウトの作成に失敗しました 3D", L"エラー", MB_OK);
         return hr;
     }
-    pCompilePS->Release();
     pCompileVS->Release();
+    pCompilePS->Release();
+  
 
 
 
@@ -299,18 +300,8 @@ void Direct3D::Release()
     SAFE_RELEASE(pVertexShader);
 
     
-    SAFE_RELEASE(pDevice);
-    SAFE_RELEASE(pContext);
-    SAFE_RELEASE(pSwapChain);
-    SAFE_RELEASE(pRenderTargetView)
-      
-    //pRasterizerState->Release();
-    //pVertexLayout->Release();
-    //pPixelShader->Release();
-    //pVertexShader->Release();
- 
-    //pDevice->Release();		                 //デバイス
-    //pContext->Release();		         //デバイスコンテキスト
-    //pSwapChain->Release();		             //スワップチェイン
-    //pRenderTargetView->Release();	 //レンダーターゲットビュー
+    SAFE_RELEASE(pDevice);             //デバイス
+    SAFE_RELEASE(pContext);           //デバイスコンテキスト
+    SAFE_RELEASE(pSwapChain);        //スワップチェイン
+    SAFE_RELEASE(pRenderTargetView) //レンダーターゲットビュー    
 }

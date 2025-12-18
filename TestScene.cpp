@@ -16,6 +16,7 @@ TestScene::~TestScene()
 void TestScene::Initialize()
 {
 	Instantiate<Stage>(this);
+	//Instantiate<Contorller>(this);
 }
 
 void TestScene::Update()

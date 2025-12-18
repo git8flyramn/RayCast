@@ -18,7 +18,25 @@ void Controller::Initialize()
 
 void Controller::Update()
 {
-	
+	if(Input::IsKey(DIK_LEFT) || Input::IsKey(DIK_RIGHT))
+	{
+		transform_.rotate_.y += 0.3f;
+	}
+
+	if(Input::IsKey(DIK_UP) || Input::IsKey(DIK_DOWN))
+	{
+		transform_.rotate_.x += 0.3f;
+	}
+
+	if (Input::IsKey(DIK_A) || Input::IsKey(DIK_B))
+	{
+		transform_.position_.x += 0.3f;
+	}
+
+	if (Input::IsKey(DIK_W) || Input::IsKey(DIK_S))
+	{
+		transform_.position_.z += 0.3f;
+	}
 }
 
 void Controller::Draw()
