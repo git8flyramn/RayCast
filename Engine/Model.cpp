@@ -87,7 +87,7 @@ void Model::Raycast(int hModel, RayCastData& rayData)
 	//rayData.dirからrayData.start - (始点から方向ベクトルをちょい伸ばした先)に向かうベクトルにする
 	XMVECTOR dirAtLocal = XMVectorSubtract(vDirVec,vstart);
 	dirAtLocal = XMVector4Normalize(dirAtLocal);
-	XMStoreFloat4(&rayData.dir, vDirVec);
+	XMStoreFloat4(&rayData.dir, dirAtLocal);
 
 	//指定したモデル番号のFBXにレイキャスト
 	modelList[hModel]->pfbx_->RayCast(rayData);

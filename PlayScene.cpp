@@ -14,12 +14,6 @@ PlayScene::~PlayScene()
 void PlayScene::Initialize()
 {
 
-	fbx = new Fbx;
-	transform_.scale_.x = 0.5f;
-	transform_.scale_.y = 0.5f;
-	transform_.scale_.z = 0.5f;
-    fbx->Load("Water.fbx");
-	transform_.position_ = { 0.0f,0.0f,0.0f };
 }
 
 void PlayScene::Draw()
@@ -46,7 +40,7 @@ void PlayScene::Draw()
 	//	}
 	//	transform_.position_.z = i;
 	//}
-  	fbx->Draw(transform_);
+  //	fbx->Draw(transform_);
 }
 
 void PlayScene::Update()

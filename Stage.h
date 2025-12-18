@@ -42,10 +42,8 @@ public:
     void Update()override;
     void Release()override;
 private:
-    std::vector<string> ModelName;
-    //sData sTable[XSIZE][ZSIZE];
+   
     sData sTable[ZSIZE][XSIZE];
-      Fbx* fbx;
      int hModel[MODEL_NUM];
 
 };
