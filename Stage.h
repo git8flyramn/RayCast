@@ -1,6 +1,6 @@
 #pragma once
 #include "Engine//GameObject.h"
-
+#include <windows.h>
 
 namespace
 {
@@ -41,10 +41,12 @@ public:
     void Draw() override;
     void Update()override;
     void Release()override;
+    BOOL localProc(HWND hWnd, UINT messsage, WPARAM wParam, LPARAM lParam);
 private:
    
     sData sTable[ZSIZE][XSIZE];
      int hModel[MODEL_NUM];
+     
 
 };
 
