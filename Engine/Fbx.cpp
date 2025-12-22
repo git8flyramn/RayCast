@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include <filesystem>
 #include <string>
+#include <DirectXCollision.h>
 namespace fs = std::filesystem;
 
 Fbx::Fbx()
