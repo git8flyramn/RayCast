@@ -33,7 +33,11 @@ XMMATRIX Transform::GetWorldMatrix()
     {
         return matScale_* matRotate_* matTranslate_* pParent_->GetWorldMatrix();
     }
-    return matScale_ * matRotate_ * matTranslate_;
+    else
+    {
+        return matScale_ * matRotate_ * matTranslate_;
+    }
+    
 }
 
 XMMATRIX Transform::GetNormalMatrix()

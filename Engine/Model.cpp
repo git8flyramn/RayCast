@@ -74,16 +74,18 @@ void Model::Raycast(int hModel, RayCastData& rayData)
 	//レイの通過点を求める(ワールド空間のレイの始点からdir方向に進む直線上の点を計算)
 	XMVECTOR vDirVec{rayData.start.x + rayData.dir.x,
 				    rayData.start.y + rayData.dir.y,
-					rayData.start.z + rayData.dir.z, };
+					rayData.start.z + rayData.dir.z,0.0f };
 
 
 	XMVECTOR vstart = XMLoadFloat4(&rayData.start);
 
 	//vstartをワールド逆行列に変換
 	vstart = XMVector3Transform(vstart, wInv);
+
 	XMStoreFloat4(&rayData.start, vstart);
 	
 	vDirVec = XMVector3Transform(vDirVec, wInv);
+	
 	//rayData.dirからrayData.start - (始点から方向ベクトルをちょい伸ばした先)に向かうベクトルにする
 	XMVECTOR dirAtLocal = XMVectorSubtract(vDirVec,vstart);
 	dirAtLocal = XMVector4Normalize(dirAtLocal);

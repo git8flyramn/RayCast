@@ -60,26 +60,13 @@ void Stage::Draw()
 	
 	RayCastData data;
 	Transform trans;
-
-	trans.position_.x = transform_.position_.x;
-	trans.position_.y = transform_.position_.y;
-	trans.position_.z = transform_.position_.z;
-	int type = BLOCK_TYPE::DEFAULT;
+	trans.position_.x = 5;
+	trans.position_.y = 0;
+	trans.position_.z = 5;
+	trans.scale_ = { 0.95,0.95,0.95 };
+	int type = BLOCK_TYPE::WATER;
 	Model::SetTransform(hModel[type], trans);
-	for (int i = 0; i < ZSIZE; i++)
-	{
-		for (int j = 0; j < XSIZE; j++)
-		{
-			
-		  Model::Draw(hModel[type]);
-		  trans.position_.x += 1.0f;
-		  Model::SetTransform(hModel[type], trans);
-		}
-		
-		trans.position_.z += 1.0f;
-		Model::Draw(hModel[type]);
-	}
-	
+	Model::Draw(hModel[type]);
 	RayCastData rayData
 	{
 		{0.0f,0.0f,5.0f,0.0f},
