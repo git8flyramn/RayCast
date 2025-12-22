@@ -10,6 +10,8 @@
 #include "Engine/Input.h"
 #include "Engine/RootJob.h"
 #include "Engine/Model.h"
+#include "Stage.h"
+#include "Resource.h"
 #pragma comment(lib, "winmm.lib")
 
 HWND hWnd = nullptr;
@@ -149,6 +151,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
        
         Direct3D::BeginDraw();
         pRootJob->DrawSub();
+
+        if (Input::IsKeyDown(DIK_SPACE))
+        {
+            //HWND CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, DlgProc, 0);
+           //showWindow(hDlg,SW_SHOW);
+        }
+      
+        if (Input::IsKeyDown(DIK_D))
+        {
+           // HRESULT hr = DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, DlgProc);
+            if (hr == IDOK)
+            {
+                PostQuitMessage(0);
+           }
+        }
         Direct3D::EndDraw();
 
       /*  pRootJob->DrawSub();
@@ -347,9 +364,9 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     return (INT_PTR)FALSE;
 }
 
-INT_PTR CALLBACK DlgProc(HWND hWnd, UINT messsage, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-
+    return ((Stage*)pRootJob->FindObject("Stage"))->localProc(hWnd,message, wParam,lParam);
 }
 
 /*

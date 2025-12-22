@@ -92,3 +92,21 @@ void Stage::Update()
 void Stage::Release()
 {
 }
+
+BOOL Stage::localProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message) {
+	case WM_COMMAND: //ÉRÉìÉgÉçÅ[ÉãÇÃëÄçÏ
+		switch (LOWORD(wParam))
+		{
+		case IDOK:
+			EndDialog(hWnd, IDOK);
+			return TRUE;
+		case IDCANCEL:
+			EndDialog(hWnd, IDCANCEL);
+			return TRUE;
+		}
+		break;
+	}
+	return FALSE;
+}
