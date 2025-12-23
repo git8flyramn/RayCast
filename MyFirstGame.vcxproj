@@ -71,20 +71,32 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include</IncludePath>
-    <LibraryPath>C:\Program Files %28x86%29\Windows Kits\10\Lib</LibraryPath>
+    <IncludePath>
+    </IncludePath>
+    <LibraryPath>
+    </LibraryPath>
+    <ExternalIncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.22621.0\um;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include</IncludePath>
-    <LibraryPath>C:\Program Files %28x86%29\Windows Kits\10\Lib</LibraryPath>
+    <IncludePath>
+    </IncludePath>
+    <LibraryPath>
+    </LibraryPath>
+    <ExternalIncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.22621.0\um;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include</IncludePath>
-    <LibraryPath>C:\Program Files %28x86%29\Windows Kits\10\Lib</LibraryPath>
+    <IncludePath>
+    </IncludePath>
+    <LibraryPath>
+    </LibraryPath>
+    <ExternalIncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.22621.0\um;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include</IncludePath>
-    <LibraryPath>C:\Program Files %28x86%29\Windows Kits\10\Lib</LibraryPath>
+    <IncludePath>
+    </IncludePath>
+    <LibraryPath>
+    </LibraryPath>
+    <ExternalIncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.22621.0\um;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
