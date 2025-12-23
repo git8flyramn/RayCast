@@ -93,8 +93,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     pRootJob = new RootJob(nullptr);
    //ゲームで増える物
     pRootJob->Initialize();
-   /* HWND hDlg = CreateDialog(hInst, DIDFT_MAKEINSTANCE(IDD_DIALOG2), hWnd, ManuProc, 0);
-    ShowWindow(hDlg, SW_SHOW);*/
+    HWND hDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd,ManuProc, 0);
+    ShowWindow(hDlg, SW_SHOW);
    
  
    // Transform* transform = new Transform();
@@ -371,9 +371,9 @@ INT_PTR CALLBACK DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return ((Stage*)pRootJob->FindObject("Stage"))->localProc(hWnd,message, wParam,lParam);
 }
 
-INT_PTR manuProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+INT_PTR ManuProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    return ((Stage*)pRootJob->FindObject("Stage"))->manuProc(hWnd, message, wParam, lParam);
+    return ((Stage*)pRootJob->FindObject("Stage"))->ManuProc(hWnd, message, wParam, lParam);
 }
 
 /*
