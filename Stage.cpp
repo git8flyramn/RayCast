@@ -2,7 +2,7 @@
 #include <string>
 #include "vector"
 #include "Engine/Model.h"
-
+#include "Resource.h"
 Stage::Stage(GameObject* parent) : GameObject(parent,"Stage")
 {
 	for (int j = 0; j < ZSIZE; j++)
@@ -109,4 +109,37 @@ BOOL Stage::localProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	return FALSE;
+}
+
+BOOL Stage::manuProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+//	//IDC_COMBO1
+//	//switch (message) {
+//	////case WM_INITDIALOG:
+//	//	//SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"デフォルト");
+//	//	//SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"a");
+//	//	//SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"i");
+//	//	//SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"u");
+//	//	//SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"e");
+//	//	//SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"o");
+//	//	//SendMessage(GetDlgItem(hWnd), IDC_COMBO1), CB_SETCURSEL, 0, 0);
+//	////	return TRUE;
+//	////case WM_COMMAND:
+//	////	switch (LOWORD(wParam))
+//	////	{
+//	////	case IDC_RADIO:
+//	////		mode_ = 0; //上げ
+//	////		return TRUE;
+//	////	case IDC_RADIO:
+//	////		mode_ = 1;//下げ
+//	////		return TRUE;
+//	////	case IDC_RADIO:
+//	////		mode_ = 2; //種類変更
+//	////	case IDC_COMBO1:
+//	////		select_ = (int)SendMessage(GetDlgItem(hWnd), IDC_COMBO1), CB_GETCURSEL, 0, 0);
+//	////		return TRUE;
+//	////	}
+//	////	return FALSE;
+//	//}
+//	//return FALSE;
 }

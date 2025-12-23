@@ -42,10 +42,14 @@ public:
     void Update()override;
     void Release()override;
     BOOL localProc(HWND hWnd, UINT messsage, WPARAM wParam, LPARAM lParam);
+    //操作パネル用プロシージャ
+    BOOL manuProc(HWND hWnd, UINT messsage, WPARAM wParam, LPARAM lParam);
 private:
    
     sData sTable[ZSIZE][XSIZE];
      int hModel[MODEL_NUM];
+     int mode_;//0 : 上げる 1:下げる 2:種類変更
+     int select_;//ボックスの種類
      
 
 };

@@ -36,6 +36,7 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    DlgProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    ManuProc(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
@@ -92,8 +93,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     pRootJob = new RootJob(nullptr);
    //ゲームで増える物
     pRootJob->Initialize();
-  
-
+   /* HWND hDlg = CreateDialog(hInst, DIDFT_MAKEINSTANCE(IDD_DIALOG2), hWnd, ManuProc, 0);
+    ShowWindow(hDlg, SW_SHOW);*/
    
  
    // Transform* transform = new Transform();
@@ -152,12 +153,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         Direct3D::BeginDraw();
         pRootJob->DrawSub();
 
-        if (Input::IsKeyDown(DIK_SPACE))
-        {
-            //HWND CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, DlgProc, 0);
-           //showWindow(hDlg,SW_SHOW);
-        }
-      
+        //if (Input::IsKeyDown(DIK_SPACE))
+        //{
+        //    //HWND CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, DlgProc, 0);
+        //   //showWindow(hDlg,SW_SHOW);
+        //}
+        
+       
         if (Input::IsKeyDown(DIK_D))
         {
            // HRESULT hr = DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, DlgProc);
@@ -367,6 +369,11 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 INT_PTR CALLBACK DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     return ((Stage*)pRootJob->FindObject("Stage"))->localProc(hWnd,message, wParam,lParam);
+}
+
+INT_PTR manuProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    return ((Stage*)pRootJob->FindObject("Stage"))->manuProc(hWnd, message, wParam, lParam);
 }
 
 /*
