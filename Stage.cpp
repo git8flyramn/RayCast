@@ -9,7 +9,7 @@ Stage::Stage(GameObject* parent) : GameObject(parent,"Stage")
 	{
 		for (int i = 0; i < XSIZE; i++)
 		{
-			SetBlock(BLOCK_TYPE::WATER, i, j);
+			SetBlock(BLOCK_TYPE::LENGA, i, j);
 			SetBlockHeight(i, j, 1 + rand() % 14);
 		}
 	}
@@ -63,7 +63,7 @@ void Stage::Draw()
 	trans.position_.y = 0;
 	trans.position_.z = 5;
 	trans.scale_ = { 0.95,0.95,0.95 };
-	int type = BLOCK_TYPE::WATER;
+	int type = BLOCK_TYPE::LENGA;
 	Model::SetTransform(hModel[type], trans);
 	Model::Draw(hModel[type]);
 	RayCastData rayData
