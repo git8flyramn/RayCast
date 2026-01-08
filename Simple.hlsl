@@ -49,7 +49,8 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
     normal = normalize(normal); //法線ベクトルの長さを正規化->1にする
     normal.w = 0;
     float4 light = float4(-1, 0.5, -0.7, 0);
-    light = normalize(light);
+
+    //light = normalize(light);
     light.w = 0;
     outData.color = clamp(dot(normal, light), 0, 1);
     

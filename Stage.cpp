@@ -9,7 +9,7 @@ Stage::Stage(GameObject* parent) : GameObject(parent,"Stage")
 	{
 		for (int i = 0; i < XSIZE; i++)
 		{
-			SetBlock(BLOCK_TYPE::LENGA, i, j);
+			SetBlock(BLOCK_TYPE::WATER, i, j);
 			SetBlockHeight(i, j, 1 + rand() % 14);
 		}
 	}
@@ -27,7 +27,7 @@ void Stage::Initialize()
 		"Lenga.fbx",
 		"Glass.fbx",
 		"Sand.fbx",
-		"Water.fbx",
+		"default.fbx",
 	};
 	for (int i = 0; i < ModelName.size(); i++)
 	{
@@ -63,7 +63,7 @@ void Stage::Draw()
 	trans.position_.y = 0;
 	trans.position_.z = 5;
 	trans.scale_ = { 0.95,0.95,0.95 };
-	int type = BLOCK_TYPE::LENGA;
+	int type = BLOCK_TYPE::WATER;
 	Model::SetTransform(hModel[type], trans);
 	Model::Draw(hModel[type]);
 	RayCastData rayData
@@ -119,7 +119,7 @@ BOOL Stage::ManuProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"ƒŒƒ“ƒK");
 		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"‘’n");
 		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"»’n");
-		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"…ê");
+		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"‘åª");//…ê
 		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_SETCURSEL, 0, 0);
 		return TRUE;
 	case WM_COMMAND:

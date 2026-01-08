@@ -1,7 +1,6 @@
 #pragma once
 #include "Engine//GameObject.h"
-#include "Engine//Fbx.h"
-class Texture;
+
 class TestScene :
     public GameObject
 {
@@ -12,7 +11,5 @@ public:
 	void Update() override;
 	void Draw() override;
 	void Release() override;
-	Texture* tex;
-	Fbx* fbx;
 };
 
