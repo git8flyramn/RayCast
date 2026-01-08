@@ -28,7 +28,6 @@ void Stage::Initialize()
 		"Glass.fbx",
 		"Sand.fbx",
 		"Water.fbx",
-		"Block.fbx"
 	};
 	for (int i = 0; i < ModelName.size(); i++)
 	{
@@ -121,8 +120,7 @@ BOOL Stage::ManuProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"草地");
 		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"砂地");
 		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"水場");
-		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"ブロック");
-		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), BM_SETCHECK, 0, 0);
+		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_SETCURSEL, 0, 0);
 		return TRUE;
 	case WM_COMMAND:
 		switch (LOWORD(wParam))

@@ -124,7 +124,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             startTime = nowTime;
         }
 
-        if (nowTime - lastUpdateTime <= 1000.0f / 60)
+        if ((nowTime - lastUpdateTime) * 60 <= 1000)
         {
             continue;
         }
@@ -162,7 +162,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
        
         if (Input::IsKeyDown(DIK_D))
         {
-           // HRESULT hr = DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, DlgProc);
+             HRESULT hr = DialogBox(hInst,MAKEINTRESOURCE(IDD_DIALOG1),hWnd,DlgProc);
             if (hr == IDOK)
             {
                 PostQuitMessage(0);
