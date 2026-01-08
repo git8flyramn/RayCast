@@ -12,10 +12,10 @@ enum BLOCK_TYPE
 
 {
     DEFAULT,
-    WATER,
-    SAND,
+    LENGA,
     GLASS,
-    LENGA
+    SAND,
+    WATER
 };
 
 struct sData
