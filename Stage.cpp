@@ -27,7 +27,7 @@ void Stage::Initialize()
 		"Lenga.fbx",
 		"Glass.fbx",
 		"Sand.fbx",
-		"default.fbx",
+		"Water.fbx",
 	};
 	for (int i = 0; i < ModelName.size(); i++)
 	{
@@ -73,14 +73,15 @@ void Stage::Draw()
 		false,
 		0.0f
 	};
-
+	
+	
 	Model::Raycast(hModel[type], rayData);
 
-	/*if (data.isHit)
+	if (rayData.isHit)
 	{
 		MessageBoxA(NULL,"hit","Info",MB_OK);
 
-	}*/
+	}
 }
 
 void Stage::Update()
@@ -119,7 +120,7 @@ BOOL Stage::ManuProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"ƒŒƒ“ƒK");
 		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"‘’n");
 		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"»’n");
-		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"‘åª");//…ê
+		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_ADDSTRING, 0, (LPARAM)L"…ê");//…ê
 		SendMessage(GetDlgItem(hWnd, IDC_COMBO1), CB_SETCURSEL, 0, 0);
 		return TRUE;
 	case WM_COMMAND:

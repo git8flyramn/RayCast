@@ -212,7 +212,7 @@ void Fbx::InitIndex(FbxMesh* mesh)
 	{
 
 		//int count = 0;
-		auto& indeces = ppIndex_[0];
+		auto& indeces = ppIndex_[i];
 
 		//‘Sƒ|ƒŠƒSƒ“
 		for (long poly = 0; poly < polygonCount_; poly++)
