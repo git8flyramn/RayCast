@@ -47,6 +47,10 @@ private:
 	{
 		Texture* pTexture;
 		XMFLOAT4 diffuse;
+		XMFLOAT4 ambient;
+		XMFLOAT4 specular;
+		float shiniess;
+		XMFLOAT4 factor;
 	};
 
 	struct CONSTANT_BUFFER

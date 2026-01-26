@@ -322,7 +322,16 @@ void Fbx::InitMaterial(FbxNode* pNode)
 			FbxDouble3  diffuse = pMaterial->Diffuse;
 			pMaterialList_[i].diffuse =  XMFLOAT4((float)diffuse[0], (float)diffuse[1], (float)diffuse[2], 1.0f);
 		}
-
+		FbxSurfacePhong* pPhong = (FbxSurfacePhong*)pNode->GetMaterial(i);
+		FbxDouble diffuse = pPhong->DiffuseFactor;//拡散反射率
+		FbxDouble ambient = pPhong->AmbientFactor;//拡散反射強度
+		FbxDouble ambient = pPhong->AmbientFactor;//環境反射率
+		if (pPhong->GetClassId().Is(FbxSurfacePhong::ClassId))
+		{
+			FbxDouble specular = pPhong->SpecularFactor;//鏡面反射率
+			FbxDouble shininess = pPhong->Shininess;//光沢度
+		}
+		//ここで、自分のマテリアル構造体に詰め込む
 	}
 
 }

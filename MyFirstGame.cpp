@@ -11,6 +11,7 @@
 #include "Engine/RootJob.h"
 #include "Engine/Model.h"
 #include "Stage.h"
+#include "Controller.h"
 #include "Resource.h"
 #pragma comment(lib, "winmm.lib")
 

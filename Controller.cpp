@@ -3,10 +3,7 @@
 #include "Engine/Camera.h"
 Controller::Controller(GameObject* parent) : GameObject(parent, "Controller")
 {
-	transform_.position_.x = 7.0f;
-	transform_.position_.y = 7.0f;
-	transform_.rotate_.x = 45.0f;
-
+	
 	
 	
 }
@@ -17,6 +14,9 @@ Controller::~Controller()
 
 void Controller::Initialize()
 {
+	transform_.position_.x = 7.0f;
+	transform_.position_.y = 7.0f;
+	transform_.rotate_.x = 45.0f;
 }
 
 void Controller::Update()
