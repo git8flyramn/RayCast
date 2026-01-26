@@ -18,6 +18,7 @@ void PlayScene::Initialize()
 
 void PlayScene::Draw()
 {
+	
 	////int box[10][10] ={{1,1,1,1,1,1,1,1,1 },
 	//			     { 1,1,1,1,1,1,1,1,1,1 },
 	//			     { 1,1,1,1,1,1,1,1,1,1 },

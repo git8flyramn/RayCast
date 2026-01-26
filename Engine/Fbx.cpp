@@ -107,7 +107,7 @@ void Fbx::Draw(Transform& transform)
 			cb.materialFlag = FALSE;
 			cb.diffuse = pMaterialList_[i].diffuse;
 		}
-
+		
 		D3D11_MAPPED_SUBRESOURCE pdata;
 		Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPU‚©‚ç‚Ìƒf[ƒ^ƒAƒNƒZƒX‚ðŽ~‚ß‚é
 		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// ƒf[ƒ^‚ð’l‚ð‘—‚é
@@ -323,9 +323,9 @@ void Fbx::InitMaterial(FbxNode* pNode)
 			pMaterialList_[i].diffuse =  XMFLOAT4((float)diffuse[0], (float)diffuse[1], (float)diffuse[2], 1.0f);
 		}
 		FbxSurfacePhong* pPhong = (FbxSurfacePhong*)pNode->GetMaterial(i);
-		FbxDouble diffuse = pPhong->DiffuseFactor;//ŠgŽU”½ŽË—¦
-		FbxDouble ambient = pPhong->AmbientFactor;//ŠgŽU”½ŽË‹­“x
-		FbxDouble ambient = pPhong->AmbientFactor;//ŠÂ‹«”½ŽË—¦
+		FbxDouble3 diffuse = pPhong->Diffuse;//ŠgŽU”½ŽË—¦
+		FbxDouble factor = pPhong->AmbientFactor;//ŠgŽU”½ŽË‹­“x
+		FbxDouble3 ambient = pPhong->Ambient;//ŠÂ‹«”½ŽË—¦
 		if (pPhong->GetClassId().Is(FbxSurfacePhong::ClassId))
 		{
 			FbxDouble specular = pPhong->SpecularFactor;//‹¾–Ê”½ŽË—¦

@@ -34,10 +34,14 @@ void Stage::Initialize()
 		hModel[i] = Model::Load(ModelName[i]);
 		assert(hModel[i] >= 0);
 	}
+	Model::Load("Donut.fbx");
 }
 
 void Stage::Draw()
 {
+
+	;
+
 	/*for (int i = 0; i < ZSIZE; i++)
 	{
 		for (int j = 0; j < XSIZE; j++)
@@ -57,7 +61,9 @@ void Stage::Draw()
 		}
 		
 	}*/
-	int type = BLOCK_TYPE::WATER;
+
+	//ƒ{ƒbƒNƒX‚ð•~‚«‹l‚ß‚é
+	/*int type = BLOCK_TYPE::WATER;
 	for (int i = 0; i < ZSIZE; i++)
 	{
 		for (int j = 0; j < XSIZE; j++)
@@ -76,24 +82,24 @@ void Stage::Draw()
 
 		}
 
-	}
+	}*/
 	
-	RayCastData rayData
-	{
-		{0.0f,0.0f,5.0f,0.0f},
-		{ 0.0f,-1.0f, 0.0f,0.0f},
-		false,
-		0.0f
-	};
-	
-	
-	Model::Raycast(hModel[type], rayData);
+	//RayCastData rayData
+	//{
+	//	{0.0f,0.0f,5.0f,0.0f},
+	//	{ 0.0f,-1.0f, 0.0f,0.0f},
+	//	false,
+	//	0.0f
+	//};
+	//
+	//
+	//Model::Raycast(hModel[type], rayData);
 
-	if (rayData.isHit)
-	{
-		MessageBoxA(NULL,"hit","Info",MB_OK);
+	//if (rayData.isHit)
+	//{
+	//	MessageBoxA(NULL,"hit","Info",MB_OK);
 
-	}
+	//}
 }
 
 void Stage::Update()
