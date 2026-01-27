@@ -1,6 +1,9 @@
 #include "Direct3D.h"
+#include <Windows.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
+
+using namespace DirectX;
 namespace Direct3D
 {
 	ID3D11Device* pDevice;		                 //デバイス
@@ -25,6 +28,7 @@ namespace Direct3D
     ID3D11RasterizerState* pRasterizerState = nullptr;	//ラスタライザー
     
     SHADER_BUNDOLE shaderBundle[SHADER_MAX];
+    XMFLOAT4 lightPositon = { 0.0f,0.5f,0.0f,0.0f }; //ライトの座標
 }
 
 HRESULT Direct3D::InitShader()
@@ -299,5 +303,15 @@ void Direct3D::Release()
     SAFE_RELEASE(pDevice);             //デバイス
     SAFE_RELEASE(pContext);           //デバイスコンテキスト
     SAFE_RELEASE(pSwapChain);        //スワップチェイン
-    SAFE_RELEASE(pRenderTargetView) //レンダーターゲットビュー    
+    SAFE_RELEASE(pRenderTargetView); //レンダーターゲットビュー    
+}
+
+XMFLOAT4 GetLightPos()
+{
+    return lightPositon;
+}
+
+void SetLightPos(DirectX::XMFLOAT4 pos)
+{
+    lightPositon = pos;
 }

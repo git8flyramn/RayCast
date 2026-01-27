@@ -39,4 +39,7 @@ namespace Direct3D
 
 	//解放
 	void Release();
+
+	XMFLOAT4 GetLightPos(); //ライトの位置
+	void SetLightPos(DirectX::XMFLOAT4 pos); //ライトの位置設定
 };

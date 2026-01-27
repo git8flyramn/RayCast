@@ -32,6 +32,11 @@ void Camera::SetPosition(XMVECTOR position)
     position_ = position;
 }
 
+XMVECTOR Camera::GetPosition()
+{
+    return position_;
+}
+
 void Camera::SetTarget(XMVECTOR target)
 {
     target_ = target;

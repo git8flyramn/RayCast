@@ -78,14 +78,14 @@ void Stage::Draw()
 		}
 		
 	}*/
-	/*Transform trans;
+	Transform trans;
 	trans.position_.x = 5 ;
 	trans.position_.y = 0;
 	trans.position_.z = 5;
 	trans.scale_ = { 0.95,0.95,0.95 };
-	int type = BLOCK_TYPE::DONUT;
-	Model::SetTransform(hModel[type], trans);
-	Model::Draw(hModel[type]);*/
+	trans.Calculation();
+	XMMATRIX worldMatrix = XMMatrixIdentity();
+	//
 	//ボックスを敷き詰める
 	/*int type = BLOCK_TYPE::WATER;
 	for (int i = 0; i < ZSIZE; i++)
@@ -128,7 +128,11 @@ void Stage::Draw()
 
 void Stage::Update()
 {
-	
+	//コンスタントバッファの更新 
+		//コンスタントバッファ 1番から１スロットを使う
+	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
+	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
+
 }
 
 void Stage::Release()
