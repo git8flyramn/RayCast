@@ -3,25 +3,44 @@
 #include "vector"
 #include "Engine/Model.h"
 #include "resource.h"
-Stage::Stage(GameObject* parent) : GameObject(parent,"Stage")
+Stage::Stage(GameObject* parent) : GameObject(parent, "Stage"), pConstantBuffer_(nullptr)
 {
-	for (int j = 0; j < ZSIZE; j++)
+	/*for (int j = 0; j < ZSIZE; j++)
 	{
 		for (int i = 0; i < XSIZE; i++)
 		{
 			SetBlock(BLOCK_TYPE::DEFAULT, i, j);
 			SetBlockHeight(i, j, 1 + rand() % 14);
 		}
-	}
+	}*/
 }
 
 Stage::~Stage()
 {
 }
+void Stage::InitConstantBuffer()
+{
+	//Quadと一緒
+	D3D11_BUFFER_DESC cb;
+	cb.ByteWidth = sizeof(CONSTANTBUFFER_STAGE);
+	cb.Usage = D3D11_USAGE_DYNAMIC;
+	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cb.MiscFlags = 0;
+	cb.StructureByteStride = 0;
+
+	// コンスタントバッファの作成
+	HRESULT hr;
+	hr = Direct3D::pDevice->CreateBuffer(&cb, nullptr, &pConstantBuffer_);
+	if (FAILED(hr))
+	{
+		MessageBox(NULL, L"コンスタントバッファの作成に失敗しました", L"エラー", MB_OK);
+	}
+}
 
 void Stage::Initialize()
 {
-	std::vector<string> ModelName
+	/*std::vector<string> ModelName
 	{
 		"default.fbx",
 		"Lenga.fbx",
@@ -33,7 +52,7 @@ void Stage::Initialize()
 	{
 		hModel[i] = Model::Load(ModelName[i]);
 		assert(hModel[i] >= 0);
-	}
+	}*/
 }
 
 void Stage::Draw()
@@ -59,14 +78,14 @@ void Stage::Draw()
 		}
 		
 	}*/
-	Transform trans;
+	/*Transform trans;
 	trans.position_.x = 5 ;
 	trans.position_.y = 0;
 	trans.position_.z = 5;
 	trans.scale_ = { 0.95,0.95,0.95 };
 	int type = BLOCK_TYPE::DONUT;
 	Model::SetTransform(hModel[type], trans);
-	Model::Draw(hModel[type]);
+	Model::Draw(hModel[type]);*/
 	//ボックスを敷き詰める
 	/*int type = BLOCK_TYPE::WATER;
 	for (int i = 0; i < ZSIZE; i++)
@@ -166,3 +185,4 @@ BOOL Stage::ManuProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	return FALSE;
 }
+

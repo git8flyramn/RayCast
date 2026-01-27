@@ -1,6 +1,7 @@
 #pragma once
 #include "Engine//GameObject.h"
 #include <windows.h>
+#include "Engine/Sprite.h"
 
 namespace
 {
@@ -16,6 +17,12 @@ enum BLOCK_TYPE
     GLASS,
     SAND,
     DONUT,
+};
+
+struct CONSTANTBUFFER_STAGE
+{
+    XMFLOAT4 lightPosition;//光源の位置
+    XMFLOAT4 eyePosition;   //カメラの座標
 };
 // WATER,
 struct sData
@@ -51,6 +58,8 @@ private:
      int mode_;//0 : 上げる 1:下げる 2:種類変更
      int select_;//ボックスの種類
      int model_;
+     void InitConstantBuffer();
+     ID3D11Buffer* pConstantBuffer_;
 };
 
 
