@@ -34,14 +34,12 @@ void Stage::Initialize()
 		hModel[i] = Model::Load(ModelName[i]);
 		assert(hModel[i] >= 0);
 	}
-	Model::Load("Donut.fbx");
 }
 
 void Stage::Draw()
 {
 
-	;
-
+	
 	/*for (int i = 0; i < ZSIZE; i++)
 	{
 		for (int j = 0; j < XSIZE; j++)
