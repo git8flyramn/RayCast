@@ -108,7 +108,11 @@ void Fbx::Draw(Transform& transform)
 			cb.diffuse = pMaterialList_[i].diffuse;
 		}
 		//コンスタントバッファにデータ転送
-		//cb.ambient 
+		cb.ambient = pMaterialList_[i].ambient;
+		cb.specular= pMaterialList_[i].specular;
+		cb.shininess = XMFLOAT4(pMaterialList_[i].shiniess, pMaterialList_[i].shiniess, pMaterialList_[i].shiniess, pMaterialList_[i].shiniess);
+		cb.diffuseFactor = pMaterialList_[i].factor;
+
 		D3D11_MAPPED_SUBRESOURCE pdata;
 		Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
 		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る

@@ -9,7 +9,7 @@ Stage::Stage(GameObject* parent) : GameObject(parent,"Stage")
 	{
 		for (int i = 0; i < XSIZE; i++)
 		{
-			SetBlock(BLOCK_TYPE::WATER, i, j);
+			SetBlock(BLOCK_TYPE::DEFAULT, i, j);
 			SetBlockHeight(i, j, 1 + rand() % 14);
 		}
 	}
@@ -27,7 +27,7 @@ void Stage::Initialize()
 		"Lenga.fbx",
 		"Glass.fbx",
 		"Sand.fbx",
-		"Water.fbx",
+		"Donut.fbx",
 	};
 	for (int i = 0; i < ModelName.size(); i++)
 	{
@@ -59,7 +59,14 @@ void Stage::Draw()
 		}
 		
 	}*/
-
+	Transform trans;
+	trans.position_.x = 5 ;
+	trans.position_.y = 0;
+	trans.position_.z = 5;
+	trans.scale_ = { 0.95,0.95,0.95 };
+	int type = BLOCK_TYPE::DONUT;
+	Model::SetTransform(hModel[type], trans);
+	Model::Draw(hModel[type]);
 	//ƒ{ƒbƒNƒX‚ð•~‚«‹l‚ß‚é
 	/*int type = BLOCK_TYPE::WATER;
 	for (int i = 0; i < ZSIZE; i++)

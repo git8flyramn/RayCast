@@ -15,9 +15,9 @@ enum BLOCK_TYPE
     LENGA,
     GLASS,
     SAND,
-    WATER
+    DONUT,
 };
-
+// WATER,
 struct sData
 
 {
@@ -50,6 +50,7 @@ private:
      int hModel[MODEL_NUM];
      int mode_;//0 : 上げる 1:下げる 2:種類変更
      int select_;//ボックスの種類
+     int model_;
 };
 
 
