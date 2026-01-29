@@ -1,17 +1,142 @@
 #include "Sprite.h"
 #include "Camera.h"
 #include "Texture.h"
+#include <codecvt>
 
-Sprite::Sprite() : pVertexBuffer_(nullptr), pIndexBuffer_(nullptr),
-pConstantBuffer_(nullptr), pTexture_(nullptr)
+//Sprite::Sprite() : pVertexBuffer_(nullptr), pIndexBuffer_(nullptr),
+//pConstantBuffer_(nullptr), pTexture_(nullptr)
+//{
+//}
+
+namespace {
+	// string (UTF-8) -> wstring
+	std::wstring ToWString(const std::string& str) {
+		if (str.empty()) return L"";
+		int size_needed = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), NULL, 0);
+		std::wstring wstrTo(size_needed, 0);
+		MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), &wstrTo[0], size_needed);
+		return wstrTo;
+	}
+
+	// wstring -> string (UTF-8)
+	std::string ToString(const std::wstring& wstr) {
+		if (wstr.empty()) return "";
+		int size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), NULL, 0, NULL, NULL);
+		std::string strTo(size_needed, 0);
+		WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), &strTo[0], size_needed, NULL, NULL);
+		return strTo;
+	}
+}
+
+Sprite::Sprite(const char* filename)
+	: pVertexBuffer_(nullptr),
+	pIndexBuffer_(nullptr),
+	pConstantBuffer_(nullptr),
+	pTexture_(nullptr)
 {
+	// バッファ初期化
+	HRESULT hr = InitializeBuffers();
+	if (FAILED(hr))
+	{
+		MessageBox(nullptr, L"Sprite 初期化（バッファ生成）に失敗しました", L"エラー", MB_OK);
+		return;
+	}
+
+	// テクスチャ読み込み
+	LoadTexture(filename);
+}
+Sprite::Sprite(const std::wstring& filename)
+	: pVertexBuffer_(nullptr),
+	pIndexBuffer_(nullptr),
+	pConstantBuffer_(nullptr),
+	pTexture_(nullptr)
+{
+	// バッファ初期化
+	HRESULT hr = InitializeBuffers();
+	if (FAILED(hr))
+	{
+		MessageBox(nullptr, L"Sprite 初期化（バッファ生成）に失敗しました", L"エラー", MB_OK);
+		return;
+	}
+
+	// テクスチャ読み込み
+	LoadTexture(filename);
 }
 
 Sprite::~Sprite()
 {
 }
 
-HRESULT Sprite::Initialize()
+//HRESULT Sprite::Initialize()
+//{
+//	
+//}
+
+void Sprite::Draw(XMMATRIX& worldMatrix)
+{
+	Direct3D::SetShader(SHADER_TYPE::SHADER_2D);
+	//コンスタントバッファに渡す情報
+	CONSTANT_BUFFER cb;
+	//cb.matWVP = XMMatrixTranspose(worldMatrix * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
+	cb.matWorld = XMMatrixTranspose(worldMatrix);
+
+
+	D3D11_MAPPED_SUBRESOURCE pdata;
+	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
+	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
+	Direct3D::pContext->Unmap(pConstantBuffer_, 0);	//再開
+
+	//頂点バッファ
+	UINT stride = sizeof(VERTEX);
+	UINT offset = 0;
+	Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+
+	// インデックスバッファーをセット
+	stride = sizeof(int);
+	offset = 0;
+	Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
+
+	//コンスタントバッファ
+	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
+	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
+
+	ID3D11SamplerState* pSampler = pTexture_->GetSampler();
+	Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
+
+	ID3D11ShaderResourceView* pSRV = pTexture_->GetSRV();
+	Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
+
+	Direct3D::pContext->DrawIndexed(6, 0, 0);
+}
+
+void Sprite::Release()
+{
+	//終了処理
+	SAFE_RELEASE(pConstantBuffer_);
+	SAFE_RELEASE(pIndexBuffer_);
+	SAFE_RELEASE(pVertexBuffer_);
+}
+
+void Sprite::LoadTexture(const char* filename)
+{
+	if (pTexture_) { delete pTexture_; pTexture_ = nullptr; }
+	pTexture_ = new Texture();
+
+	// Texture::Load(const char*) を想定
+	// 戻り値がある場合はチェックして MessageBox などで通知すると良いです
+	pTexture_->Load(filename);
+}
+
+void Sprite::LoadTexture(const std::wstring& filename)
+{
+	if (pTexture_) { delete pTexture_; pTexture_ = nullptr; }
+	pTexture_ = new Texture();
+
+	std::string str = ToString(filename);
+	pTexture_->Load(str);
+}
+
+HRESULT Sprite::InitializeBuffers()
 {
 	HRESULT hr;
 	//縦横2の乗数
@@ -23,7 +148,7 @@ HRESULT Sprite::Initialize()
 		{{1.0f,-1.0f,0.0f,0.0f},  {1.0f,1.0f}}, //四角形の頂点(右下)
 		{{-1.0f,-1.0f,0.0f,0.0f}, {0.0f,1.0f}},//四角形の頂点(左下)
 
-		
+
 	};
 	// 頂点データ用バッファの設定
 	D3D11_BUFFER_DESC bd_vertex;
@@ -80,52 +205,7 @@ HRESULT Sprite::Initialize()
 		return hr;
 	}
 
-	pTexture_ = new Texture();
-	pTexture_->Load("Dice1.png");
+	//pTexture_ = new Texture();
+	//pTexture_->Load("Dice1.png");
 	return S_OK;
-}
-
-void Sprite::Draw(XMMATRIX& worldMatrix)
-{
-	Direct3D::SetShader(SHADER_TYPE::SHADER_2D);
-	//コンスタントバッファに渡す情報
-	CONSTANT_BUFFER cb;
-	//cb.matWVP = XMMatrixTranspose(worldMatrix * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
-	cb.matWorld = XMMatrixTranspose(worldMatrix);
-
-
-	D3D11_MAPPED_SUBRESOURCE pdata;
-	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
-	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
-	Direct3D::pContext->Unmap(pConstantBuffer_, 0);	//再開
-
-	//頂点バッファ
-	UINT stride = sizeof(VERTEX);
-	UINT offset = 0;
-	Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
-
-	// インデックスバッファーをセット
-	stride = sizeof(int);
-	offset = 0;
-	Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
-
-	//コンスタントバッファ
-	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
-	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
-
-	ID3D11SamplerState* pSampler = pTexture_->GetSampler();
-	Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
-
-	ID3D11ShaderResourceView* pSRV = pTexture_->GetSRV();
-	Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
-
-	Direct3D::pContext->DrawIndexed(6, 0, 0);
-}
-
-void Sprite::Release()
-{
-	//終了処理
-	SAFE_RELEASE(pConstantBuffer_);
-	SAFE_RELEASE(pIndexBuffer_);
-	SAFE_RELEASE(pVertexBuffer_);
 }

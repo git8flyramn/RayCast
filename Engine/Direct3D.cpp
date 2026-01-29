@@ -1,5 +1,4 @@
 #include "Direct3D.h"
-#include <Windows.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 
@@ -28,7 +27,7 @@ namespace Direct3D
     ID3D11RasterizerState* pRasterizerState = nullptr;	//ラスタライザー
     
     SHADER_BUNDOLE shaderBundle[SHADER_MAX];
-    XMFLOAT4 lightPositon = { 0.0f,0.5f,0.0f,0.0f }; //ライトの座標
+      XMFLOAT4 lightPosition{0.0f,0.5f,0.0f,0.0f}; //ライトの座標
 }
 
 HRESULT Direct3D::InitShader()
@@ -306,12 +305,12 @@ void Direct3D::Release()
     SAFE_RELEASE(pRenderTargetView); //レンダーターゲットビュー    
 }
 
-XMFLOAT4 GetLightPos()
+XMFLOAT4 Direct3D::GetLightPos()
 {
-    return lightPositon;
+    return lightPosition;
 }
 
-void SetLightPos(DirectX::XMFLOAT4 pos)
+void Direct3D::SetLightPos(DirectX::XMFLOAT4 pos)
 {
-    lightPositon = pos;
+    lightPosition = pos;
 }

@@ -15,6 +15,10 @@
 #include "Resource.h"
 #pragma comment(lib, "winmm.lib")
 
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_dx11.h"
+#include "imgui/imgui_impl_win32.h"
+
 HWND hWnd = nullptr;
 
 #define MAX_LOADSTRING 100
@@ -85,6 +89,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         return 0;
     }
+
+    //imguiの初期化
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& ui = ImGui::GetIO();
+    ImGui_ImplWin32_Init(hWnd);
+    ImGui_ImplDX11_Init(Direct3D::pDevice, Direct3D::pContext);
+    ImGui::StyleColorsLight();
     Camera::Initialize();
     Input::Initialize(hWnd); //入力の初期化
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MYFIRSTGAME));
@@ -163,11 +175,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
        
         if (Input::IsKeyDown(DIK_D))
         {
-             HRESULT hr = DialogBox(hInst,MAKEINTRESOURCE(IDD_DIALOG1),hWnd,DlgProc);
+           /*  HRESULT hr = DialogBox(hInst,MAKEINTRESOURCE(IDD_DIALOG1),hWnd,DlgProc);
             if (hr == IDOK)
             {
                 PostQuitMessage(0);
-           }
+           }*/
         }
         Direct3D::EndDraw();
 
@@ -286,6 +298,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
     return TRUE;
 }
+//ImGuiのメッセージ         
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler
+(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+
 
 //
 //  関数: WndProc(HWND, UINT, WPARAM, LPARAM)
@@ -301,6 +318,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //ウィンドウに送信されたメッセージを処理する関数 メインメッセージループに応じた動きをする
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+        return true;
     switch (message)
     {
     case WM_COMMAND:
@@ -367,15 +386,16 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     return (INT_PTR)FALSE;
 }
 
-INT_PTR CALLBACK DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    return ((Stage*)pRootJob->FindObject("Stage"))->localProc(hWnd,message, wParam,lParam);
-}
+//INT_PTR CALLBACK DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+//{
+//    return ((Stage*)pRootJob->FindObject("Stage"))->localProc(hWnd,message, wParam,lParam);
+//}
+//
+//INT_PTR ManuProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+//{
+//    return ((Stage*)pRootJob->FindObject("Stage"))->ManuProc(hWnd, message, wParam, lParam);
+//}
 
-INT_PTR ManuProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    return ((Stage*)pRootJob->FindObject("Stage"))->ManuProc(hWnd, message, wParam, lParam);
-}
 
 /*
 CreateWindowExの引数と戻り値の意味

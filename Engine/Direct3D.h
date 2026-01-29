@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <d3d11.h>
 #include <assert.h>
+#include <DirectXMath.h>
 //リンカ
 #pragma comment (lib,"d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
@@ -40,6 +41,6 @@ namespace Direct3D
 	//解放
 	void Release();
 
-	XMFLOAT4 GetLightPos(); //ライトの位置
+	DirectX::XMFLOAT4 GetLightPos(); //ライトの位置
 	void SetLightPos(DirectX::XMFLOAT4 pos); //ライトの位置設定
 };

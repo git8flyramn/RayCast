@@ -38,9 +38,9 @@ struct sData
 class Stage : public GameObject
 { 
 public:
-    void SetBlock(BLOCK_TYPE type, int x, int z) { GetT(x, z).type = type; }
+    /*void SetBlock(BLOCK_TYPE type, int x, int z) { GetT(x, z).type = type; }
     void SetBlockHeight(int x, int z, int height) { GetT(x, z).height = height;}
-    sData& GetT(int x, int z) { return sTable[z][x]; }
+    sData& GetT(int x, int z) { return sTable[z][x]; }*/
 public:
     Stage(GameObject* parent);
     ~Stage();
@@ -53,11 +53,12 @@ public:
     BOOL ManuProc(HWND hWnd, UINT messsage, WPARAM wParam, LPARAM lParam);
 private:
    
-    sData sTable[ZSIZE][XSIZE];
-     int hModel[MODEL_NUM];
-     int mode_;//0 : 上げる 1:下げる 2:種類変更
-     int select_;//ボックスの種類
-     int model_;
+    //sData sTable[ZSIZE][XSIZE];
+    // int hModel[MODEL_NUM];
+    // int mode_;//0 : 上げる 1:下げる 2:種類変更
+    // int select_;//ボックスの種類
+    // int model_;
+    Sprite* pImage;
      void InitConstantBuffer();
      ID3D11Buffer* pConstantBuffer_;
 };
