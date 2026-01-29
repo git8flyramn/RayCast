@@ -112,6 +112,7 @@ void Fbx::Draw(Transform& transform)
 		cb.specular= pMaterialList_[i].specular;
 		cb.shininess = XMFLOAT4(pMaterialList_[i].shiniess, pMaterialList_[i].shiniess, pMaterialList_[i].shiniess, pMaterialList_[i].shiniess);
 		cb.diffuseFactor = pMaterialList_[i].factor;
+		cb.materialFlag = pMaterialList_[i].pTexture != nullptr;
 
 		D3D11_MAPPED_SUBRESOURCE pdata;
 		Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
@@ -313,6 +314,7 @@ void Fbx::InitMaterial(FbxNode* pNode)
 			}
 			else
 			{
+				pMaterialList_[i].pTexture = nullptr;
 				//テクスチャファイルが無いときの処理(エラー）
 			}
 
@@ -321,21 +323,32 @@ void Fbx::InitMaterial(FbxNode* pNode)
 		else
 		{
 			pMaterialList_[i].pTexture = nullptr;
-
 			//マテリアルの色
 			FbxSurfaceLambert* pMaterial = (FbxSurfaceLambert*)pNode->GetMaterial(i);
 			FbxDouble3  diffuse = pMaterial->Diffuse;
 			pMaterialList_[i].diffuse =  XMFLOAT4((float)diffuse[0], (float)diffuse[1], (float)diffuse[2], 1.0f);
+			FbxSurfacePhong* pPhong = (FbxSurfacePhong*)pNode->GetMaterial(i);
+			FbxDouble factor = pPhong->DiffuseFactor;//拡散反射強度
+			pMaterialList_[i].factor = XMFLOAT4((float)factor, (float)factor, (float)factor, (float)factor);
+			
+			FbxDouble3 ambient = pPhong->Ambient;//環境反射率
+			pMaterialList_[i].ambient = XMFLOAT4((float)ambient[0], (float)ambient[1], (float)ambient[2],1.0f);
+		
+			if (pPhong->GetClassId().Is(FbxSurfacePhong::ClassId))
+			{
+				FbxDouble specular = pPhong->SpecularFactor;//鏡面反射率
+				FbxDouble shininess = pPhong->Shininess;//光沢度
+				pMaterialList_[i].specular = { (float)specular, (float)specular, (float)specular,1.0f };
+				pMaterialList_[i].shiniess = shininess;
+			}
+			else
+			{
+				//フォンのパラメータを持っていない時のデフォルト値
+				pMaterialList_[i].specular = { 0.0f,0.0f,0.0f,1.0f };
+				pMaterialList_[i].shiniess = 10.0f;
+			}
 		}
-		FbxSurfacePhong* pPhong = (FbxSurfacePhong*)pNode->GetMaterial(i);
-		FbxDouble3 diffuse = pPhong->Diffuse;//拡散反射率
-		FbxDouble factor = pPhong->AmbientFactor;//拡散反射強度
-		FbxDouble3 ambient = pPhong->Ambient;//環境反射率
-		if (pPhong->GetClassId().Is(FbxSurfacePhong::ClassId))
-		{
-			FbxDouble specular = pPhong->SpecularFactor;//鏡面反射率
-			FbxDouble shininess = pPhong->Shininess;//光沢度
-		}
+    	
 		//ここで、自分のマテリアル構造体に詰め込む
 	}
 

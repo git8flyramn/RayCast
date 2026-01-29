@@ -3,14 +3,18 @@
 #include "vector"
 #include "Engine/Model.h"
 #include "resource.h"
-
+#include "Engine/Camera.h"
+#include "Engine/Input.h"
+#include <cassert>
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
 
-Stage::Stage(GameObject* parent) : GameObject(parent, "Stage"), pConstantBuffer_(nullptr),pImage(nullptr)
+Stage::Stage(GameObject* parent) : GameObject(parent, "Stage"), pConstantBuffer_(nullptr)
 {
-	
+	hball_ = -1;
+	hRoom_ = -1;
+	hDonut_ = -1;
 }
 
 Stage::~Stage()
@@ -20,7 +24,7 @@ void Stage::InitConstantBuffer()
 {
 	//Quadと一緒
 	D3D11_BUFFER_DESC cb;
-	cb.ByteWidth = sizeof(CONSTANTBUFFER_STAGE);
+	cb.ByteWidth = sizeof(CONSTANT_BUFFER_STAGE);
 	cb.Usage = D3D11_USAGE_DYNAMIC;
 	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -51,13 +55,29 @@ void Stage::Initialize()
 		hModel[i] = Model::Load(ModelName[i]);
 		assert(hModel[i] >= 0);
 	}*/
-	pImage = new Sprite("Aseets//texture.png");
+
+	InitConstantBuffer();
+	hDonut_ = Model::Load("Donut.fbx");
+	assert(hDonut_ >= 0);
+	hRoom_ = Model::Load("Room.fbx");
+	assert(hRoom_ >= 0);
+	Camera::SetPosition({ 0,0.8,-2.8 });
+	Camera::SetTarget({0,0.8,0});
 }
 
 void Stage::Draw()
-{
-
+{ 
+	Transform ltr;
+	ltr.position_ = { Direct3D::GetLightPos().x,Direct3D::GetLightPos().y,Direct3D::GetLightPos().z };
+	ltr.scale_ = { 0.1,0.1,0.1 };
+	Model::SetTransform(hball_, ltr);
+	Model::Draw(hball_);
 	
+	Transform tr;
+	tr.position_ = { 0,0,0 };
+	tr.rotate_ = { 0,0,0 };
+	Model::SetTransform(hRoom_, tr);
+	Model::Draw(hRoom_);
 	/*for (int i = 0; i < ZSIZE; i++)
 	{
 		for (int j = 0; j < XSIZE; j++)
@@ -77,16 +97,20 @@ void Stage::Draw()
 		}
 		
 	}*/
-	//コンスタントバッファ  1番から１スロット使う
-	Direct3D::pContext->VSSetConstantBuffers(1, 1, &pConstantBuffer_);	//頂点シェーダー用	
-	Direct3D::pContext->PSSetConstantBuffers(1, 1, &pConstantBuffer_);	//ピクセルシェーダー用
 
-	static Transform trans;
+	static Transform tDount;
+	tDount.scale_ = { 0.25,0.25,0.25 };
+	tDount.position_ = { 0,0.5,0 };
+	tDount.rotate_.y += 0.1f;
+	Model::SetTransform(hDonut_, tDount);
+	Model::Draw(hDonut_);
+
+	/*static Transform trans;
 	trans.scale_ = { 0.5f,0.5f,1.0f };
 	trans.Calculation();
-	XMMATRIX worldMatrix = XMMatrixIdentity();
-	pImage->Draw(worldMatrix);
-	//
+	XMMATRIX worldMatrix = XMMatrixIdentity();*/
+	
+
 	//ボックスを敷き詰める
 	/*int type = BLOCK_TYPE::WATER;
 	for (int i = 0; i < ZSIZE; i++)
@@ -109,8 +133,11 @@ void Stage::Draw()
 
 	}*/
 	
-//	ImGui::Text("Stage Class rot:%lf", trans.rotate_.z);
-	//RayCastData rayData
+//	ImGui::Text("Stage Class rot:%lf", tDount.rotate_.z);
+	
+
+
+//RayCastData rayData
 	//{
 	//	{0.0f,0.0f,5.0f,0.0f},
 	//	{ 0.0f,-1.0f, 0.0f,0.0f},
@@ -130,7 +157,47 @@ void Stage::Draw()
 
 void Stage::Update()
 {
+	transform_.rotate_.y += 0.5f;
+	if (Input::IsKey(DIK_A))
+	{
+		XMFLOAT4 p = Direct3D::GetLightPos();
+		p = { p.x - 0.01f,p.y,p.z,p.w };
+		Direct3D::SetLightPos(p);
+	}
+	if (Input::IsKey(DIK_D))
+	{
+		XMFLOAT4 p = Direct3D::GetLightPos();
+		p = { p.x + 0.01f,p.y,p.z,p.w };
+		Direct3D::SetLightPos(p);
+	}
+	if (Input::IsKey(DIK_W))
+	{
+		XMFLOAT4 p = Direct3D::GetLightPos();
+		p = { p.x,p.y,p.z + 0.01f,p.w };
+		Direct3D::SetLightPos(p);
+	}
+	if (Input::IsKey(DIK_UP))
+	{
+		XMFLOAT4 p = Direct3D::GetLightPos();
+		p = { p.x,p.y + 0.01f,p.z,p.w };
+		Direct3D::SetLightPos(p);
+	}
+	if (Input::IsKey(DIK_DOWN))
+	{
+		XMFLOAT4 p = Direct3D::GetLightPos();
+		p = { p.x,p.y + 0.01f,p.z,p.w };
+		Direct3D::SetLightPos(p);
+	}
 	
+	CONSTANT_BUFFER_STAGE cb;
+	D3D11_MAPPED_SUBRESOURCE pdata;
+	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
+	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
+	Direct3D::pContext->Unmap(pConstantBuffer_, 0);	//再開
+
+	//コンスタントバッファ
+	Direct3D::pContext->VSSetConstantBuffers(1, 1, &pConstantBuffer_);	//頂点シェーダー用	
+	Direct3D::pContext->PSSetConstantBuffers(1, 1, &pConstantBuffer_);	//ピクセルシェーダー用
 }
 
 void Stage::Release()
