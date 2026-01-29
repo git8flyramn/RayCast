@@ -15,6 +15,7 @@ Stage::Stage(GameObject* parent) : GameObject(parent, "Stage"), pConstantBuffer_
 	hball_ = -1;
 	hRoom_ = -1;
 	hDonut_ = -1;
+	hGround_ = -1;
 }
 
 Stage::~Stage()
