@@ -4,15 +4,15 @@
 #include "framework.h"
 
 #include "MyFirstGame.h"
-#include "Engine/Direct3D.h"
-#include "Engine/Camera.h"
-#include "Engine/Transform.h"
-#include "Engine/Input.h"
-#include "Engine/RootJob.h"
-#include "Engine/Model.h"
-#include "Stage.h"
-#include "Controller.h"
+#include "Engine//Direct3D.h"
+#include "Engine//Camera.h"
+#include "Engine//Transform.h"
+#include "Engine//Input.h"
+#include "Engine//RootJob.h"
+#include "Engine//Model.h"
 #include "Resource.h"
+#include "Stage.h"
+
 #pragma comment(lib, "winmm.lib")
 
 #include "imgui/imgui.h"
@@ -106,8 +106,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     pRootJob = new RootJob(nullptr);
    //ゲームで増える物
     pRootJob->Initialize();
-    HWND hDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd,ManuProc, 0);
-    ShowWindow(hDlg, SW_SHOW);
+   /* HWND hDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd,ManuProc, 0);
+    ShowWindow(hDlg, SW_SHOW);*/
    
  
    // Transform* transform = new Transform();
@@ -293,8 +293,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
         return FALSE;
     }
 
-    ShowWindow(hWnd, nCmdShow);
-    UpdateWindow(hWnd);
+  /*  ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);*/
 
     return TRUE;
 }

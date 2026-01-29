@@ -19,7 +19,7 @@ void PlayScene::Initialize()
 void PlayScene::Draw()
 {
 	
-	int box[10][10] ={{1,1,1,1,1,1,1,1,1 },
+	/*int box[10][10] ={{1,1,1,1,1,1,1,1,1 },
 				     { 1,1,1,1,1,1,1,1,1,1 },
 				     { 1,1,1,1,1,1,1,1,1,1 },
 				     { 1,1,1,1,1,1,1,1,1,1 },
@@ -41,7 +41,7 @@ void PlayScene::Draw()
 		}
 		transform_.position_.z = i;
 	}
-  	fbx->Draw(transform_);
+  	fbx->Draw(transform_);*/
 }
 
 void PlayScene::Update()

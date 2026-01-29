@@ -1,6 +1,9 @@
 #include "Direct3D.h"
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
+#include "../imgui/imgui.h"
+#include "../imgui/imgui_impl_dx11.h"
+#include "../imgui/imgui_impl_win32.h"
 
 using namespace DirectX;
 namespace Direct3D
@@ -287,12 +290,20 @@ void Direct3D::BeginDraw()
 
 void Direct3D::EndDraw()
 {
+    ImGui::Button("Button");
+    ImGui::Render();
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
     //スワップ（バックバッファを表に表示する）
     pSwapChain->Present(0, 0);
 }
 
 void Direct3D::Release()
 {
+    ImGui_ImplDX11_Shutdown();
+    ImGui_ImplWin32_Shutdown();
+    ImGui::DestroyContext();
+
     SAFE_RELEASE(pRasterizerState);
     SAFE_RELEASE(pVertexLayout);
     SAFE_RELEASE(pPixelShader);

@@ -139,7 +139,7 @@ void Stage::Release()
 
 //BOOL Stage::localProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 //{
-//	//switch (message) {
+//	////switch (message) {
 //	//case WM_COMMAND: //ƒRƒ“ƒgƒ[ƒ‹‚Ì‘€ì
 //	//	switch (LOWORD(wParam))
 //	//	{

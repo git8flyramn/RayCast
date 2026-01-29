@@ -22,12 +22,12 @@ void TitleScene::Update()
 }
 
 void TitleScene::Draw()
-{
+{/*
 	if (Input::IsKeyDown(DIK_SPACE))
 	{
 		SceneManager* pSceneManager = (SceneManager*)FindObject("SceneManager");
 		pSceneManager->ChangeScene(SCENE_ID_PLAY);
-	}
+	}*/
 }
 
 void TitleScene::Release()
