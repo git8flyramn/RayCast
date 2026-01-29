@@ -13,11 +13,13 @@
 #include "Resource.h"
 #include "Stage.h"
 
-#pragma comment(lib, "winmm.lib")
-
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
+
+#pragma comment(lib, "winmm.lib")
+
+
 
 HWND hWnd = nullptr;
 
@@ -40,8 +42,8 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    DlgProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    ManuProc(HWND, UINT, WPARAM, LPARAM);
+//INT_PTR CALLBACK    DlgProc(HWND, UINT, WPARAM, LPARAM);
+//INT_PTR CALLBACK    ManuProc(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
@@ -97,6 +99,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     ImGui_ImplWin32_Init(hWnd);
     ImGui_ImplDX11_Init(Direct3D::pDevice, Direct3D::pContext);
     ImGui::StyleColorsLight();
+
+
     Camera::Initialize();
     Input::Initialize(hWnd); //入力の初期化
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MYFIRSTGAME));
@@ -106,12 +110,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     pRootJob = new RootJob(nullptr);
    //ゲームで増える物
     pRootJob->Initialize();
-   /* HWND hDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd,ManuProc, 0);
+  /*  HWND hDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd,ManuProc, 0);
     ShowWindow(hDlg, SW_SHOW);*/
-   
- 
-   // Transform* transform = new Transform();
-  // hr = sprite->Initialize();
   //  ZeroMemory(&msg, sizeof(msg));
     // メイン メッセージ ループ:　ユーザー操作(クリックやキー入力)を受け取り、処理を続ける仕組み
     while (msg.message != WM_QUIT)
@@ -129,6 +129,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         static DWORD startTime = timeGetTime();//初回の時間を保存
         DWORD nowTime = timeGetTime();//現在の時間を取得
         static DWORD lastUpdateTime = nowTime;
+       
         if (nowTime - startTime >= 1000)
         {
             std::string str = "FPS" + std::to_string(nowTime - startTime) + "," + std::to_string(countFps);
@@ -173,14 +174,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         //}
         
        
-        if (Input::IsKeyDown(DIK_D))
-        {
-           /*  HRESULT hr = DialogBox(hInst,MAKEINTRESOURCE(IDD_DIALOG1),hWnd,DlgProc);
-            if (hr == IDOK)
-            {
-                PostQuitMessage(0);
-           }*/
-        }
+        //if (Input::IsKeyDown(DIK_D))
+        //{
+        //   /*  HRESULT hr = DialogBox(hInst,MAKEINTRESOURCE(IDD_DIALOG1),hWnd,DlgProc);
+        //    if (hr == IDOK)
+        //    {
+        //        PostQuitMessage(0);
+        //   }*/
+        //}
         Direct3D::EndDraw();
 
       /*  pRootJob->DrawSub();
@@ -293,10 +294,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
         return FALSE;
     }
 
-  /*  ShowWindow(hWnd, nCmdShow);
-    UpdateWindow(hWnd);*/
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
 
-    return TRUE;
+  return TRUE;
 }
 //ImGuiのメッセージ         
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler
@@ -355,13 +356,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         int x = LOWORD(lParam);
         int y = HIWORD(lParam);
         Input::SetMousePosition(x, y);
-        OutputDebugStringA((std::to_string(x) + "." + std::to_string(y) + "\n").c_str());
+       // OutputDebugStringA((std::to_string(x) + "." + std::to_string(y) + "\n").c_str());
     }
     break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
-
-
     }
     return 0;
 }

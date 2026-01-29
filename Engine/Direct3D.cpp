@@ -290,9 +290,9 @@ void Direct3D::BeginDraw()
 
 void Direct3D::EndDraw()
 {
-    ImGui::Button("Button");
+    /*ImGui::Button("Button");
     ImGui::Render();
-    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());*/
 
     //スワップ（バックバッファを表に表示する）
     pSwapChain->Present(0, 0);
@@ -300,9 +300,9 @@ void Direct3D::EndDraw()
 
 void Direct3D::Release()
 {
-    ImGui_ImplDX11_Shutdown();
+    /*ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
-    ImGui::DestroyContext();
+    ImGui::DestroyContext();*/
 
     SAFE_RELEASE(pRasterizerState);
     SAFE_RELEASE(pVertexLayout);

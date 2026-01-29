@@ -48,9 +48,9 @@ public:
     void Draw() override;
     void Update()override;
     void Release()override;
-  //  BOOL localProc(HWND hWnd, UINT messsage, WPARAM wParam, LPARAM lParam);
+   // BOOL localProc(HWND hWnd, UINT messsage, WPARAM wParam, LPARAM lParam);
     //操作パネル用プロシージャ
-    //BOOL ManuProc(HWND hWnd, UINT messsage, WPARAM wParam, LPARAM lParam);
+   // BOOL ManuProc(HWND hWnd, UINT messsage, WPARAM wParam, LPARAM lParam);
 private:
    
     //sData sTable[ZSIZE][XSIZE];

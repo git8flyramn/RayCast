@@ -24,17 +24,24 @@ cbuffer global : register(b0)
     
 };
 
+cbuffer gStage : register(b1)
+{
+    float4 lightPosition;
+    float4 eyePosition;
+}
+
 //───────────────────────────────────────
 // 頂点シェーダー出力＆ピクセルシェーダー入力データ構造体
 //───────────────────────────────────────
 struct VS_OUT
 {
                  //セマンティクス
-    float4 wpos : SV_Position; //ワールド座標
+    float4 wpos : Position; //ワールド座標
     float4 spos : SP_POSITION; //スクリーン座標
     float2 uv : TEXCOORD; //UV座標
     float4 color : COLOR; //色(明るさ)
     float4 normal : NORMAL; //法線ベクトル
+    float4 eyev : POSITION1; //視線ポジション
 };
 
 //───────────────────────────────────────
@@ -53,10 +60,13 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
     outData.normal = mul(normal, matNomal);
     uv.w = 1;
     outData.uv = uv.xy;
+    outData.eyev = eyePosition - outData.wpos;
     
-    normal = mul(normal, matNomal); //法線ベクトルをワールドビュープロジェクション行列で変換
-    normal = normalize(normal); //法線ベクトルの長さを正規化->1にする
-    normal.w = 0;
+    
+    //normal = mul(normal, matNomal); //法線ベクトルをワールドビュープロジェクション行列で変換
+    //normal = normalize(normal); //法線ベクトルの長さを正規化->1にする
+    //normal.w = 0;
+    
     //float4 light = float4(-1, 0.5, -0.7, 0);
     
     //light = normalize(light);
@@ -72,22 +82,23 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 //───────────────────────────────────────
 float4 PS(VS_OUT inData) : SV_Target
 {
-    float4 light = float4(-1, 0.5, -0.7, 0);
+   // float4 light = float4(-1, 0.5, -0.7, 0);
     float4 color;
-    float3 L;
-    float3 N;
-    float i;
-    L = normalize(light.xyz - inData.wpos.xyz);
-    N = normalize(inData.normal.xyz);
-    i = saturate(dot(L, N));
+    float4 diffuse;
+    float4 ambientColor = ambient;
+    float4 ambentFactor = { 0.2, 0.2, 0.2, 1.0 };
+    float3 dir = normalize(lightPosition.xyz);//ピクセル位置のポリゴン3次元座標 = wpos
+                                        
+    diffuse = diffuseColor * diffusefactor * clamp(dot(inData.normal.xyz, dir), 0, 1);
     
     if (useTexture == 1)
     {
-        color = g_texture.Sample(g_sampler, inData.uv);
+        //テクスチャから色を取得
+        color = g_texture.Sample(g_sampler, inData.uv) + ambientColor * ambentFactor;
     }
     else
     {
-        color = diffuseColor;
+        color = diffuse + diffuseColor * ambentFactor;
     }
-    return color * inData.color;
+    return color;
 }
