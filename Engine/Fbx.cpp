@@ -329,6 +329,7 @@ void Fbx::InitMaterial(FbxNode* pNode)
 			pMaterialList_[i].diffuse = XMFLOAT4((float)diffuseColor[0], (float)diffuseColor[1], (float)diffuseColor[2], 1.0f);
 			pMaterialList_[i].factor = XMFLOAT4((float)diffuse, (float)diffuse,(float)diffuse,(float)diffuse);
 			pMaterialList_[i].ambient = { (float)ambient[0],(float)ambient[1],(float)ambient[2],1.0f };
+			
 			if (pMaterial->GetClassId().Is(FbxSurfacePhong::ClassId))
 			{
 				FbxDouble3 specular = pMaterial->Specular;
@@ -346,6 +347,7 @@ void Fbx::InitMaterial(FbxNode* pNode)
 			//マテリアルの色
 			FbxSurfaceLambert* pMaterial = (FbxSurfaceLambert*)pNode->GetMaterial(i);
 			FbxDouble3 diffuse = pMaterial->Diffuse;
+
 			pMaterialList_[i].diffuse = XMFLOAT4((float)diffuse[0], (float)diffuse[1], (float)diffuse[2], 1.0f);
 			FbxSurfacePhong* pPhong = (FbxSurfacePhong*)pNode->GetMaterial(i);
 			FbxDouble factor = pPhong->DiffuseFactor;//拡散反射強度
