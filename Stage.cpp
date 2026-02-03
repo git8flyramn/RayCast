@@ -6,6 +6,7 @@
 #include "Engine/Camera.h"
 #include "Engine/Input.h"
 #include <cassert>
+
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
@@ -58,10 +59,19 @@ void Stage::Initialize()
 	}*/
 
 	InitConstantBuffer();
-	hDonut_ = Model::Load("Donut.fbx");
-	assert(hDonut_ >= 0);
+	hball_ = Model::Load("Ball.fbx");
+	assert(hball_ >= 0);
+
 	hRoom_ = Model::Load("Room.fbx");
 	assert(hRoom_ >= 0);
+
+	hGround_ = Model::Load("Block.fbx");
+	assert(hRoom_ >= 0); 
+	               
+	hDonut_ = Model::Load("DONUT2.fbx");
+	assert(hDonut_ >= 0);
+	
+
 	Camera::SetPosition({ 0,0.8,-2.8 });
 	Camera::SetTarget({0,0.8,0});
 }
@@ -134,7 +144,7 @@ void Stage::Draw()
 
 	}*/
 	
-//	ImGui::Text("Stage Class rot:%lf", tDount.rotate_.z);
+	//ImGui::Text("Stage Class rot:%lf", tDount.rotate_.z);
 	
 
 
@@ -186,11 +196,13 @@ void Stage::Update()
 	if (Input::IsKey(DIK_DOWN))
 	{
 		XMFLOAT4 p = Direct3D::GetLightPos();
-		p = { p.x,p.y + 0.01f,p.z,p.w };
+		p = { p.x,p.y - 0.01f,p.z,p.w };
 		Direct3D::SetLightPos(p);
 	}
 	
 	CONSTANT_BUFFER_STAGE cb;
+	cb.lightPosition = Direct3D::GetLightPos();
+	XMStoreFloat4(&cb.eyePosition,Camera::GetPosition());
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
 	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る

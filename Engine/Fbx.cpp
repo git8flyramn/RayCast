@@ -295,7 +295,7 @@ void Fbx::InitMaterial(FbxNode* pNode)
 		//i番目のマテリアル情報を取得
 		FbxSurfaceMaterial* pMaterial = pNode->GetMaterial(i);
 		//テクスチャ情報
-		FbxProperty  lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
+	    FbxProperty  lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
 		//テクスチャの数数
 		int fileTextureCount = lProperty.GetSrcObjectCount<FbxFileTexture>();
 
@@ -325,15 +325,16 @@ void Fbx::InitMaterial(FbxNode* pNode)
 			pMaterialList_[i].pTexture = nullptr;
 			//マテリアルの色
 			FbxSurfaceLambert* pMaterial = (FbxSurfaceLambert*)pNode->GetMaterial(i);
-			FbxDouble3  diffuse = pMaterial->Diffuse;
-			pMaterialList_[i].diffuse =  XMFLOAT4((float)diffuse[0], (float)diffuse[1], (float)diffuse[2], 1.0f);
+			FbxDouble diffeuse = pMaterial->DiffuseFactor;
+			FbxDouble3  diffuseColor = pMaterial->Diffuse;
+			FbxDouble3 ambient = pMaterial->Ambient;//環境反射率
+			pMaterialList_[i].diffuse =  XMFLOAT4((float)diffuseColor[0], (float)diffuseColor[1], (float)diffuseColor[2], 1.0f);
+			pMaterialList_[i].factor = XMFLOAT4((float)diffeuse, (float)diffeuse, (float)diffeuse, (float)diffeuse);
+			pMaterialList_[i].ambient = { (float)ambient[0], (float)ambient[1], (float)ambient[2], 1.0f };
+			
 			FbxSurfacePhong* pPhong = (FbxSurfacePhong*)pNode->GetMaterial(i);
 			FbxDouble factor = pPhong->DiffuseFactor;//拡散反射強度
-			pMaterialList_[i].factor = XMFLOAT4((float)factor, (float)factor, (float)factor, (float)factor);
 			
-			FbxDouble3 ambient = pPhong->Ambient;//環境反射率
-			pMaterialList_[i].ambient = XMFLOAT4((float)ambient[0], (float)ambient[1], (float)ambient[2],1.0f);
-		
 			if (pPhong->GetClassId().Is(FbxSurfacePhong::ClassId))
 			{
 				FbxDouble specular = pPhong->SpecularFactor;//鏡面反射率
