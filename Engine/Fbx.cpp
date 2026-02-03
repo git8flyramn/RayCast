@@ -97,20 +97,25 @@ void Fbx::Draw(Transform& transform)
 
 	for (int i = 0; i < materialCount_; i++)
 	{
-		if (pMaterialList_[i].pTexture)
-		{
-			cb.materialFlag = TRUE;
-			cb.diffuse = XMFLOAT4(1, 1, 1, 1);//保険
-		}
-		else
-		{
-			cb.materialFlag = FALSE;
-			cb.diffuse = pMaterialList_[i].diffuse;
-		}
+		//if (pMaterialList_[i].pTexture)
+		//{
+		//	cb.materialFlag = TRUE;
+		//	cb.diffuse = XMFLOAT4(1, 1, 1, 1);//保険
+		//}
+		//else
+		//{
+		//	cb.materialFlag = FALSE;
+		//	cb.diffuse = pMaterialList_[i].diffuse;
+		//}
 		//コンスタントバッファにデータ転送
-		cb.ambient = pMaterialList_[i].ambient;
-		cb.specular= pMaterialList_[i].specular;
+		
+		cb.matWVP    = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix());
+		cb.matNormal = transform.GetNormalMatrix();
+		cb.matWolrd  = XMMatrixTranspose(transform.GetWorldMatrix());
+		cb.ambient   = pMaterialList_[i].ambient;
+		cb.specular  = pMaterialList_[i].specular;
 		cb.shininess = XMFLOAT4(pMaterialList_[i].shiniess, pMaterialList_[i].shiniess, pMaterialList_[i].shiniess, pMaterialList_[i].shiniess);
+		cb.diffuse = pMaterialList_[i].diffuse;
 		cb.diffuseFactor = pMaterialList_[i].factor;
 		cb.materialFlag = pMaterialList_[i].pTexture != nullptr;
 

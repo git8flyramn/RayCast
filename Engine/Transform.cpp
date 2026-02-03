@@ -42,7 +42,12 @@ XMMATRIX Transform::GetWorldMatrix()
 
 XMMATRIX Transform::GetNormalMatrix()
 {
-    return matRotate_ * XMMatrixInverse(nullptr,matScale_);
+    //return matRotate_ * XMMatrixInverse(nullptr,matScale_);
+    //World‚Ì‹t“]’u(•½sˆÚ“®¬•ª‚Ì–³‹)
+    XMMATRIX world = GetWorldMatrix();
+    XMMATRIX invWorld = XMMatrixInverse(nullptr, world);
+    return XMMatrixTranspose(invWorld);
+
 }
 
 

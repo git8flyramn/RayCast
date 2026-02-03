@@ -7,6 +7,7 @@ using std::string;
 using std::list;
 
 class SphereCollider;
+
 class GameObject
 {
 public:

@@ -86,7 +86,7 @@ void Stage::Draw()
 	
 	Transform tr;
 	tr.position_ = { 0,0,0 };
-	tr.rotate_ = { 0,0,0 };
+	tr.rotate_ = { 0,180,0 };
 	Model::SetTransform(hRoom_, tr);
 	Model::Draw(hRoom_);
 	/*for (int i = 0; i < ZSIZE; i++)

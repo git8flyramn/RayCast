@@ -36,7 +36,7 @@ cbuffer gStage : register(b1)
 struct VS_OUT
 {
                  //セマンティクス
-    float4 wpos : Position; //ワールド座標
+    float4 wpos : Position0; //ワールド座標
     float4 spos : SP_POSITION; //スクリーン座標
     float2 uv : TEXCOORD; //UV座標
     float4 color : COLOR; //色(明るさ)
@@ -57,8 +57,12 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
     outData.spos = mul(pos, matWVP);
 	//ワールド座標も変換し、ピクセルシェーダーへ
     outData.wpos = mul(pos, matWolrd);
+    float4 n = normal;
+    n.w = 0;
     outData.normal = mul(normal, matNomal);
-    uv.w = 1;
+    outData.normal.xyz = normalize(mul(n, matNomal).xyz);
+    
+    uv.w = 0;
     outData.uv = uv.xy;
     outData.eyev = eyePosition - outData.wpos;
     
@@ -83,26 +87,47 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 float4 PS(VS_OUT inData) : SV_Target
 {
    // float4 light = float4(-1, 0.5, -0.7, 0);
-    float4 color;
     float4 diffuse;
     float4 ambientColor = ambient;
     float4 ambentFactor = { 0.2, 0.2, 0.2, 1.0 };
     float3 dir = normalize(lightPosition.xyz);//ピクセル位置のポリゴン3次元座標 = wpos
-    float4 specularCol;
+    
+    float3 k = { 0.2f, 0.2f, 1.0f };
+    float len = length(lightPosition.xyz - inData.wpos.xyz);
+    float dTerm = 1.0 / (k.x + k.y * len + k.z * len * len);//距離減衰計算
+    float3 N = normalize(inData.normal.xyz);
+    diffuse = diffuseColor * diffusefactor * clamp(dot(N, dir), 0, 1) * dTerm;
+    
+    float3 L = normalize(lightPosition.xyz - inData.wpos.xyz);
+    float ndotl = saturate(dot(N, L));
+    float spec = 0.0f;
+    
+    if(ndotl > 0.0)
+    {
+        float3 R = reflect(-L, N);
+        float3 V = normalize(inData.eyev.xyz);
+        spec = pow(saturate(dot(R, V)), 32.0) * ndotl;
+
+    }
+    
+    float4 specularCol = specular * spec;
+    float4 diffuseTerm;
+    float4 specularTerm = specularCol * dTerm;
+    float ambientTerm;
+    float4 color;
     diffuse = diffuseColor * diffusefactor * clamp(dot(inData.normal.xyz, dir), 0, 1);
     
-    float4 diffuseTerm;
-    float4 specularTerm = specularCol;
     if (useTexture == 1)
     {
         //テクスチャから色を取得
-        color = g_texture.Sample(g_sampler, inData.uv) + ambientColor * ambentFactor;
+        diffuseTerm = diffuse * g_texture.Sample(g_sampler, inData.uv);
+        ambientTerm = ambentFactor * g_texture.Sample(g_sampler, inData.uv);
     }
     else
     {
-        color = diffuse + diffuseColor * ambentFactor;
+        diffuseTerm = diffuse;
+        ambientTerm = ambentFactor * diffuseColor;
     }
-    float4 ambientTerm;
-    //color = diffuseTerm + specularTerm + ambientTerm;
+    color = diffuseTerm + specularTerm + ambientTerm;
     return color;
 }
