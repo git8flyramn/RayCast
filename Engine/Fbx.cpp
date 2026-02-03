@@ -317,24 +317,37 @@ void Fbx::InitMaterial(FbxNode* pNode)
 				pMaterialList_[i].pTexture = nullptr;
 				//テクスチャファイルが無いときの処理(エラー）
 			}
-
-		}
+			FbxSurfacePhong* pMaterial = (FbxSurfacePhong*)pNode->GetMaterial(i);
+			FbxDouble diffuse = pMaterial->DiffuseFactor;
+			FbxDouble3 diffuseColor = pMaterial->Diffuse;
+			FbxDouble3 ambient = pMaterial->Ambient;
+			pMaterialList_[i].diffuse = XMFLOAT4((float)diffuseColor[0], (float)diffuseColor[1], (float)diffuseColor[2], 1.0f);
+			pMaterialList_[i].factor = XMFLOAT4((float)diffuse, (float)diffuse,(float)diffuse,(float)diffuse);
+			pMaterialList_[i].ambient = { (float)ambient[0],(float)ambient[1],(float)ambient[2],1.0f };
+			if (pMaterial->GetClassId().Is(FbxSurfacePhong::ClassId))
+			{
+				FbxDouble3 specular = pMaterial->Specular;
+				FbxDouble shininess = pMaterial->Shininess; //4つとも同じ値でセット
+				//ここで、自分のpMaterialList[i]に値を設定
+				pMaterialList_[i].specular = { (float)specular[0],(float)specular[1],(float)specular[2],1.0f };
+				pMaterialList_[i].shiniess = shininess;
+			}
+		}  
+			                                  
 		//テクスチャ無し
 		else
 		{
 			pMaterialList_[i].pTexture = nullptr;
 			//マテリアルの色
 			FbxSurfaceLambert* pMaterial = (FbxSurfaceLambert*)pNode->GetMaterial(i);
-			FbxDouble diffeuse = pMaterial->DiffuseFactor;
-			FbxDouble3  diffuseColor = pMaterial->Diffuse;
-			FbxDouble3 ambient = pMaterial->Ambient;//環境反射率
-			pMaterialList_[i].diffuse =  XMFLOAT4((float)diffuseColor[0], (float)diffuseColor[1], (float)diffuseColor[2], 1.0f);
-			pMaterialList_[i].factor = XMFLOAT4((float)diffeuse, (float)diffeuse, (float)diffeuse, (float)diffeuse);
-			pMaterialList_[i].ambient = { (float)ambient[0], (float)ambient[1], (float)ambient[2], 1.0f };
-			
+			FbxDouble3 diffuse = pMaterial->Diffuse;
+			pMaterialList_[i].diffuse = XMFLOAT4((float)diffuse[0], (float)diffuse[1], (float)diffuse[2], 1.0f);
 			FbxSurfacePhong* pPhong = (FbxSurfacePhong*)pNode->GetMaterial(i);
 			FbxDouble factor = pPhong->DiffuseFactor;//拡散反射強度
+			pMaterialList_[i].factor = XMFLOAT4((float)factor, (float)factor, (float)factor, 1.0f);
 			
+			FbxDouble3 ambient = pPhong->Ambient; //環境反射率;
+			pMaterialList_[i].ambient = XMFLOAT4((float)ambient[0], (float)ambient[1], (float)ambient[2], 1.0f);
 			if (pPhong->GetClassId().Is(FbxSurfacePhong::ClassId))
 			{
 				FbxDouble specular = pPhong->SpecularFactor;//鏡面反射率
@@ -367,6 +380,8 @@ void Fbx::RayCast(RayCastData& rayData)
 			VERTEX& V0 = pVertices_[ indices[i + 0] ];
 			VERTEX& V1 = pVertices_[ indices[i + 1] ];
 			VERTEX& V2 = pVertices_[ indices[i + 2] ];
+
+			rayData.isHit = TriangleTests::Intersects(XMLoadFloat4(&rayData.start), XMLoadFloat4(&rayData.dir), V0.position, V1.position, V2.position, rayData.dist);
 	
 			
 		}
@@ -389,9 +404,9 @@ void Fbx::RayCast(RayCastData& rayData)
 float Math::Det(XMFLOAT3 a, XMFLOAT3 b, XMFLOAT3 c)
 {
 	// 3x3 行列の行列式 
-// | a.x a.y a.z | 
-// | b.x b.y b.z | 
-// | c.x c.y c.z |
+ /*| a.x a.y a.z | 
+ | b.x b.y b.z | 
+ | c.x c.y c.z |*/
 	return (a.x * b.x * c.x) + (a.y * b.y * c.y) + (a.z * b.z * c.z) - (a.x * b.x * c.x) - (a.y * b.y * c.y) - (a.z * b.z * c.z);
 }
 

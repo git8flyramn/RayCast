@@ -88,9 +88,11 @@ float4 PS(VS_OUT inData) : SV_Target
     float4 ambientColor = ambient;
     float4 ambentFactor = { 0.2, 0.2, 0.2, 1.0 };
     float3 dir = normalize(lightPosition.xyz);//ピクセル位置のポリゴン3次元座標 = wpos
-                                        
+    float4 specularCol;
     diffuse = diffuseColor * diffusefactor * clamp(dot(inData.normal.xyz, dir), 0, 1);
     
+    float4 diffuseTerm;
+    float4 specularTerm = specularCol;
     if (useTexture == 1)
     {
         //テクスチャから色を取得
@@ -100,5 +102,7 @@ float4 PS(VS_OUT inData) : SV_Target
     {
         color = diffuse + diffuseColor * ambentFactor;
     }
+    float4 ambientTerm;
+    //color = diffuseTerm + specularTerm + ambientTerm;
     return color;
 }
