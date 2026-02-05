@@ -388,7 +388,8 @@ void Fbx::RayCast(RayCastData& rayData)
 			VERTEX& V1 = pVertices_[ indices[i + 1] ];
 			VERTEX& V2 = pVertices_[ indices[i + 2] ];
 
-			rayData.isHit = TriangleTests::Intersects(XMLoadFloat4(&rayData.start), XMLoadFloat4(&rayData.dir), V0.position, V1.position, V2.position, rayData.dist);
+			rayData.isHit = TriangleTests::Intersects(XMLoadFloat4(&rayData.start), XMLoadFloat4(&rayData.dir),
+			                               V0.position, V1.position, V2.position, rayData.dist);
 	
 			
 		}

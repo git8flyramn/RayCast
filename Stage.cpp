@@ -62,11 +62,11 @@ void Stage::Initialize()
 	hball_ = Model::Load("Ball.fbx");
 	assert(hball_ >= 0);
 
-	hRoom_ = Model::Load("Room.fbx");
-	assert(hRoom_ >= 0);
+	/*hRoom_ = Model::Load("Room.fbx");
+	assert(hRoom_ >= 0);*/
 
 	hGround_ = Model::Load("Block.fbx");
-	assert(hRoom_ >= 0); 
+	assert(hGround_ >= 0); 
 	               
 	hDonut_ = Model::Load("DONUT2.fbx");
 	assert(hDonut_ >= 0);
@@ -87,8 +87,8 @@ void Stage::Draw()
 	Transform tr;
 	tr.position_ = { 0,0,0 };
 	tr.rotate_ = { 0,180,0 };
-	Model::SetTransform(hRoom_, tr);
-	Model::Draw(hRoom_);
+	Model::SetTransform(hGround_, tr);
+	Model::Draw(hGround_);
 	/*for (int i = 0; i < ZSIZE; i++)
 	{
 		for (int j = 0; j < XSIZE; j++)
