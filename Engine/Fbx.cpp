@@ -71,7 +71,7 @@ void Fbx::Draw(Transform& transform)
 	Direct3D::SetShader(SHADER_3D);
 	transform.Calculation();
 
-	
+
 
 	//for (int i = 0;i < materialCount_;i++)
 	//{
@@ -107,11 +107,11 @@ void Fbx::Draw(Transform& transform)
 		//}
 		//コンスタントバッファにデータ転送
 		CONSTANT_BUFFER cb;
-		cb.matWVP    = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix());
+		cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
 		cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
-		cb.matWolrd  = XMMatrixTranspose(transform.GetWorldMatrix());
-		cb.ambient   = pMaterialList_[i].ambient;
-		cb.specular  = pMaterialList_[i].specular;
+		cb.matWolrd = XMMatrixTranspose(transform.GetWorldMatrix());
+		cb.ambient = pMaterialList_[i].ambient;
+		cb.specular = pMaterialList_[i].specular;
 		cb.shininess = XMFLOAT4(pMaterialList_[i].shiniess, pMaterialList_[i].shiniess, pMaterialList_[i].shiniess, pMaterialList_[i].shiniess);
 		cb.diffuse = pMaterialList_[i].diffuse;
 		cb.diffuseFactor = pMaterialList_[i].factor;
@@ -298,7 +298,7 @@ void Fbx::InitMaterial(FbxNode* pNode)
 		//i番目のマテリアル情報を取得
 		FbxSurfaceMaterial* pMaterial = pNode->GetMaterial(i);
 		//テクスチャ情報
-	    FbxProperty  lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
+		FbxProperty  lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
 		//テクスチャの数数
 		int fileTextureCount = lProperty.GetSrcObjectCount<FbxFileTexture>();
 
@@ -325,9 +325,9 @@ void Fbx::InitMaterial(FbxNode* pNode)
 			FbxDouble3 diffuseColor = pMaterial->Diffuse;
 			FbxDouble3 ambient = pMaterial->Ambient;
 			pMaterialList_[i].diffuse = XMFLOAT4((float)diffuseColor[0], (float)diffuseColor[1], (float)diffuseColor[2], 1.0f);
-			pMaterialList_[i].factor = XMFLOAT4((float)diffuse, (float)diffuse,(float)diffuse,(float)diffuse);
+			pMaterialList_[i].factor = XMFLOAT4((float)diffuse, (float)diffuse, (float)diffuse, (float)diffuse);
 			pMaterialList_[i].ambient = { (float)ambient[0],(float)ambient[1],(float)ambient[2],1.0f };
-			
+
 			if (pMaterial->GetClassId().Is(FbxSurfacePhong::ClassId))
 			{
 				FbxDouble3 specular = pMaterial->Specular;
@@ -336,8 +336,8 @@ void Fbx::InitMaterial(FbxNode* pNode)
 				pMaterialList_[i].specular = { (float)specular[0],(float)specular[1],(float)specular[2],1.0f };
 				pMaterialList_[i].shiniess = shininess;
 			}
-		}  
-			                                  
+		}
+
 		//テクスチャ無し
 		else
 		{
@@ -349,8 +349,8 @@ void Fbx::InitMaterial(FbxNode* pNode)
 			pMaterialList_[i].diffuse = XMFLOAT4((float)diffuse[0], (float)diffuse[1], (float)diffuse[2], 1.0f);
 			FbxSurfacePhong* pPhong = (FbxSurfacePhong*)pNode->GetMaterial(i);
 			FbxDouble factor = pPhong->DiffuseFactor;//拡散反射強度
-			pMaterialList_[i].factor = XMFLOAT4((float)factor, (float)factor, (float)factor,(float)factor);
-			
+			pMaterialList_[i].factor = XMFLOAT4((float)factor, (float)factor, (float)factor, (float)factor);
+
 			FbxDouble3 ambient = pPhong->Ambient; //環境反射率;
 			pMaterialList_[i].ambient = XMFLOAT4((float)ambient[0], (float)ambient[1], (float)ambient[2], 1.0f);
 			if (pPhong->GetClassId().Is(FbxSurfacePhong::ClassId))
@@ -367,7 +367,7 @@ void Fbx::InitMaterial(FbxNode* pNode)
 				pMaterialList_[i].shiniess = 10.0f;
 			}
 		}
-    	
+
 		//ここで、自分のマテリアル構造体に詰め込む
 	}
 
@@ -382,14 +382,14 @@ void Fbx::RayCast(RayCastData& rayData)
 		//全ポリゴンに対して
 		for (int i = 0; i < (int)indices.size(); i += 3)
 		{
-			VERTEX& V0 = pVertices_[ indices[i + 0] ];
-			VERTEX& V1 = pVertices_[ indices[i + 1] ];
-			VERTEX& V2 = pVertices_[ indices[i + 2] ];
+			VERTEX& V0 = pVertices_[indices[i + 0]];
+			VERTEX& V1 = pVertices_[indices[i + 1]];
+			VERTEX& V2 = pVertices_[indices[i + 2]];
 
 			rayData.isHit = TriangleTests::Intersects(XMLoadFloat4(&rayData.start), XMLoadFloat4(&rayData.dir),
-			                               V0.position, V1.position, V2.position, rayData.dist);
-	
-			
+				V0.position, V1.position, V2.position, rayData.dist);
+
+
 		}
 		//rayData.isHit = InterSects(V0, V1, V2, レイキャストのデータ);
 		if (rayData.isHit)
@@ -410,8 +410,8 @@ void Fbx::RayCast(RayCastData& rayData)
 float Math::Det(XMFLOAT3 a, XMFLOAT3 b, XMFLOAT3 c)
 {
 	// 3x3 行列の行列式 
- /*| a.x a.y a.z | 
- | b.x b.y b.z | 
+ /*| a.x a.y a.z |
+ | b.x b.y b.z |
  | c.x c.y c.z |*/
 	return (a.x * b.x * c.x) + (a.y * b.y * c.y) + (a.z * b.z * c.z) - (a.x * b.x * c.x) - (a.y * b.y * c.y) - (a.z * b.z * c.z);
 }
@@ -425,7 +425,7 @@ bool Math::Intersect(XMFLOAT3 origin, XMFLOAT3 ray, XMFLOAT3 v0, XMFLOAT3  v1, X
 	XMVECTOR vV0 = XMLoadFloat3(&v0); //三角形の頂点v0
 	XMVECTOR vV1 = XMLoadFloat3(&v1); //三角形の頂点v1
 	XMVECTOR vV2 = XMLoadFloat3(&v2); //三角形の頂点v2
-	
+
 	//三角形の2本の辺ベクトルを作る
 	XMVECTOR vEdge1 = vV1 - vV0;
 	XMVECTOR vEdge2 = vV2 - vV0;
@@ -441,12 +441,12 @@ bool Math::Intersect(XMFLOAT3 origin, XMFLOAT3 ray, XMFLOAT3 v0, XMFLOAT3  v1, X
 	//連立方程式
 	// t*ray = (v0 - origin) + u*edge1 + v*edge2を作るための準備
 	XMFLOAT3 d;
-	XMStoreFloat3(&d,vEdge1);
+	XMStoreFloat3(&d, vEdge1);
 
 	//rayを反転()
 	//連立方程式を
 	//u*edge1 + v*edge2 + t*(-ray) = d
-    //の形に揃えるため、rayに-1を掛ける
+	//の形に揃えるため、rayに-1を掛ける
 	ray = {
 		ray.x * -1.0f,
 		ray.y * -1.0f,
@@ -454,7 +454,7 @@ bool Math::Intersect(XMFLOAT3 origin, XMFLOAT3 ray, XMFLOAT3 v0, XMFLOAT3  v1, X
 	};
 
 	//連立方程式(行列式)
-	float denom = Det(edge1,edge2,ray);
+	float denom = Det(edge1, edge2, ray);
 	//平行(解なし)の判定
 	if (denom <= 0.0f)
 	{
@@ -462,23 +462,23 @@ bool Math::Intersect(XMFLOAT3 origin, XMFLOAT3 ray, XMFLOAT3 v0, XMFLOAT3  v1, X
 		return false;
 	}
 	//クラメルの公式で、u,v,tを求める
-   
+
 	//u = det(d,edge2, -ray) /denom
 	//交点がedge1 方向にどれだけ進んだか(重心座標 u)
-	float u = Det(d,edge2, ray) / denom;
+	float u = Det(d, edge2, ray) / denom;
 
 	// v = det(edge1, d, -ray) / denom
-    // → 交点が edge2 方向にどれだけ進んだか（重心座標 v）
+	// → 交点が edge2 方向にどれだけ進んだか（重心座標 v）
 	float v = Det(edge1, d, ray) / denom;
-	
+
 	// t = det(edge1, edge2, d) / denom
    // → Ray の開始点から交点までの距離
 	float t = Det(edge1, edge2, d) / denom;
 
 	//--------------------------------------
-    // 三角形内部 ＋ Ray の向き 判定
-    //--------------------------------------
-    // t >= 0  : Ray の前方向に交点がある
+	// 三角形内部 ＋ Ray の向き 判定
+	//--------------------------------------
+	// t >= 0  : Ray の前方向に交点がある
    // u >= 0  : v0 → v1 方向に外れていない
    // v >= 0  : v0 → v2 方向に外れていない
   // u + v <= 1 : 三角形の内部に入っている
@@ -491,5 +491,5 @@ bool Math::Intersect(XMFLOAT3 origin, XMFLOAT3 ray, XMFLOAT3 v0, XMFLOAT3  v1, X
 	{
 		return false;
 	}
-	
+
 }
