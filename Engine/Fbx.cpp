@@ -71,9 +71,7 @@ void Fbx::Draw(Transform& transform)
 	Direct3D::SetShader(SHADER_3D);
 	transform.Calculation();
 
-	CONSTANT_BUFFER cb;
-	cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
-	cb.matNormal = transform.GetNormalMatrix();
+	
 
 	//for (int i = 0;i < materialCount_;i++)
 	//{
@@ -108,9 +106,9 @@ void Fbx::Draw(Transform& transform)
 		//	cb.diffuse = pMaterialList_[i].diffuse;
 		//}
 		//コンスタントバッファにデータ転送
-		
+		CONSTANT_BUFFER cb;
 		cb.matWVP    = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix());
-		cb.matNormal = transform.GetNormalMatrix();
+		cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
 		cb.matWolrd  = XMMatrixTranspose(transform.GetWorldMatrix());
 		cb.ambient   = pMaterialList_[i].ambient;
 		cb.specular  = pMaterialList_[i].specular;
@@ -351,7 +349,7 @@ void Fbx::InitMaterial(FbxNode* pNode)
 			pMaterialList_[i].diffuse = XMFLOAT4((float)diffuse[0], (float)diffuse[1], (float)diffuse[2], 1.0f);
 			FbxSurfacePhong* pPhong = (FbxSurfacePhong*)pNode->GetMaterial(i);
 			FbxDouble factor = pPhong->DiffuseFactor;//拡散反射強度
-			pMaterialList_[i].factor = XMFLOAT4((float)factor, (float)factor, (float)factor, 1.0f);
+			pMaterialList_[i].factor = XMFLOAT4((float)factor, (float)factor, (float)factor,(float)factor);
 			
 			FbxDouble3 ambient = pPhong->Ambient; //環境反射率;
 			pMaterialList_[i].ambient = XMFLOAT4((float)ambient[0], (float)ambient[1], (float)ambient[2], 1.0f);

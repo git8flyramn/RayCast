@@ -65,7 +65,7 @@ void Stage::Initialize()
 	/*hRoom_ = Model::Load("Room.fbx");
 	assert(hRoom_ >= 0);*/
 
-	hGround_ = Model::Load("Block.fbx");
+	hGround_ = Model::Load("Room.fbx");
 	assert(hGround_ >= 0); 
 	               
 	hDonut_ = Model::Load("DONUT2.fbx");
@@ -112,7 +112,7 @@ void Stage::Draw()
 	static Transform tDount;
 	tDount.scale_ = { 0.25,0.25,0.25 };
 	tDount.position_ = { 0,0.5,0 };
-	tDount.rotate_.y += 0.1f;
+	tDount.rotate_.y += 0.1;
 	Model::SetTransform(hDonut_, tDount);
 	Model::Draw(hDonut_);
 
