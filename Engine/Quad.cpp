@@ -126,13 +126,6 @@ void Quad::Draw(XMMATRIX& worldMatrix)
 	ID3D11ShaderResourceView* pSRV = pTexture_->GetSRV();
 	Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
 
-	
-	
-
-	
-
-
-
 	Direct3D::pContext->DrawIndexed(6, 0, 0);
 }
 

@@ -65,6 +65,7 @@ Sprite::Sprite(const std::wstring& filename)
 
 Sprite::~Sprite()
 {
+	Release();
 }
 
 //HRESULT Sprite::Initialize()
@@ -115,6 +116,12 @@ void Sprite::Release()
 	SAFE_RELEASE(pConstantBuffer_);
 	SAFE_RELEASE(pIndexBuffer_);
 	SAFE_RELEASE(pVertexBuffer_);
+
+	if (pTexture_)
+	{
+		delete pTexture_;
+		pTexture_ = nullptr;
+	}
 }
 
 void Sprite::LoadTexture(const char* filename)

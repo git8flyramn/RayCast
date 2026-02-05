@@ -45,6 +45,7 @@ void Model::Release()
 	bool isReffered = false;//参照されているか
 	for (int i = 0; i < modelList.size(); i++)
 	{
+		isReffered = false;
 		for (int j = i + 1; j < modelList.size(); j++)
 		{
 			//modelListの中にあるモデルの消去
@@ -66,9 +67,11 @@ void Model::Release()
 void Model::Raycast(int hModel, RayCastData& rayData)
 {
 	modelList[hModel]->transform_.Calculation();
+
     //ワールド行列取得
 	XMMATRIX worldMatrix = modelList[hModel]->transform_.GetWorldMatrix();
-   //ワールド行列の逆行列
+   
+	//ワールド行列の逆行列
 	XMMATRIX wInv = XMMatrixInverse(nullptr,worldMatrix);
 
 	//レイの通過点を求める(ワールド空間のレイの始点からdir方向に進む直線上の点を計算)
