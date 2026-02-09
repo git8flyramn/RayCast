@@ -123,9 +123,9 @@ void Fbx::Draw(Transform& transform)
 		//}
 		//コンスタントバッファにデータ転送
 		CONSTANT_BUFFER cb;
-		cb.matWVP = XMMatrixTranspose(transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
-		cb.matNormal = XMMatrixTranspose(transform.GetNormalMatrix());
-		cb.matWolrd = XMMatrixTranspose(transform.GetWorldMatrix());
+		cb.matWVP = transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix();
+		cb.matWolrd = transform.GetWorldMatrix();
+		cb.matNormal = transform.GetNormalMatrix();
 		cb.ambient = pMaterialList_[i].ambient;
 		cb.specular = pMaterialList_[i].specular;
 		cb.shininess = { pMaterialList_[i].shiniess,

@@ -1,4 +1,6 @@
 #include "Transform.h"
+
+
 Transform::Transform()
     :matTranslate_(XMMatrixIdentity()),
     matRotate_(XMMatrixIdentity()),
@@ -42,7 +44,6 @@ XMMATRIX Transform::GetWorldMatrix()
 
 XMMATRIX Transform::GetNormalMatrix()
 {
-    //return matRotate_ * XMMatrixInverse(nullptr,matScale_);
     //World‚Ì‹t“]’u(•½sˆÚ“®¬•ª‚Ì–³‹)
     XMMATRIX world = GetWorldMatrix();
     XMMATRIX invWorld = XMMatrixInverse(nullptr, world);

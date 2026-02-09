@@ -12,9 +12,9 @@ SamplerState g_sampler : register(s0); //サンプラー
 //───────────────────────────────────────
 cbuffer global : register(b0)
 {
-    float4x4 matWVP; // ワールド・ビュー・プロジェクションの合成行列
-    float4x4 matWolrd; //ワールド行列
-    float4x4 matNomal;
+    row_major float4x4 matWVP; // ワールド・ビュー・プロジェクションの合成行列
+    row_major float4x4 matWolrd; //ワールド行列
+    row_major float4x4 matNomal;//法線変換行列
     float4 diffuseColor;
     float4 diffusefactor;
     float4 specular; //スペキュラ
