@@ -70,13 +70,13 @@ void Stage::Initialize()
 	assert(hRoom_ >= 0); 
 	
 
-	hGround_ = Model::Load("box.fbx");
+	hGround_ = Model::Load("Ground.fbx");
 	assert(hGround_ >= 0);
 
 	hDonut_ = Model::Load("Donut.fbx");
 	assert(hDonut_ >= 0);
 	
-	Camera::SetPosition({ 0, 0.8, -2.8 });
+	Camera::SetPosition({ 0, 0.8, 5.0 });
 	Camera::SetTarget({ 0,0.8,0 });
 	/*Camera::SetPosition({0, 0.8, -2.8 });
 	Camera::SetTarget({0,0.8,0});*/
