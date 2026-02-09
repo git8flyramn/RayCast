@@ -1,6 +1,6 @@
 #include "SceneManager.h"
 //#include "../PlayScene.h"
-#include "../TestScene.h"
+#include "..//TestScene.h"
 #include "Direct3D.h"
 #include "Model.h"
 SceneManager::SceneManager(GameObject* parent)

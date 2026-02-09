@@ -1,6 +1,8 @@
 #include "Direct3D.h"
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
+
+
 #include "../imgui/imgui.h"
 #include "../imgui/imgui_impl_dx11.h"
 #include "../imgui/imgui_impl_win32.h"
@@ -49,6 +51,8 @@ HRESULT Direct3D::InitShader()
 HRESULT Direct3D::InitShader3D()
 {
     HRESULT hr;
+
+
     // 頂点シェーダの作成（コンパイル）
     ID3DBlob* pCompileVS = nullptr;
     D3DCompileFromFile(L"Simple.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);

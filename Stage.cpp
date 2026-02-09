@@ -17,6 +17,7 @@ Stage::Stage(GameObject* parent) : GameObject(parent, "Stage"), pConstantBuffer_
 	hRoom_ = -1;
 	hDonut_ = -1;
 	hRoom_ = -1;
+	hGround_ = -1;
 }
 
 Stage::~Stage()
@@ -65,9 +66,13 @@ void Stage::Initialize()
 	/*hRoom_ = Model::Load("Room.fbx");
 	assert(hRoom_ >= 0);*/
 
-	hRoom_ = Model::Load("box.fbx");
+	hRoom_ = Model::Load("Room.fbx");
 	assert(hRoom_ >= 0); 
-	               
+	
+
+	hGround_ = Model::Load("box.fbx");
+	assert(hGround_ >= 0);
+
 	hDonut_ = Model::Load("Donut.fbx");
 	assert(hDonut_ >= 0);
 	
@@ -117,6 +122,11 @@ void Stage::Draw()
 	Model::SetTransform(hDonut_, tDount);
 	Model::Draw(hDonut_);
 
+	Transform tGround;
+	tGround.scale_ = { 2.0f,2.0f,2.0f };
+	tGround.position_ = { 0,0.01f,0 };
+	Model::SetTransform(hGround_, tGround);
+	Model::Draw(hGround_);
 	/*static Transform trans;
 	trans.scale_ = { 0.5f,0.5f,1.0f };
 	trans.Calculation();
@@ -145,7 +155,7 @@ void Stage::Draw()
 
 	}*/
 	
-	//ImGui::Text("Stage Class rot:%lf", tDount.rotate_.z);
+//	ImGui::Text("Stage Class rot:%lf", tDount.rotate_.z);
 	
 
 

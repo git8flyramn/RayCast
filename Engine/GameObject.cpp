@@ -1,6 +1,6 @@
 #include "GameObject.h"
 #include "SphereCollider.h"
-#include <Windows.h>
+#include <windows.h>
 GameObject::GameObject(): pParent_(nullptr)
 {
 }
@@ -53,7 +53,7 @@ void GameObject::UpdateSub()
 		}
 		else
 		{
-			itr++;
+			++itr;
 		}
 	}
 
