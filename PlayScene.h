@@ -10,6 +10,5 @@ public:
 	void Draw() override;
 	void Update() override;
 	void Release() override;
-	Fbx* fbx;
 
 };

@@ -3,7 +3,7 @@
 #include "Engine/Texture.h"
 #include "Engine/Fbx.h"
 PlayScene::PlayScene(GameObject* parent)
-	: GameObject(parent, "PlayScene"), fbx(nullptr)
+	: GameObject(parent, "PlayScene")
 {
 }
 

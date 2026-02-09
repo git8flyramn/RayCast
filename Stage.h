@@ -5,9 +5,9 @@
 
 namespace
 {
-    const int XSIZE{ 15 };
+    /*const int XSIZE{ 15 };
     const int ZSIZE{ 15 };
-    const int MODEL_NUM{ 5 };
+    const int MODEL_NUM{ 5 };*/
 }
 enum BLOCK_TYPE
 

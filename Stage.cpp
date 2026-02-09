@@ -16,7 +16,7 @@ Stage::Stage(GameObject* parent) : GameObject(parent, "Stage"), pConstantBuffer_
 	hball_ = -1;
 	hRoom_ = -1;
 	hDonut_ = -1;
-	hGround_ = -1;
+	hRoom_ = -1;
 }
 
 Stage::~Stage()
@@ -65,8 +65,8 @@ void Stage::Initialize()
 	/*hRoom_ = Model::Load("Room.fbx");
 	assert(hRoom_ >= 0);*/
 
-	hGround_ = Model::Load("box.fbx");
-	assert(hGround_ >= 0); 
+	hRoom_ = Model::Load("box.fbx");
+	assert(hRoom_ >= 0); 
 	               
 	hDonut_ = Model::Load("Donut.fbx");
 	assert(hDonut_ >= 0);
@@ -88,8 +88,8 @@ void Stage::Draw()
 	Transform tr;
 	tr.position_ = { 0,0,0 };
 	tr.rotate_ = { 0,180,0 };
-	Model::SetTransform(hGround_, tr);
-	Model::Draw(hGround_);
+	Model::SetTransform(hRoom_, tr);
+	Model::Draw(hRoom_);
 	/*for (int i = 0; i < ZSIZE; i++)
 	{
 		for (int j = 0; j < XSIZE; j++)
@@ -111,8 +111,8 @@ void Stage::Draw()
 	}*/
 
 	static Transform tDount;
-	tDount.scale_ = { 1,1,1 };
-	tDount.position_ = { 0,0,0 };
+	tDount.scale_ = { 0.25,0.25,0.25 };
+	tDount.position_ = { 0,0.5,0 };
 	tDount.rotate_.y += 0.1;
 	Model::SetTransform(hDonut_, tDount);
 	Model::Draw(hDonut_);

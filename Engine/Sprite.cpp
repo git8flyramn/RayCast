@@ -163,9 +163,9 @@ HRESULT Sprite::InitializeBuffers()
 	bd_vertex.Usage = D3D11_USAGE_DEFAULT;
 	bd_vertex.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd_vertex.CPUAccessFlags = 0;
-	bd_vertex.MiscFlags = 0;
-	bd_vertex.StructureByteStride = 0;
-	D3D11_SUBRESOURCE_DATA data_vertex;
+	/*bd_vertex.MiscFlags = 0;
+	bd_vertex.StructureByteStride = 0;*/
+	D3D11_SUBRESOURCE_DATA data_vertex = {};
 	data_vertex.pSysMem = vertices;
 	hr = Direct3D::pDevice->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);
 	if (FAILED(hr))
@@ -177,17 +177,17 @@ HRESULT Sprite::InitializeBuffers()
 	//インデックス情報
 	int index[] = { 0,2,3, 0,1,2 }; //CW
 	// インデックスバッファを生成する
-	D3D11_BUFFER_DESC   bd;
+	D3D11_BUFFER_DESC bd = {};
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.ByteWidth = sizeof(index);
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
-	bd.MiscFlags = 0;
+	//bd.MiscFlags = 0;
 
-	D3D11_SUBRESOURCE_DATA InitData;
+	D3D11_SUBRESOURCE_DATA InitData = {};
 	InitData.pSysMem = index;
-	InitData.SysMemPitch = 0;
-	InitData.SysMemSlicePitch = 0;
+	/*InitData.SysMemPitch = 0;
+	InitData.SysMemSlicePitch = 0;*/
 	hr = Direct3D::pDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer_);
 	if (FAILED(hr))
 	{

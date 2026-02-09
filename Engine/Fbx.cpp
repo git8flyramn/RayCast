@@ -40,6 +40,22 @@ HRESULT Fbx::Load(std::string fileName)
 	fbxImporter->Import(pFbxScene);
 	fbxImporter->Destroy();
 
+	//FBXの軸のシステムが入っている
+	FbxAxisSystem sceneAxisSystem = pFbxScene->GetGlobalSettings().GetAxisSystem();
+	
+	FbxAxisSystem myAxisSystem(FbxAxisSystem::DirectX);
+
+	if (sceneAxisSystem != myAxisSystem)
+	{
+		myAxisSystem.DeepConvertScene(pFbxScene);
+	}
+
+	FbxSystemUnit sceneSystemUnit = pFbxScene->GetGlobalSettings().GetSystemUnit();
+
+	if (sceneSystemUnit != FbxSystemUnit::cm)
+	{
+		FbxSystemUnit::cm.ConvertScene(pFbxScene);
+	}
 	//meshの情報を取得
 	//メッシュ情報を取得
 	FbxNode* rootNode = pFbxScene->GetRootNode();
