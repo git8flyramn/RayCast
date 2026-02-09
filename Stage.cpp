@@ -63,20 +63,16 @@ void Stage::Initialize()
 	hball_ = Model::Load("Ball.fbx");
 	assert(hball_ >= 0);
 
-	/*hRoom_ = Model::Load("Room.fbx");
-	assert(hRoom_ >= 0);*/
-
 	hRoom_ = Model::Load("Room.fbx");
 	assert(hRoom_ >= 0); 
 	
-
 	hGround_ = Model::Load("Ground.fbx");
 	assert(hGround_ >= 0);
 
 	hDonut_ = Model::Load("Donut.fbx");
 	assert(hDonut_ >= 0);
 	
-	Camera::SetPosition({ 0, 0.8, 5.0 });
+	Camera::SetPosition({ 0, 0.8, -2.8 });
 	Camera::SetTarget({ 0,0.8,0 });
 	/*Camera::SetPosition({0, 0.8, -2.8 });
 	Camera::SetTarget({0,0.8,0});*/
@@ -86,13 +82,13 @@ void Stage::Draw()
 { 
 	Transform ltr;
 	ltr.position_ = { Direct3D::GetLightPos().x,Direct3D::GetLightPos().y,Direct3D::GetLightPos().z };
-	ltr.scale_ = { 0.1,0.1,0.1 };
+	ltr.scale_ = { 0.1f,0.1f,0.1f };
 	Model::SetTransform(hball_, ltr);
 	Model::Draw(hball_);
 	
 	Transform tr;
 	tr.position_ = { 0,0,0 };
-	tr.rotate_ = { 0,180,0 };
+	tr.rotate_ = { 0,180.0f,0 };
 	Model::SetTransform(hRoom_, tr);
 	Model::Draw(hRoom_);
 	/*for (int i = 0; i < ZSIZE; i++)
