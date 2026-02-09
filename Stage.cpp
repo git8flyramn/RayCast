@@ -65,15 +65,16 @@ void Stage::Initialize()
 	/*hRoom_ = Model::Load("Room.fbx");
 	assert(hRoom_ >= 0);*/
 
-	hGround_ = Model::Load("Room.fbx");
+	hGround_ = Model::Load("box.fbx");
 	assert(hGround_ >= 0); 
 	               
-	hDonut_ = Model::Load("DONUT2.fbx");
+	hDonut_ = Model::Load("Donut.fbx");
 	assert(hDonut_ >= 0);
 	
-
-	Camera::SetPosition({ 0,0.8,-2.8 });
-	Camera::SetTarget({0,0.8,0});
+	Camera::SetPosition({ 0, 0.8, -2.8 });
+	Camera::SetTarget({ 0,0.8,0 });
+	/*Camera::SetPosition({0, 0.8, -2.8 });
+	Camera::SetTarget({0,0.8,0});*/
 }
 
 void Stage::Draw()
@@ -110,8 +111,8 @@ void Stage::Draw()
 	}*/
 
 	static Transform tDount;
-	tDount.scale_ = { 0.25,0.25,0.25 };
-	tDount.position_ = { 0,0.5,0 };
+	tDount.scale_ = { 1,1,1 };
+	tDount.position_ = { 0,0,0 };
 	tDount.rotate_.y += 0.1;
 	Model::SetTransform(hDonut_, tDount);
 	Model::Draw(hDonut_);

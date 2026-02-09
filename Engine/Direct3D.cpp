@@ -286,6 +286,12 @@ void Direct3D::BeginDraw()
     pContext->ClearRenderTargetView(pRenderTargetView, clearColor);
     pContext->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
+    //Imguiのフレーム開始
+
+   /* ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();*/
+
 }
 
 void Direct3D::EndDraw()

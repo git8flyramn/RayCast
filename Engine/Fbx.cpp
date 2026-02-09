@@ -112,7 +112,10 @@ void Fbx::Draw(Transform& transform)
 		cb.matWolrd = XMMatrixTranspose(transform.GetWorldMatrix());
 		cb.ambient = pMaterialList_[i].ambient;
 		cb.specular = pMaterialList_[i].specular;
-		cb.shininess = XMFLOAT4(pMaterialList_[i].shiniess, pMaterialList_[i].shiniess, pMaterialList_[i].shiniess, pMaterialList_[i].shiniess);
+		cb.shininess = { pMaterialList_[i].shiniess,
+			pMaterialList_[i].shiniess,
+			pMaterialList_[i].shiniess,
+			pMaterialList_[i].shiniess};
 		cb.diffuse = pMaterialList_[i].diffuse;
 		cb.diffuseFactor = pMaterialList_[i].factor;
 		cb.materialFlag = pMaterialList_[i].pTexture != nullptr;
@@ -176,6 +179,8 @@ void Fbx::InitVertex(FbxMesh* mesh)
 			FbxVector2  uv = pUV->GetDirectArray().GetAt(uvIndex);
 			//vertices[index].uv
 			pVertices_[index].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 1.0f);
+			
+			
 			//’¸“_‚Ì–@ü
 			FbxVector4 normal;
 			mesh->GetPolygonVertexNormal(poly, vertex, normal);

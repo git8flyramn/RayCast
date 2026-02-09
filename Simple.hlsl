@@ -90,29 +90,32 @@ float4 PS(VS_OUT inData) : SV_Target
     float4 diffuse;
     float4 ambientColor = ambient;
     float4 ambentFactor = { 0.2, 0.2, 0.2, 1.0 };
-    float3 dir = normalize(lightPosition.xyz);//ピクセル位置のポリゴン3次元座標 = wpos
+    float3 dir = normalize(lightPosition.xyz - inData.wpos.xyz);//ピクセル位置のポリゴン3次元座標 = wpos
     
     float3 k = { 0.2f, 0.2f, 1.0f };
     float len = length(lightPosition.xyz - inData.wpos.xyz);
-    float dTerm = 1.0 / (k.x + k.y * len + k.z * len * len);//距離減衰計算
+    //float dTerm = 1.0 / (k.x + k.y * len + k.z * len * len);//距離減衰計算
+    float dTerm = 1.0;
     float3 N = normalize(inData.normal.xyz);
     diffuse = diffuseColor * diffusefactor * clamp(dot(N, dir), 0, 1) * dTerm;
     
     float3 L = normalize(lightPosition.xyz - inData.wpos.xyz);
     float ndotl = saturate(dot(N, L));
-    float spec = 0.0f;
+    float spec = 0.0;
     
     if(ndotl > 0.0)
     {
-        float3 R = reflect(-L, N);
+        float3 R = reflect(L, N);
         float3 V = normalize(inData.eyev.xyz);
         spec = pow(saturate(dot(R, V)), 32.0) * ndotl;
 
     }
-    
     float4 specularCol = specular * spec;
+    
     float4 diffuseTerm;
     float4 specularTerm = specularCol * dTerm;
+    
+    
     float ambientTerm;
     float4 color;
     diffuse = diffuseColor * diffusefactor * clamp(dot(inData.normal.xyz, dir), 0, 1);

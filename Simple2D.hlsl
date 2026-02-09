@@ -48,7 +48,7 @@ float4 PS(VS_OUT inData) : SV_Target
 {    
     float4 color = g_texture.Sample(g_sampler, inData.uv);
    
-    if((int) inData.pos & 1)
+    if((int) inData.pos.x & 1)
     {
         color = float4(0.0f, 0.0f, 0.0f,color.a);
     }
