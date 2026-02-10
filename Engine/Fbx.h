@@ -70,6 +70,8 @@ private:
 		XMVECTOR position;
 		XMVECTOR uv;
 		XMVECTOR normal;
+		XMVECTOR tanget;
+		XMVECTOR binormal;
 	};
 
 	//バッファの皆さん

@@ -44,7 +44,7 @@ public:
 	GameObject* Instantiate(GameObject* parent)
 	{
 		T* obj = new T(parent);
-		   //Initialize
+		   
 		obj->Initialize();
 		childList_.push_back(obj);
 		return (obj);

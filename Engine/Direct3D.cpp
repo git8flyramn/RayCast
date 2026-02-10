@@ -45,10 +45,17 @@ HRESULT Direct3D::InitShader()
     {
         return E_FAIL;
     }
+    if (FAILED(InitNormalShader()))
+    {
+        return E_FAIL;
+    }
     return S_OK;
 }
 
-HRESULT Direct3D::InitShader3D()
+
+//NormalShader.hlsl用のシェーダーの初期化
+//プロトタイプがまだの状態
+HRESULT Direct3D::InitNormalShader()
 {
     HRESULT hr;
 
@@ -79,12 +86,16 @@ HRESULT Direct3D::InitShader3D()
         MessageBox(nullptr, L"ピクセルシェーダの作成に失敗しました", L"エラー", MB_OK);
         return hr;
     }
-
+                                       //XMVECTOR
+     UINT offset[5] = {0,sizeof(DirectX::XMVECTOR),sizeof(DirectX::XMVECTOR) * 2, sizeof(DirectX::XMVECTOR) * 3 , sizeof(DirectX::XMVECTOR) * 4};
+    
     //頂点インプットレイアウト
     D3D11_INPUT_ELEMENT_DESC layout[] = {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA, 0 },//位置
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,sizeof(DirectX::XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0},//UV座標
-        { "NORMAL"  , 0, DXGI_FORMAT_R32G32B32_FLOAT,0,sizeof(DirectX::XMVECTOR) + sizeof(DirectX::XMVECTOR), D3D11_INPUT_PER_VERTEX_DATA, 0 } //法線ベクトル
+        { "NORMAL"  , 0, DXGI_FORMAT_R32G32B32_FLOAT,0,sizeof(DirectX::XMVECTOR) + sizeof(DirectX::XMVECTOR), D3D11_INPUT_PER_VERTEX_DATA, 0 }, //法線ベクトル
+       { "TANGENT",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,sizeof(DirectX::XMVECTOR) + sizeof(DirectX::XMVECTOR) + sizeof(DirectX::XMVECTOR),D3D11_INPUT_PER_VERTEX_DATA,0},
+        {"BINORMAL",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,offset[4],D3D11_INPUT_PER_VERTEX_DATA,0 }
     };
 
     hr = pDevice->CreateInputLayout(layout, 3, pCompileVS->GetBufferPointer(),
@@ -103,6 +114,72 @@ HRESULT Direct3D::InitShader3D()
     rdc.FillMode = D3D11_FILL_SOLID;
     rdc.FrontCounterClockwise = FALSE;
     pDevice->CreateRasterizerState(&rdc, &(shaderBundle[SHADER_3D].pRasterizerState));
+
+    //それぞれをデバイスコンテキストにセット
+    //pContext->VSSetShader(pVertexShader, NULL, 0);	//頂点シェーダー
+    //pContext->PSSetShader(pPixelShader, NULL, 0);	//ピクセルシェーダー
+    //pContext->IASetInputLayout(pVertexLayout);	//頂点インプットレイアウト
+    //pContext->RSSetState(pRasterizerState);		//ラスタライザー
+
+    return S_OK;
+}
+
+HRESULT Direct3D::InitShader3D()
+{
+    HRESULT hr;
+
+
+    // 頂点シェーダの作成（コンパイル）
+    ID3DBlob* pCompileVS = nullptr;
+    D3DCompileFromFile(L"NormalShader.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
+    assert(pCompileVS != nullptr);
+
+    hr = pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(),
+        pCompileVS->GetBufferSize(), NULL, &(shaderBundle[SHADER_NOMALMAP].pVertexShader));
+
+
+    if (FAILED(hr))
+    {
+        MessageBox(nullptr, L"頂点シェーダの作成に失敗しました", L"エラー", MB_OK);
+        return hr;
+    }
+
+    // ピクセルシェーダの作成（コンパイル）
+    ID3DBlob* pCompilePS = nullptr;
+    D3DCompileFromFile(L"NormalShader.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
+    assert(pCompilePS != nullptr);
+    hr = pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(),
+        pCompilePS->GetBufferSize(), NULL, &(shaderBundle[SHADER_NOMALMAP].pPixelShader));
+    if (FAILED(hr))
+    {
+        MessageBox(nullptr, L"ピクセルシェーダの作成に失敗しました", L"エラー", MB_OK);
+        return hr;
+    }
+    //XMVECTOR
+    UINT offset[5] = { 0,sizeof(DirectX::XMVECTOR),sizeof(DirectX::XMVECTOR) * 2 };
+    //頂点インプットレイアウト
+    D3D11_INPUT_ELEMENT_DESC layout[] = {
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA, 0 },//位置
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,sizeof(DirectX::XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0},//UV座標
+        { "NORMAL"  , 0, DXGI_FORMAT_R32G32B32_FLOAT,0,sizeof(DirectX::XMVECTOR) + sizeof(DirectX::XMVECTOR), D3D11_INPUT_PER_VERTEX_DATA, 0 }, //法線ベクトル
+    };
+
+    hr = pDevice->CreateInputLayout(layout, 3, pCompileVS->GetBufferPointer(),
+        pCompileVS->GetBufferSize(), &(shaderBundle[SHADER_NOMALMAP].pVertexLayout));
+
+    if (FAILED(hr))
+    {
+        MessageBox(nullptr, L"頂点インプットレイアウトの作成に失敗しました 3D", L"エラー", MB_OK);
+        return hr;
+    }
+    pCompileVS->Release();
+    pCompilePS->Release();
+    //ラスタライザ作成
+    D3D11_RASTERIZER_DESC rdc = {};
+    rdc.CullMode = D3D11_CULL_BACK;
+    rdc.FillMode = D3D11_FILL_SOLID;
+    rdc.FrontCounterClockwise = FALSE;
+    pDevice->CreateRasterizerState(&rdc, &(shaderBundle[SHADER_NOMALMAP].pRasterizerState));
 
     //それぞれをデバイスコンテキストにセット
     //pContext->VSSetShader(pVertexShader, NULL, 0);	//頂点シェーダー

@@ -203,6 +203,21 @@ void Fbx::InitVertex(FbxMesh* mesh)
 			//vertices[index].normal
 			pVertices_[index].normal
 				= XMVectorSet((float)normal[0], (float)normal[1], (float)normal[2], 0.0f);
+
+
+			index++;
+		}
+	}
+
+	for (int i = 0; i < polygonCount_; i++)
+	{
+		int startIndex = mesh->GetPolygonVertexIndex(i);
+		FbxVector4 tangent = mesh->GetElementTangent(0)->GetDirectArray().GetAt(startIndex);
+		for (int j = 0; j < 3; j++)
+		{
+			//int index = mesh->GetPolygonVertexIndex(i) + j;
+			int index = mesh->GetPolygonVertices()[startIndex + j];
+			pVertices_[index].tanget = XMVectorSet((float)tangent[0], (float)tangent[1], (float)tangent[2], 0.0f);
 		}
 	}
 	// 頂点バッファ作成
@@ -358,7 +373,6 @@ void Fbx::InitMaterial(FbxNode* pNode)
 				pMaterialList_[i].shiniess = shininess;
 			}
 		}
-
 		//テクスチャ無し
 		else
 		{

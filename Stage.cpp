@@ -72,7 +72,7 @@ void Stage::Initialize()
 	hDonut_ = Model::Load("Donut.fbx");
 	assert(hDonut_ >= 0);
 	
-	Camera::SetPosition({ 0, 0.8, -2.8 });
+	//Camera::SetPosition({ 0, 0.8, -2.8 });
 	Camera::SetTarget({ 0,0.8,0 });
 	/*Camera::SetPosition({0, 0.8, -2.8 });
 	Camera::SetTarget({0,0.8,0});*/
@@ -82,7 +82,7 @@ void Stage::Draw()
 { 
 	Transform ltr;
 	ltr.position_ = { Direct3D::GetLightPos().x,Direct3D::GetLightPos().y,Direct3D::GetLightPos().z };
-	ltr.scale_ = { 0.5f,0.5f,0.5f };
+	ltr.scale_ = { 0.1f,0.1f,0.1f };
 	Model::SetTransform(hball_, ltr);
 	Model::Draw(hball_);
 	
@@ -114,7 +114,7 @@ void Stage::Draw()
 	static Transform tDount;
 	tDount.scale_ = { 0.25,0.25,0.25 };
 	tDount.position_ = { 0,0.5,0 };
-	tDount.rotate_.y += 0.1f;
+	//tDount.rotate_.y += 0.1f;
 	Model::SetTransform(hDonut_, tDount);
 	Model::Draw(hDonut_);
 
