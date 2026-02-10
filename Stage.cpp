@@ -60,7 +60,7 @@ void Stage::Initialize()
 	}*/
 
 	InitConstantBuffer();
-	hball_ = Model::Load("Ball.fbx");
+	hball_ = Model::Load("UVcheck.fbx");
 	assert(hball_ >= 0);
 
 	hRoom_ = Model::Load("Room.fbx");
@@ -82,7 +82,7 @@ void Stage::Draw()
 { 
 	Transform ltr;
 	ltr.position_ = { Direct3D::GetLightPos().x,Direct3D::GetLightPos().y,Direct3D::GetLightPos().z };
-	ltr.scale_ = { 0.1f,0.1f,0.1f };
+	ltr.scale_ = { 0.5f,0.5f,0.5f };
 	Model::SetTransform(hball_, ltr);
 	Model::Draw(hball_);
 	
@@ -114,7 +114,7 @@ void Stage::Draw()
 	static Transform tDount;
 	tDount.scale_ = { 0.25,0.25,0.25 };
 	tDount.position_ = { 0,0.5,0 };
-	tDount.rotate_.y += 0.1;
+	tDount.rotate_.y += 0.1f;
 	Model::SetTransform(hDonut_, tDount);
 	Model::Draw(hDonut_);
 
