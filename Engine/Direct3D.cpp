@@ -36,6 +36,7 @@ namespace Direct3D
 }
 
 HRESULT Direct3D::InitShader()
+
 {
     if (FAILED(InitShader3D()))
     {
@@ -53,7 +54,7 @@ HRESULT Direct3D::InitShader()
 }
 
 
-//NormalShader.hlsl用のシェーダーの初期化
+//NormalMap.hlsl用のシェーダーの初期化
 //プロトタイプがまだの状態
 HRESULT Direct3D::InitNormalShader()
 {
@@ -62,7 +63,7 @@ HRESULT Direct3D::InitNormalShader()
 
     // 頂点シェーダの作成（コンパイル）
     ID3DBlob* pCompileVS = nullptr;
-    D3DCompileFromFile(L"Simple.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
+       D3DCompileFromFile(L"NormalMap.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
     assert(pCompileVS != nullptr);
     
    hr =  pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(),
@@ -77,10 +78,10 @@ HRESULT Direct3D::InitNormalShader()
    
     // ピクセルシェーダの作成（コンパイル）
     ID3DBlob* pCompilePS = nullptr;
-    D3DCompileFromFile(L"Simple.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
+    D3DCompileFromFile(L"NormalMap.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
     assert(pCompilePS != nullptr);
     hr = pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(),
-         pCompilePS->GetBufferSize(), NULL, &(shaderBundle[SHADER_3D].pPixelShader));
+         pCompilePS->GetBufferSize(), NULL, &(shaderBundle[SHADER_NOMALMAP].pPixelShader));
     if (FAILED(hr))
     {
         MessageBox(nullptr, L"ピクセルシェーダの作成に失敗しました", L"エラー", MB_OK);
@@ -99,7 +100,7 @@ HRESULT Direct3D::InitNormalShader()
     };
 
     hr = pDevice->CreateInputLayout(layout, 3, pCompileVS->GetBufferPointer(),
-        pCompileVS->GetBufferSize(), &(shaderBundle[SHADER_3D].pVertexLayout));
+        pCompileVS->GetBufferSize(), &(shaderBundle[SHADER_NOMALMAP].pVertexLayout));
 
     if (FAILED(hr))
     {
@@ -113,7 +114,7 @@ HRESULT Direct3D::InitNormalShader()
     rdc.CullMode = D3D11_CULL_BACK;
     rdc.FillMode = D3D11_FILL_SOLID;
     rdc.FrontCounterClockwise = FALSE;
-    pDevice->CreateRasterizerState(&rdc, &(shaderBundle[SHADER_3D].pRasterizerState));
+    pDevice->CreateRasterizerState(&rdc, &(shaderBundle[SHADER_NOMALMAP].pRasterizerState));
 
     //それぞれをデバイスコンテキストにセット
     //pContext->VSSetShader(pVertexShader, NULL, 0);	//頂点シェーダー
@@ -131,11 +132,12 @@ HRESULT Direct3D::InitShader3D()
 
     // 頂点シェーダの作成（コンパイル）
     ID3DBlob* pCompileVS = nullptr;
-    D3DCompileFromFile(L"NormalShader.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
+  
+    D3DCompileFromFile(L"Simple.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
     assert(pCompileVS != nullptr);
 
     hr = pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(),
-        pCompileVS->GetBufferSize(), NULL, &(shaderBundle[SHADER_NOMALMAP].pVertexShader));
+        pCompileVS->GetBufferSize(), NULL, &(shaderBundle[SHADER_3D].pVertexShader));
 
 
     if (FAILED(hr))
@@ -146,10 +148,10 @@ HRESULT Direct3D::InitShader3D()
 
     // ピクセルシェーダの作成（コンパイル）
     ID3DBlob* pCompilePS = nullptr;
-    D3DCompileFromFile(L"NormalShader.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
+    D3DCompileFromFile(L"Simple.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
     assert(pCompilePS != nullptr);
     hr = pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(),
-        pCompilePS->GetBufferSize(), NULL, &(shaderBundle[SHADER_NOMALMAP].pPixelShader));
+        pCompilePS->GetBufferSize(), NULL, &(shaderBundle[SHADER_3D].pPixelShader));
     if (FAILED(hr))
     {
         MessageBox(nullptr, L"ピクセルシェーダの作成に失敗しました", L"エラー", MB_OK);
@@ -165,7 +167,7 @@ HRESULT Direct3D::InitShader3D()
     };
 
     hr = pDevice->CreateInputLayout(layout, 3, pCompileVS->GetBufferPointer(),
-        pCompileVS->GetBufferSize(), &(shaderBundle[SHADER_NOMALMAP].pVertexLayout));
+        pCompileVS->GetBufferSize(), &(shaderBundle[SHADER_3D].pVertexLayout));
 
     if (FAILED(hr))
     {
@@ -179,7 +181,7 @@ HRESULT Direct3D::InitShader3D()
     rdc.CullMode = D3D11_CULL_BACK;
     rdc.FillMode = D3D11_FILL_SOLID;
     rdc.FrontCounterClockwise = FALSE;
-    pDevice->CreateRasterizerState(&rdc, &(shaderBundle[SHADER_NOMALMAP].pRasterizerState));
+    pDevice->CreateRasterizerState(&rdc, &(shaderBundle[SHADER_3D].pRasterizerState));
 
     //それぞれをデバイスコンテキストにセット
     //pContext->VSSetShader(pVertexShader, NULL, 0);	//頂点シェーダー

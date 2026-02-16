@@ -211,6 +211,7 @@
   <ItemGroup>
     <FxCompile Include="Simple.hlsl" />
     <FxCompile Include="Simple2D.hlsl" />
+    <FxCompile Include="NormalMap.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

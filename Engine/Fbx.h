@@ -69,9 +69,9 @@ private:
 	{
 		XMVECTOR position;
 		XMVECTOR uv;
-		XMVECTOR normal;
-		XMVECTOR tanget;
-		XMVECTOR binormal;
+		XMVECTOR normal;//法線
+		XMVECTOR tanget;//接線
+		XMVECTOR binormal;//従法線
 	};
 
 	//バッファの皆さん

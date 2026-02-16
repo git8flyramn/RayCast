@@ -175,6 +175,10 @@ void Fbx::InitVertex(FbxMesh* mesh)
 	//VERTEX* vertices = new VERTEX[vertexCount_];
 	pVertices_.resize(vertexCount_);//修正
 	//全ポリゴン
+
+	//Tangentの確認
+	FbxLayerElementTangent* tangentElement = mesh->GetElementTangent();
+
 	for (long poly = 0; poly < polygonCount_; poly++)
 	{
 		//3頂点分
@@ -204,22 +208,53 @@ void Fbx::InitVertex(FbxMesh* mesh)
 			pVertices_[index].normal
 				= XMVectorSet((float)normal[0], (float)normal[1], (float)normal[2], 0.0f);
 
+			if (tangentElement != nullptr)
+			{
+				int tangentIndex = 0;
+				//頂点ごとに接線の情報があるか
+				if (tangentElement->GetReferenceMode() == FbxGeometryElement::eDirect)
+				{
+					tangentIndex = poly * 3 + vertex;
+				}
+				//頂点ごとに接線の情報が無い場合、ポリゴンごとに接線の情報があるか
+				else if (tangentElement->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
+				{
+					tangentIndex = tangentElement->GetIndexArray().GetAt(poly * 3 + vertex);
+				}
+				FbxVector4 tangent = tangentElement->GetDirectArray().GetAt(tangentIndex);
+				pVertices_[index].tanget = { (float)tangent[0],(float)tangent[1],(float)tangent[2],0.0f };
 
-			index++;
+			}
+			else
+			{
+				//接線の情報が無い場合は0べクトルを入れておく
+				pVertices_[index].tanget = { 0.0f,0.0f, 0.0f, 0.0f };
+			}
 		}
 	}
 
-	for (int i = 0; i < polygonCount_; i++)
+	for (int i = 0; i < vertexCount_; i++)
 	{
-		int startIndex = mesh->GetPolygonVertexIndex(i);
-		FbxVector4 tangent = mesh->GetElementTangent(0)->GetDirectArray().GetAt(startIndex);
-		for (int j = 0; j < 3; j++)
-		{
-			//int index = mesh->GetPolygonVertexIndex(i) + j;
-			int index = mesh->GetPolygonVertices()[startIndex + j];
-			pVertices_[index].tanget = XMVectorSet((float)tangent[0], (float)tangent[1], (float)tangent[2], 0.0f);
-		}
+		
+		XMVECTOR N = XMVector3Normalize(pVertices_[i].normal);
+		XMVECTOR T = XMVector3Normalize(pVertices_[i].tanget);
+		//従法線は外積で求める
+		XMVECTOR B = XMVector3Normalize(XMVector3Cross(N, T));
+		pVertices_[i].binormal = B;
+
 	}
+	//for (int i = 0; i < polygonCount_; i++)
+	//{
+	//	int startIndex = mesh->GetPolygonVertexIndex(i);
+	//	FbxVector4 tangent = mesh->GetElementTangent(0)->GetDirectArray().GetAt(startIndex);
+	//	for (int j = 0; j < 3; j++)
+	//	{
+	//		//int index = mesh->GetPolygonVertexIndex(i) + j;
+	//		int index = mesh->GetPolygonVertices()[startIndex + j];
+	//		pVertices_[index].tanget = XMVectorSet((float)tangent[0], (float)tangent[1], (float)tangent[2], 0.0f);
+	//	}
+	//}
+
 	// 頂点バッファ作成
 	//（自分でやって）
 	//頂点バッファ
