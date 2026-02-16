@@ -166,6 +166,82 @@ void Fbx::Draw(Transform& transform)
 	}
 }
 
+void Fbx::DrawPseudoNormal(Transform& transform)
+{
+	//shader
+	Direct3D::SetShader(SHADER_NOMALMAP);
+	transform.Calculation();
+
+	//頂点バッファ、インデックスバッファ、コンスタントバッファをパイプラインにセット
+	UINT stride = sizeof(VERTEX);
+	UINT offset = 0;
+	Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+
+	for (int i = 0; i < materialCount_; i++)
+	{
+		//if (pMaterialList_[i].pTexture)
+		//{
+		//	cb.materialFlag = TRUE;
+		//	cb.diffuse = XMFLOAT4(1, 1, 1, 1);//保険
+		//}
+		//else
+		//{
+		//	cb.materialFlag = FALSE;
+		//	cb.diffuse = pMaterialList_[i].diffuse;
+		//}
+		//コンスタントバッファにデータ転送
+		CONSTANT_BUFFER cb;
+		cb.matWVP = transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix();
+		cb.matWolrd = transform.GetWorldMatrix();
+		cb.matNormal = transform.GetNormalMatrix();
+		cb.ambient = pMaterialList_[i].ambient;
+		cb.specular = pMaterialList_[i].specular;
+		cb.shininess = { pMaterialList_[i].shiniess,
+			pMaterialList_[i].shiniess,
+			pMaterialList_[i].shiniess,
+			pMaterialList_[i].shiniess };
+		cb.diffuse = pMaterialList_[i].diffuse;
+		cb.diffuseFactor = pMaterialList_[i].factor;
+		cb.materialFlag = pMaterialList_[i].pTexture != nullptr;
+
+		D3D11_MAPPED_SUBRESOURCE pdata;
+		Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
+		memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
+
+		Direct3D::pContext->Unmap(pConstantBuffer_, 0);	//再開
+
+		// インデックスバッファーをセット
+		stride = sizeof(int);
+		offset = 0;
+		Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_[i], DXGI_FORMAT_R32_UINT, 0);
+
+		//コンスタントバッファ
+		Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
+		Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
+
+		//色のテクスチャがある場合はセット
+		if (pMaterialList_[i].pTexture)
+		{
+			ID3D11SamplerState* pSampler = pMaterialList_[i].pTexture->GetSampler();
+			Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
+
+			ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pTexture->GetSRV();
+			Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
+		}
+		//ノーマルマップのテクスチャがある場合はセット
+		if (pMaterialList_[i].pNormalTexture)
+		{
+			ID3D11SamplerState* pSampler = pMaterialList_[i].pNormalTexture->GetSampler();
+			Direct3D::pContext->PSSetSamplers(1, 1, &pSampler);
+			ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pNormalTexture->GetSRV();
+			Direct3D::pContext->PSSetShaderResources(1, 1, &pSRV);
+
+		}
+		//描画
+		Direct3D::pContext->DrawIndexed(indexCount_[i], 0, 0);
+	}
+}
+
 void Fbx::Release()
 {
 }
@@ -391,6 +467,18 @@ void Fbx::InitMaterial(FbxNode* pNode)
 				pMaterialList_[i].pTexture = nullptr;
 				//テクスチャファイルが無いときの処理(エラー）
 			}
+			//ノーマルマップのテクスチャの取得
+			fs::path normalTexturePath = "texture.png";
+			if (fs::is_regular_file(normalTexturePath))
+			{
+				pMaterialList_[i].pNormalTexture = new Texture;
+				pMaterialList_[i].pNormalTexture->Load(normalTexturePath.string());
+			}
+			else
+			{
+				pMaterialList_[i].pNormalTexture = nullptr;
+			}
+
 			FbxSurfacePhong* pMaterial = (FbxSurfacePhong*)pNode->GetMaterial(i);
 			FbxDouble diffuse = pMaterial->DiffuseFactor;
 			FbxDouble3 diffuseColor = pMaterial->Diffuse;

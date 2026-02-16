@@ -35,6 +35,7 @@ public:
 	Fbx();
 	HRESULT Load(std::string fileName);
 	void    Draw(Transform& transform);
+	void    DrawPseudoNormal(Transform& transform);
 	void    Release();
 
 	void InitVertex(FbxMesh* mesh);
@@ -46,10 +47,13 @@ private:
 	struct MATERIAL
 	{
 		Texture* pTexture;
+		//ポインタを直接持っている時はpを付ける
+		//std::shared_ptr<Texture> pNormalTexture;スマートポインタ
+		Texture* pNormalTexture;
 		XMFLOAT4 diffuse;
 		XMFLOAT4 ambient;
 		XMFLOAT4 specular;
-		float shiniess;
+		float    shiniess;
 		XMFLOAT4 factor;
 	};
 

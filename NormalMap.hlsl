@@ -4,7 +4,10 @@
 
 //  Sample3D.hlsl (頂点シェーダ)
 Texture2D g_texture : register(t0); //テクスチャー
-SamplerState g_sampler : register(s0); //サンプラー
+Texture2D g_normalmap : register(t1); //サンプラー
+
+SamplerState g_sampler : register(s0);
+SamplerState g_normalsampler : register(s1);
 
 //───────────────────────────────────────
 // コンスタントバッファ
@@ -41,13 +44,19 @@ struct VS_OUT
     float2 uv : TEXCOORD; //UV座標
     float4 color : COLOR; //色(明るさ)
     float4 normal : NORMAL; //法線ベクトル
+    float4 tangent : TANGENT;
+    float4 binormal : BINOMAL;
     float4 eyev : POSITION1; //視線ポジション
 };
 
 //───────────────────────────────────────
 // 頂点シェーダ
 //───────────────────────────────────────
-VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
+VS_OUT VS(float4 pos : POSITION, 
+          float4 uv  : TEXCOORD, 
+          float4 normal : NORMAL,
+          float4 tangent: TANGENT,
+          float4 binormal: BINORMAL)
 {
 	//ピクセルシェーダーへ渡す情報
     VS_OUT outData;
@@ -57,10 +66,13 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
     outData.spos = mul(pos, matWVP);
 	//ワールド座標も変換し、ピクセルシェーダーへ
     outData.wpos = mul(pos, matWolrd);
-    float4 n = normal;
-    n.w = 0;
+    
+    normal.w = 0;
     outData.normal = mul(normal, matNomal);
-    outData.normal.xyz = normalize(mul(n, matNomal).xyz);
+    
+    tangent.w = 0;
+    outData
+    
     
     uv.w = 0;
     outData.uv = uv.xy;
@@ -86,6 +98,9 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 //───────────────────────────────────────
 float4 PS(VS_OUT inData) : SV_Target
 {
+    //法線マップから法線を取得
+   // float3 normalMap = g_normalmap.Sample(g_normalsampler, inData.uv).xyz * 2.0 - 1.0;
+    float3 normalMap = g_normalmap.Sample(g_normalsampler, inData.uv).xyz;
    // float4 light = float4(-1, 0.5, -0.7, 0);
     float4 diffuse;
     float4 ambientColor = ambient;
@@ -132,5 +147,7 @@ float4 PS(VS_OUT inData) : SV_Target
         ambientTerm = ambentFactor * diffuseColor;
     }
     color = diffuseTerm + specularTerm + ambientTerm;
-    return color;
+   // return color;
+    return normalMap;
+   
 }

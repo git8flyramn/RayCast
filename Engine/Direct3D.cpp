@@ -67,7 +67,7 @@ HRESULT Direct3D::InitNormalShader()
     assert(pCompileVS != nullptr);
     
    hr =  pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(),
-         pCompileVS->GetBufferSize(), NULL, &(shaderBundle[SHADER_3D].pVertexShader));
+         pCompileVS->GetBufferSize(), NULL, &(shaderBundle[SHADER_NOMALMAP].pVertexShader));
 
     
    if (FAILED(hr))
@@ -87,19 +87,19 @@ HRESULT Direct3D::InitNormalShader()
         MessageBox(nullptr, L"ピクセルシェーダの作成に失敗しました", L"エラー", MB_OK);
         return hr;
     }
-                                       //XMVECTOR
-     UINT offset[5] = {0,sizeof(DirectX::XMVECTOR),sizeof(DirectX::XMVECTOR) * 2, sizeof(DirectX::XMVECTOR) * 3 , sizeof(DirectX::XMVECTOR) * 4};
-    
+                                      
+    UINT offset[5] = { 0,16,32,48,64};
+
     //頂点インプットレイアウト
     D3D11_INPUT_ELEMENT_DESC layout[] = {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA, 0 },//位置
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,offset[1] , D3D11_INPUT_PER_VERTEX_DATA, 0},//UV座標
-        { "NORMAL"  , 0, DXGI_FORMAT_R32G32B32_FLOAT,0,offset[2], D3D11_INPUT_PER_VERTEX_DATA, 0}, //法線ベクトル
-       { "TANGENT",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,offset[3],D3D11_INPUT_PER_VERTEX_DATA,0},
-        {"BINORMAL",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,offset[4],D3D11_INPUT_PER_VERTEX_DATA,0 }
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,   0, offset[0], D3D11_INPUT_PER_VERTEX_DATA, 0},//位置
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,      0, offset[1], D3D11_INPUT_PER_VERTEX_DATA, 0},//UV座標
+        { "NORMAL"  , 0, DXGI_FORMAT_R32G32B32_FLOAT,   0, offset[2], D3D11_INPUT_PER_VERTEX_DATA, 0}, //法線ベクトル
+        { "TANGENT" , 0, DXGI_FORMAT_R32G32B32A32_FLOAT,0, offset[3], D3D11_INPUT_PER_VERTEX_DATA, 0},//接線ベクトル
+        {"BINORMAL" , 0, DXGI_FORMAT_R32G32B32A32_FLOAT,0, offset[4], D3D11_INPUT_PER_VERTEX_DATA, 0} //従法線
     };
 
-    hr = pDevice->CreateInputLayout(layout, 3, pCompileVS->GetBufferPointer(),
+    hr = pDevice->CreateInputLayout(layout, 5, pCompileVS->GetBufferPointer(),
         pCompileVS->GetBufferSize(), &(shaderBundle[SHADER_NOMALMAP].pVertexLayout));
 
     if (FAILED(hr))
