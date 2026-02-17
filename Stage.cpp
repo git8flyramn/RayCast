@@ -11,6 +11,11 @@
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
 
+
+namespace
+{
+	bool isBump = false;
+}
 Stage::Stage(GameObject* parent) : GameObject(parent, "Stage"), pConstantBuffer_(nullptr)
 {
 	hball_ = -1;
@@ -60,7 +65,7 @@ void Stage::Initialize()
 	}*/
 
 	InitConstantBuffer();
-	hball_ = Model::Load("UVcheck.fbx");
+	hball_ = Model::Load("Ball.fbx");
 	assert(hball_ >= 0);
 
 	hRoom_ = Model::Load("Room.fbx");
@@ -72,17 +77,15 @@ void Stage::Initialize()
 	hDonut_ = Model::Load("Donut.fbx");
 	assert(hDonut_ >= 0);
 	
-	//Camera::SetPosition({ 0, 0.8, -2.8 });
+	Camera::SetPosition({ 0,0.8,-2.8 });
 	Camera::SetTarget({ 0,0.8,0 });
-	/*Camera::SetPosition({0, 0.8, -2.8 });
-	Camera::SetTarget({0,0.8,0});*/
 }
 
 void Stage::Draw()
 { 
 	Transform ltr;
 	ltr.position_ = { Direct3D::GetLightPos().x,Direct3D::GetLightPos().y,Direct3D::GetLightPos().z };
-	ltr.scale_ = { 0.1f,0.1f,0.1f };
+	ltr.scale_ = { 0.1,0.1,0.1 };
 	Model::SetTransform(hball_, ltr);
 	Model::Draw(hball_);
 	
@@ -117,12 +120,13 @@ void Stage::Draw()
 	//tDount.rotate_.y += 0.1f;
 	Model::SetTransform(hDonut_, tDount);
 	Model::Draw(hDonut_);
-
+	//Model::DrawPseudoNormal(hDonut_);
 	Transform tGround;
 	tGround.scale_ = { 2.0f,2.0f,2.0f };
 	tGround.position_ = { 0,0.01f,0 };
 	Model::SetTransform(hGround_, tGround);
 	Model::Draw(hGround_);
+	
 	/*static Transform trans;
 	trans.scale_ = { 0.5f,0.5f,1.0f };
 	trans.Calculation();
@@ -206,10 +210,15 @@ void Stage::Update()
 		p = { p.x,p.y - 0.01f,p.z,p.w };
 		Direct3D::SetLightPos(p);
 	}
+	if (Input::IsKeyDown(DIK_B))
+	{
+		isBump = !isBump;
+	}
 	
 	CONSTANT_BUFFER_STAGE cb;
 	cb.lightPosition = Direct3D::GetLightPos();
 	XMStoreFloat4(&cb.eyePosition,Camera::GetPosition());
+	
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
 	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る

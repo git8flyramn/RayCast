@@ -71,7 +71,10 @@ VS_OUT VS(float4 pos : POSITION,
     outData.normal = mul(normal, matNomal);
     
     tangent.w = 0;
-    outData
+    outData.tangent = mul(tangent, matNomal);
+    
+    binormal.w = 0;
+    outData.binormal = mul(binormal, matNomal);
     
     
     uv.w = 0;
@@ -100,7 +103,7 @@ float4 PS(VS_OUT inData) : SV_Target
 {
     //法線マップから法線を取得
    // float3 normalMap = g_normalmap.Sample(g_normalsampler, inData.uv).xyz * 2.0 - 1.0;
-    float3 normalMap = g_normalmap.Sample(g_normalsampler, inData.uv).xyz;
+    float4 normalMap = g_normalmap.Sample(g_normalsampler, inData.uv).xyz;
    // float4 light = float4(-1, 0.5, -0.7, 0);
     float4 diffuse;
     float4 ambientColor = ambient;
@@ -131,7 +134,7 @@ float4 PS(VS_OUT inData) : SV_Target
     float4 specularTerm = specularCol * dTerm;
     
     
-    float ambientTerm;
+    float4 ambientTerm;
     float4 color;
     diffuse = diffuseColor * diffusefactor * clamp(dot(inData.normal.xyz, dir), 0, 1);
     
