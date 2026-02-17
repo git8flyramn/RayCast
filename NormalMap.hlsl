@@ -77,9 +77,9 @@ VS_OUT VS(float4 pos : POSITION,
     outData.binormal = mul(binormal, matNomal);
     
     
-    uv.w = 0;
+    //uv.w = 0;
     outData.uv = uv.xy;
-    outData.eyev = eyePosition - outData.wpos;
+    outData.eyev = outData.wpos - eyePosition;
     
     
     //normal = mul(normal, matNomal); //法線ベクトルをワールドビュープロジェクション行列で変換
@@ -103,27 +103,35 @@ float4 PS(VS_OUT inData) : SV_Target
 {
     //法線マップから法線を取得
    // float3 normalMap = g_normalmap.Sample(g_normalsampler, inData.uv).xyz * 2.0 - 1.0;
-    float4 normalMap = g_normalmap.Sample(g_normalsampler, inData.uv).xyz;
-   // float4 light = float4(-1, 0.5, -0.7, 0);
+    float3 normalMap = g_normalmap.Sample(g_normalsampler, inData.uv).xyz;
+   
+    float3 T = normalize(inData.tangent.xyz);
+    float3 B = normalize(inData.binormal.xyz);
+    float3 N = normalize(inData.normal.xyz);
+    float3x3 TBN = float3x3(T, B, N);
+    float3 wNormal = mul(normalMap, TBN); //ワールド空間の法線ベクトルを計算
+    
+    
+    // float4 light = float4(-1, 0.5, -0.7, 0);
     float4 diffuse;
     float4 ambientColor = ambient;
-    float4 ambentFactor = { 0.2, 0.2, 0.2, 1.0 };
+    float4 ambentFactor = { 0.1, 0.1, 0.1, 1.0 };
     float3 dir = normalize(lightPosition.xyz - inData.wpos.xyz); //ピクセル位置のポリゴン3次元座標 = wpos
     
     float3 k = { 0.2f, 0.2f, 1.0f };
     float len = length(lightPosition.xyz - inData.wpos.xyz);
-    //float dTerm = 1.0 / (k.x + k.y * len + k.z * len * len);//距離減衰計算
-    float dTerm = 1.0;
-    float3 N = normalize(inData.normal.xyz);
-    diffuse = diffuseColor * diffusefactor * clamp(dot(N, dir), 0, 1) * dTerm;
+    float dTerm = 1.0 / (k.x + k.y * len + k.z * len * len);//距離減衰計算
+    //float dTerm = 1.0;
+   // float3 N = normalize(inData.normal.xyz);
+    diffuse = diffuseColor * diffusefactor * clamp(dot(wNormal, dir), 0, 1) * dTerm;
     
     float3 L = normalize(lightPosition.xyz - inData.wpos.xyz);
-    float ndotl = saturate(dot(N, L));
+    float ndotl = saturate(dot(wNormal, L));
     float spec = 0.0;
     
     if (ndotl > 0.0)
     {
-        float3 R = reflect(L, N);
+        float3 R = reflect(L, wNormal);
         float3 V = normalize(inData.eyev.xyz);
         spec = pow(saturate(dot(R, V)), 32.0) * ndotl;
 
@@ -136,8 +144,6 @@ float4 PS(VS_OUT inData) : SV_Target
     
     float4 ambientTerm;
     float4 color;
-    diffuse = diffuseColor * diffusefactor * clamp(dot(inData.normal.xyz, dir), 0, 1);
-    
     if (useTexture == 1)
     {
         //テクスチャから色を取得
@@ -146,11 +152,11 @@ float4 PS(VS_OUT inData) : SV_Target
     }
     else
     {
-        diffuseTerm = diffuse;
+        diffuseTerm = diffuse * dTerm;
         ambientTerm = ambentFactor * diffuseColor;
     }
     color = diffuseTerm + specularTerm + ambientTerm;
-   // return color;
-    return normalMap;
+    return float4(normalMap,1.0);
+   // return normalMap;
    
 }

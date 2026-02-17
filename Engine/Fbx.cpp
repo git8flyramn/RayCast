@@ -129,9 +129,10 @@ void Fbx::Draw(Transform& transform)
 		cb.ambient = pMaterialList_[i].ambient;
 		cb.specular = pMaterialList_[i].specular;
 		cb.shininess = { pMaterialList_[i].shiniess,
-			pMaterialList_[i].shiniess,
-			pMaterialList_[i].shiniess,
-			pMaterialList_[i].shiniess};
+			             pMaterialList_[i].shiniess,
+			             pMaterialList_[i].shiniess,
+			             pMaterialList_[i].shiniess};
+
 		cb.diffuse = pMaterialList_[i].diffuse;
 		cb.diffuseFactor = pMaterialList_[i].factor;
 		cb.materialFlag = pMaterialList_[i].pTexture != nullptr;
@@ -197,9 +198,10 @@ void Fbx::DrawPseudoNormal(Transform& transform)
 		cb.ambient = pMaterialList_[i].ambient;
 		cb.specular = pMaterialList_[i].specular;
 		cb.shininess = { pMaterialList_[i].shiniess,
-			pMaterialList_[i].shiniess,
-			pMaterialList_[i].shiniess,
-			pMaterialList_[i].shiniess };
+			             pMaterialList_[i].shiniess,
+			             pMaterialList_[i].shiniess,
+			             pMaterialList_[i].shiniess };
+		
 		cb.diffuse = pMaterialList_[i].diffuse;
 		cb.diffuseFactor = pMaterialList_[i].factor;
 		cb.materialFlag = pMaterialList_[i].pTexture != nullptr;
@@ -249,11 +251,13 @@ void Fbx::Release()
 void Fbx::InitVertex(FbxMesh* mesh)
 {
 	//VERTEX* vertices = new VERTEX[vertexCount_];
-	pVertices_.resize(vertexCount_);//修正
+	pVertices_.resize(polygonCount_ * 3);//修正
+	vertexCount_ = polygonCount_ * 3;
 	//全ポリゴン
 
 	//Tangentの確認
 	FbxLayerElementTangent* tangentElement = mesh->GetElementTangent();
+	int vIndex = 0;
 
 	for (long poly = 0; poly < polygonCount_; poly++)
 	{
@@ -261,12 +265,11 @@ void Fbx::InitVertex(FbxMesh* mesh)
 		for (int vertex = 0; vertex < 3; vertex++)
 		{
 			//調べる頂点の番号
-			int index = mesh->GetPolygonVertex(poly, vertex);
-
+			//int index = mesh->GetPolygonVertex(poly, vertex);
+			int cp = mesh->GetPolygonVertex(poly, vertex);
 			//頂点の位置
-			FbxVector4 pos = mesh->GetControlPointAt(index);
-			//[index].position
-			pVertices_[index].position
+			FbxVector4 pos = mesh->GetControlPointAt(cp);
+			pVertices_[vIndex].position
 				= XMVectorSet((float)pos[0], (float)pos[1], (float)pos[2], 0.0f);
 
 			//頂点のUV
@@ -274,14 +277,13 @@ void Fbx::InitVertex(FbxMesh* mesh)
 			int uvIndex = mesh->GetTextureUVIndex(poly, vertex, FbxLayerElement::eTextureDiffuse);
 			FbxVector2  uv = pUV->GetDirectArray().GetAt(uvIndex);
 			//vertices[index].uv
-			pVertices_[index].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 1.0f);
+			pVertices_[vIndex].uv = XMVectorSet((float)uv.mData[0], (float)(1.0f - uv.mData[1]), 0.0f, 1.0f);
 			
 			
 			//頂点の法線
 			FbxVector4 normal;
 			mesh->GetPolygonVertexNormal(poly, vertex, normal);
-			//vertices[index].normal
-			pVertices_[index].normal
+			pVertices_[vIndex].normal
 				= XMVectorSet((float)normal[0], (float)normal[1], (float)normal[2], 0.0f);
 
 			if (tangentElement != nullptr)
@@ -298,14 +300,16 @@ void Fbx::InitVertex(FbxMesh* mesh)
 					tangentIndex = tangentElement->GetIndexArray().GetAt(poly * 3 + vertex);
 				}
 				FbxVector4 tangent = tangentElement->GetDirectArray().GetAt(tangentIndex);
-				pVertices_[index].tanget = { (float)tangent[0],(float)tangent[1],(float)tangent[2],0.0f };
+				pVertices_[vIndex].tanget = { (float)tangent[0],(float)tangent[1],(float)tangent[2],0.0f };
 
 			}
 			else
 			{
 				//接線の情報が無い場合は0べクトルを入れておく
-				pVertices_[index].tanget = { 0.0f,0.0f, 0.0f, 0.0f };
+				pVertices_[vIndex].tanget = { 0.0f,0.0f, 0.0f, 0.0f };
 			}
+			//次のIndexへ更新
+			vIndex++;
 		}
 	}
 
@@ -381,7 +385,8 @@ void Fbx::InitIndex(FbxMesh* mesh)
 			{
 				for (long vertex = 0; vertex < 3; vertex++)
 				{
-					indeces.push_back(mesh->GetPolygonVertex(poly, vertex));
+					//indeces.push_back(mesh->GetPolygonVertex(poly, vertex));
+					indeces.push_back((int)(poly * 3 + vertex)); //修正
 					//count++;
 				}
 			}
