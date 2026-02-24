@@ -57,9 +57,12 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
     outData.spos = mul(pos, matWVP);
 	//ワールド座標も変換し、ピクセルシェーダーへ
     outData.wpos = mul(pos, matWolrd);
+    
+    
     normal.w = 0;
     outData.normal = mul(normal, matNomal);
-   // outData.normal.xyz = normalize(mul(n, matNomal).xyz);
+   
+    // outData.normal.xyz = normalize(mul(n, matNomal).xyz);
     outData.uv = uv;
     outData.eyev = outData.wpos - eyePosition;
     

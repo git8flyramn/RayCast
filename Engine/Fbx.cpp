@@ -126,6 +126,7 @@ void Fbx::Draw(Transform& transform)
 		cb.matWVP = transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix();
 		cb.matWolrd = transform.GetWorldMatrix();
 		cb.matNormal = transform.GetNormalMatrix();
+
 		cb.ambient = pMaterialList_[i].ambient;
 		cb.specular = pMaterialList_[i].specular;
 		cb.shininess = { pMaterialList_[i].shiniess,
@@ -242,6 +243,11 @@ void Fbx::DrawPseudoNormal(Transform& transform)
 		//•`‰æ
 		Direct3D::pContext->DrawIndexed(indexCount_[i], 0, 0);
 	}
+}
+
+void Fbx::DrawToon(Transform& transform)
+{
+
 }
 
 void Fbx::Release()
@@ -366,11 +372,8 @@ void Fbx::InitIndex(FbxMesh* mesh)
 	ppIndex_.resize(materialCount_);
 	indexCount_ = std::vector<int>(materialCount_);
 	//indexCount_.resize(materialCount_);
-
-
 	for (int i = 0; i < materialCount_; i++)
 	{
-
 		//int count = 0;
 		auto& indeces = ppIndex_[i];
 

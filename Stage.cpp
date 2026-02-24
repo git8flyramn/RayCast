@@ -116,11 +116,13 @@ void Stage::Draw()
 
 	static Transform tDount;
 	tDount.scale_ = { 0.25,0.25,0.25 };
-	tDount.position_ = { 0,0.5,0 };
+	tDount.position_ = { 0,0.5,1 };
 	//tDount.rotate_.y += 0.1f;
 	Model::SetTransform(hDonut_, tDount);
 	Model::Draw(hDonut_);
 	//Model::DrawPseudoNormal(hDonut_);
+
+
 	Transform tGround;
 	tGround.scale_ = { 2.0f,2.0f,2.0f };
 	tGround.position_ = { 0,0.01f,0 };
@@ -180,36 +182,42 @@ void Stage::Draw()
 void Stage::Update()
 {
 	transform_.rotate_.y += 0.5f;
+
 	if (Input::IsKey(DIK_A))
 	{
 		XMFLOAT4 p = Direct3D::GetLightPos();
 		p = { p.x - 0.01f,p.y,p.z,p.w };
 		Direct3D::SetLightPos(p);
 	}
+	
 	if (Input::IsKey(DIK_D))
 	{
 		XMFLOAT4 p = Direct3D::GetLightPos();
 		p = { p.x + 0.01f,p.y,p.z,p.w };
 		Direct3D::SetLightPos(p);
 	}
+	
 	if (Input::IsKey(DIK_W))
 	{
 		XMFLOAT4 p = Direct3D::GetLightPos();
 		p = { p.x,p.y,p.z + 0.01f,p.w };
 		Direct3D::SetLightPos(p);
 	}
+	
 	if (Input::IsKey(DIK_UP))
 	{
 		XMFLOAT4 p = Direct3D::GetLightPos();
 		p = { p.x,p.y + 0.01f,p.z,p.w };
 		Direct3D::SetLightPos(p);
 	}
+	
 	if (Input::IsKey(DIK_DOWN))
 	{
 		XMFLOAT4 p = Direct3D::GetLightPos();
 		p = { p.x,p.y - 0.01f,p.z,p.w };
 		Direct3D::SetLightPos(p);
 	}
+	
 	if (Input::IsKeyDown(DIK_B))
 	{
 		isBump = !isBump;

@@ -34,8 +34,9 @@ class Fbx
 public:
 	Fbx();
 	HRESULT Load(std::string fileName);
-	void    Draw(Transform& transform);
-	void    DrawPseudoNormal(Transform& transform);
+	void    Draw(Transform& transform);//sinple3D.hlslで描画する関数
+	void    DrawPseudoNormal(Transform& transform);//ノーマルマップ描画を追加
+	void    DrawToon(Transform& transform);//トゥーンシェーダー描画を追加
 	void    Release();
 
 	void InitVertex(FbxMesh* mesh);

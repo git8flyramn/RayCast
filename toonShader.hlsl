@@ -4,10 +4,7 @@
 
 //  Sample3D.hlsl (頂点シェーダ)
 Texture2D g_texture : register(t0); //テクスチャー
-Texture2D g_normalmap : register(t1); //サンプラー
-
-SamplerState g_sampler : register(s0);
-SamplerState g_normalsampler : register(s1);
+SamplerState g_sampler : register(s0); //サンプラー
 
 //───────────────────────────────────────
 // コンスタントバッファ
@@ -44,19 +41,13 @@ struct VS_OUT
     float2 uv : TEXCOORD; //UV座標
     float4 color : COLOR; //色(明るさ)
     float4 normal : NORMAL; //法線ベクトル
-    float4 tangent : TANGENT;
-    float4 binormal : BINOMAL;
     float4 eyev : POSITION1; //視線ポジション
 };
 
 //───────────────────────────────────────
 // 頂点シェーダ
 //───────────────────────────────────────
-VS_OUT VS(float4 pos : POSITION, 
-          float4 uv  : TEXCOORD, 
-          float4 normal : NORMAL,
-          float4 tangent: TANGENT,
-          float4 binormal: BINORMAL)
+VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 {
 	//ピクセルシェーダーへ渡す情報
     VS_OUT outData;
@@ -67,18 +58,12 @@ VS_OUT VS(float4 pos : POSITION,
 	//ワールド座標も変換し、ピクセルシェーダーへ
     outData.wpos = mul(pos, matWolrd);
     
+    
     normal.w = 0;
     outData.normal = mul(normal, matNomal);
-    
-    tangent.w = 0;
-    outData.tangent = mul(tangent, matNomal);
-    
-    binormal.w = 0;
-    outData.binormal = mul(binormal, matNomal);
-    
-    
-    //uv.w = 0;
-    outData.uv = uv.xy;
+   
+    // outData.normal.xyz = normalize(mul(n, matNomal).xyz);
+    outData.uv = uv;
     outData.eyev = outData.wpos - eyePosition;
     
     
@@ -101,18 +86,7 @@ VS_OUT VS(float4 pos : POSITION,
 //───────────────────────────────────────
 float4 PS(VS_OUT inData) : SV_Target
 {
-    //法線マップから法線を取得
-   // float3 normalMap = g_normalmap.Sample(g_normalsampler, inData.uv).xyz * 2.0 - 1.0;
-    float3 normalMap = g_normalmap.Sample(g_normalsampler, inData.uv).xyz;
-   
-    float3 T = normalize(inData.tangent.xyz);
-    float3 B = normalize(inData.binormal.xyz);
-    float3 N = normalize(inData.normal.xyz);
-    float3x3 TBN = float3x3(T, B, N);
-    float3 wNormal = mul(normalMap, TBN); //ワールド空間の法線ベクトルを計算
-    
-    
-    // float4 light = float4(-1, 0.5, -0.7, 0);
+   // float4 light = float4(-1, 0.5, -0.7, 0);
     float4 diffuse;
     float4 ambientColor = ambient;
     float4 ambentFactor = { 0.1, 0.1, 0.1, 1.0 };
@@ -120,18 +94,19 @@ float4 PS(VS_OUT inData) : SV_Target
     
     float3 k = { 0.2f, 0.2f, 1.0f };
     float len = length(lightPosition.xyz - inData.wpos.xyz);
-    float dTerm = 1.0 / (k.x + k.y * len + k.z * len * len);//距離減衰計算
-    //float dTerm = 1.0;
-   // float3 N = normalize(inData.normal.xyz);
-    diffuse = diffuseColor * diffusefactor * clamp(dot(wNormal, dir), 0, 1) * dTerm;
+    float dTerm = 1.0 / (k.x + k.y * len + k.z * len * len); //距離減衰計算
+   // float dTerm = 1.0;
+    
+    float3 N = normalize(inData.normal.xyz);
+    diffuse = diffuseColor * diffusefactor * clamp(dot(N, dir), 0, 1) * dTerm;
     
     float3 L = normalize(lightPosition.xyz - inData.wpos.xyz);
-    float ndotl = saturate(dot(wNormal, L));
+    float ndotl = saturate(dot(N, L));
     float spec = 0.0;
     
     if (ndotl > 0.0)
     {
-        float3 R = reflect(L, wNormal);
+        float3 R = reflect(L, N);
         float3 V = normalize(inData.eyev.xyz);
         spec = pow(saturate(dot(R, V)), 32.0) * ndotl;
 
@@ -144,6 +119,8 @@ float4 PS(VS_OUT inData) : SV_Target
     
     float4 ambientTerm;
     float4 color;
+    //diffuse = diffuseColor * diffusefactor * clamp(dot(inData.normal.xyz, dir), 0, 1);
+    
     if (useTexture == 1)
     {
         //テクスチャから色を取得
@@ -156,7 +133,5 @@ float4 PS(VS_OUT inData) : SV_Target
         ambientTerm = ambentFactor * diffuseColor;
     }
     color = diffuseTerm + specularTerm + ambientTerm;
-   // return float4(normalMap,1.0);
-   return color;
-   
+    return color;
 }
