@@ -85,7 +85,7 @@ void Stage::Draw()
 { 
 	Transform ltr;
 	ltr.position_ = { Direct3D::GetLightPos().x,Direct3D::GetLightPos().y,Direct3D::GetLightPos().z };
-	ltr.scale_ = { 0.1,0.1,0.1 };
+	ltr.scale_ = { 0.1f,0.1f,0.1f };
 	Model::SetTransform(hball_, ltr);
 	Model::Draw(hball_);
 	
@@ -119,7 +119,7 @@ void Stage::Draw()
 	tDount.position_ = { 0,0.5,1 };
 	//tDount.rotate_.y += 0.1f;
 	Model::SetTransform(hDonut_, tDount);
-	Model::Draw(hDonut_);
+	Model::DrawToon(hDonut_);
 	//Model::DrawPseudoNormal(hDonut_);
 
 

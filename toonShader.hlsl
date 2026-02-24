@@ -92,6 +92,9 @@ float4 PS(VS_OUT inData) : SV_Target
     float4 ambentFactor = { 0.1, 0.1, 0.1, 1.0 };
     float3 dir = normalize(lightPosition.xyz - inData.wpos.xyz); //ピクセル位置のポリゴン3次元座標 = wpos
     
+   
+    //距離減衰
+    
     float3 k = { 0.2f, 0.2f, 1.0f };
     float len = length(lightPosition.xyz - inData.wpos.xyz);
     float dTerm = 1.0 / (k.x + k.y * len + k.z * len * len); //距離減衰計算
@@ -101,13 +104,14 @@ float4 PS(VS_OUT inData) : SV_Target
     diffuse = diffuseColor * diffusefactor * clamp(dot(N, dir), 0, 1) * dTerm;
     
     float3 L = normalize(lightPosition.xyz - inData.wpos.xyz);
-    float ndotl = saturate(dot(N, L));
+    float ndotl = saturate(dot(N, L));//NとLの内積を0～1にクランプ
+   
     float spec = 0.0;
     
     if (ndotl > 0.0)
     {
         float3 R = reflect(L, N);
-        float3 V = normalize(inData.eyev.xyz);
+        float3 V = normalize(-inData.eyev.xyz);
         spec = pow(saturate(dot(R, V)), 32.0) * ndotl;
 
     }
@@ -118,7 +122,7 @@ float4 PS(VS_OUT inData) : SV_Target
     
     
     float4 ambientTerm;
-    float4 color;
+   // float4 color;
     //diffuse = diffuseColor * diffusefactor * clamp(dot(inData.normal.xyz, dir), 0, 1);
     
     if (useTexture == 1)
@@ -132,6 +136,24 @@ float4 PS(VS_OUT inData) : SV_Target
         diffuseTerm = diffuse * dTerm;
         ambientTerm = ambentFactor * diffuseColor;
     }
-    color = diffuseTerm + specularTerm + ambientTerm;
-    return color;
+    //float4 color = diffuseTerm + specularTerm + ambientTerm;
+    float4 color = float4(ndotl, ndotl, ndotl, 1.0);
+    
+    if (ndotl > (float) 3 / 4)
+    {
+        color = float4(1, 1, 1, 1);
+    }
+    else if (ndotl > (float) 2 / 4)
+    {
+        color = float4(0.7,0.7,0.7,1);
+    }
+    else if (ndotl > (float) 1 / 4)
+    {
+        color = float4(0.4, 0.4, 0.4, 1);
+    }
+    else
+    {
+        color = float4(0.1, 0.1, 0.1, 1);
+    }
+        return color;
 }

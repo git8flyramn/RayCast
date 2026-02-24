@@ -63,11 +63,13 @@ private:
 		XMMATRIX matWVP;    //ワールドビュー射影行列
 		XMMATRIX matWolrd;//ワールド行列
 		XMMATRIX matNormal;//法線変換行列
+
 		XMFLOAT4 diffuse; //材質の色
 		XMFLOAT4 diffuseFactor;//拡散反射の強さ
 		XMFLOAT4 specular;//鏡面反射の色
 		XMFLOAT4 shininess;//鏡面反射の鋭さ 4要素同じのが入ってる
 		XMFLOAT4 ambient; //環境光
+
 		BOOL materialFlag; //マテリアルがあるかないか
 	};
 	struct VERTEX
