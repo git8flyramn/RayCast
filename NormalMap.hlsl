@@ -67,13 +67,13 @@ VS_OUT VS(float4 pos : POSITION,
 	//ワールド座標も変換し、ピクセルシェーダーへ
     outData.wpos = mul(pos, matWolrd);
     
-    normal.w = 0;
+    normal.w = 0;//法線ベクトルのw成分を0にする
     outData.normal = mul(normal, matNomal);
     
-    tangent.w = 0;
+    tangent.w = 0; //接線ベクトルのw成分を0にする
     outData.tangent = mul(tangent, matNomal);
     
-    binormal.w = 0;
+    binormal.w = 0; //従法線ベクトルのw成分を0にする
     outData.binormal = mul(binormal, matNomal);
     
     
@@ -122,7 +122,7 @@ float4 PS(VS_OUT inData) : SV_Target
     float len = length(lightPosition.xyz - inData.wpos.xyz);
     float dTerm = 1.0 / (k.x + k.y * len + k.z * len * len);//距離減衰計算
     //float dTerm = 1.0;
-   // float3 N = normalize(inData.normal.xyz);
+  
     diffuse = diffuseColor * diffusefactor * clamp(dot(wNormal, dir), 0, 1) * dTerm;
     
     float3 L = normalize(lightPosition.xyz - inData.wpos.xyz);

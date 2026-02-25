@@ -136,6 +136,8 @@ float4 PS(VS_OUT inData) : SV_Target
         diffuseTerm = diffuse * dTerm;
         ambientTerm = ambentFactor * diffuseColor;
     }
+    
+    
     //float4 color = diffuseTerm + specularTerm + ambientTerm;
     float4 color = float4(ndotl, ndotl, ndotl, 1.0);
     
@@ -155,5 +157,16 @@ float4 PS(VS_OUT inData) : SV_Target
     {
         color = float4(0.1, 0.1, 0.1, 1);
     }
-        return color;
+    
+    // 視線ベクトル inData.eye.xyz;
+    //面の法線      inData.normal.xyz;
+    float3 Vvec = normalize(-inData.eyev.xyz);
+    float3 Nvec = normalize(inData.normal.xyz);
+    float VdotN = abs(dot(Nvec, Vvec));
+    if(VdotN < 0.5)
+    {
+        color = float4(0, 0, 0, 1);
+
+    }
+    return color;
 }

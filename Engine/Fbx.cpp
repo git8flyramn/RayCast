@@ -532,7 +532,7 @@ void Fbx::InitMaterial(FbxNode* pNode)
 				//テクスチャファイルが無いときの処理(エラー）
 			}
 			//ノーマルマップのテクスチャの取得
-			fs::path normalTexturePath = "texture.png";
+			fs::path normalTexturePath = "UV.png";
 			if (fs::is_regular_file(normalTexturePath))
 			{
 				pMaterialList_[i].pNormalTexture = new Texture;
@@ -548,7 +548,9 @@ void Fbx::InitMaterial(FbxNode* pNode)
 			FbxDouble3 diffuseColor = pMaterial->Diffuse;
 			FbxDouble3 ambient = pMaterial->Ambient;
 			pMaterialList_[i].diffuse = XMFLOAT4((float)diffuseColor[0], (float)diffuseColor[1], (float)diffuseColor[2], 1.0f);
+			
 			pMaterialList_[i].factor = XMFLOAT4((float)diffuse, (float)diffuse, (float)diffuse, (float)diffuse);
+			
 			pMaterialList_[i].ambient = { (float)ambient[0],(float)ambient[1],(float)ambient[2],1.0f };
 
 			if (pMaterial->GetClassId().Is(FbxSurfacePhong::ClassId))
@@ -570,11 +572,13 @@ void Fbx::InitMaterial(FbxNode* pNode)
 
 			pMaterialList_[i].diffuse = XMFLOAT4((float)diffuse[0], (float)diffuse[1], (float)diffuse[2], 1.0f);
 			FbxSurfacePhong* pPhong = (FbxSurfacePhong*)pNode->GetMaterial(i);
+			
 			FbxDouble factor = pPhong->DiffuseFactor;//拡散反射強度
 			pMaterialList_[i].factor = XMFLOAT4((float)factor, (float)factor, (float)factor, (float)factor);
 
 			FbxDouble3 ambient = pPhong->Ambient; //環境反射率;
 			pMaterialList_[i].ambient = XMFLOAT4((float)ambient[0], (float)ambient[1], (float)ambient[2], 1.0f);
+			
 			if (pPhong->GetClassId().Is(FbxSurfacePhong::ClassId))
 			{
 				FbxDouble specular = pPhong->SpecularFactor;//鏡面反射率
@@ -611,13 +615,13 @@ void Fbx::RayCast(RayCastData& rayData)
 			rayData.isHit = TriangleTests::Intersects(XMLoadFloat4(&rayData.start), XMLoadFloat4(&rayData.dir),
 				V0.position, V1.position, V2.position, rayData.dist);
 
-
-		}
-		//rayData.isHit = InterSects(V0, V1, V2, レイキャストのデータ);
-		if (rayData.isHit)
-		{
-			return;
-		}
+			//rayData.isHit = InterSects(V0, V1, V2, レイキャストのデータ);
+			if (rayData.isHit)
+			{
+				return;
+		    }
+	    }
+		rayData.isHit = false;
 		////グループ語とに全ポリゴンに対して
 	 //  // 頂点を3つ取ってくる
 	 //  
@@ -626,7 +630,7 @@ void Fbx::RayCast(RayCastData& rayData)
 		//XMVECTOR dirN = XMVector4Normalize(dir); //dirの単位ベクトル
 		////rayData.isHit = InterSects();
 	}
-	rayData.isHit = false;
+	
 }
 
 float Math::Det(XMFLOAT3 a, XMFLOAT3 b, XMFLOAT3 c)

@@ -222,11 +222,13 @@ HRESULT Direct3D::InitShader3D()
     assert(pCompilePS != nullptr);
     hr = pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(),
         pCompilePS->GetBufferSize(), NULL, &(shaderBundle[SHADER_3D].pPixelShader));
+   
     if (FAILED(hr))
     {
         MessageBox(nullptr, L"ピクセルシェーダの作成に失敗しました", L"エラー", MB_OK);
         return hr;
     }
+
     //XMVECTOR
     UINT offset[5] = { 0,sizeof(DirectX::XMVECTOR),sizeof(DirectX::XMVECTOR) * 2 };
     //頂点インプットレイアウト
@@ -282,7 +284,6 @@ HRESULT Direct3D::InitShader2D()
         MessageBox(nullptr, L"頂点シェーダの作成の作成に失敗しました", L"エラー", MB_OK);
         return hr;
     }
-
 
 
     // ピクセルシェーダの作成（コンパイル）

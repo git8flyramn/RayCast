@@ -117,7 +117,7 @@ void Stage::Draw()
 	static Transform tDount;
 	tDount.scale_ = { 0.25,0.25,0.25 };
 	tDount.position_ = { 0,0.5,1 };
-	//tDount.rotate_.y += 0.1f;
+	tDount.rotate_.y += 0.1f;
 	Model::SetTransform(hDonut_, tDount);
 	Model::DrawToon(hDonut_);
 	//Model::DrawPseudoNormal(hDonut_);
@@ -157,7 +157,7 @@ void Stage::Draw()
 
 	}*/
 	
-//	ImGui::Text("Stage Class rot:%lf", tDount.rotate_.z);
+//ImGui::Text("Stage Class rot:%lf", tDount.rotate_.z);
 	
 
 
