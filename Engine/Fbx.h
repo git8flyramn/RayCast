@@ -97,6 +97,8 @@ private:
 	std::vector<std::vector<int>> ppIndex_; //マテリアルごとのインデックスデータ[material][index]
 	//auto& arr = ppIndex_[1];
 	//arr[0]からarr[index - 1]までになる
+
+	Texture* pToonTexture_;//トゥーンシェーダー
    
 
 };

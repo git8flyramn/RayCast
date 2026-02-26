@@ -13,6 +13,7 @@ Fbx::Fbx()
 	, vertexCount_(0)
 	, polygonCount_(0)
 	, materialCount_(0)
+    ,pToonTexture_(nullptr)
 {
 }
 
@@ -78,6 +79,9 @@ HRESULT Fbx::Load(std::string fileName)
 
 	//マネージャ解放
 	pFbxManager->Destroy();
+
+	pToonTexture_ = new Texture();
+	pToonTexture_->Load("toon.png");
 	return S_OK;
 }
 
@@ -297,6 +301,16 @@ void Fbx::DrawToon(Transform& transform)
 			Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
 
 			ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pTexture->GetSRV();
+			Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
+		}
+
+		assert(pToonTexture_ != nullptr);
+		if (pToonTexture_)
+		{
+			ID3D11SamplerState* pSampler = pToonTexture_->GetSampler();
+			Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
+
+			ID3D11ShaderResourceView* pSRV = pToonTexture_->GetSRV();
 			Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
 		}
 
@@ -532,7 +546,7 @@ void Fbx::InitMaterial(FbxNode* pNode)
 				//テクスチャファイルが無いときの処理(エラー）
 			}
 			//ノーマルマップのテクスチャの取得
-			fs::path normalTexturePath = "UV.png";
+			fs::path normalTexturePath = "UVImage.png";
 			if (fs::is_regular_file(normalTexturePath))
 			{
 				pMaterialList_[i].pNormalTexture = new Texture;
@@ -547,6 +561,7 @@ void Fbx::InitMaterial(FbxNode* pNode)
 			FbxDouble diffuse = pMaterial->DiffuseFactor;
 			FbxDouble3 diffuseColor = pMaterial->Diffuse;
 			FbxDouble3 ambient = pMaterial->Ambient;
+
 			pMaterialList_[i].diffuse = XMFLOAT4((float)diffuseColor[0], (float)diffuseColor[1], (float)diffuseColor[2], 1.0f);
 			
 			pMaterialList_[i].factor = XMFLOAT4((float)diffuse, (float)diffuse, (float)diffuse, (float)diffuse);

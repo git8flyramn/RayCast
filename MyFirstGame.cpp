@@ -42,8 +42,8 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-//INT_PTR CALLBACK    DlgProc(HWND, UINT, WPARAM, LPARAM);
-//INT_PTR CALLBACK    ManuProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    DlgProc(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    ManuProc(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
@@ -112,12 +112,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     pRootJob->Initialize();
   /*  HWND hDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd,ManuProc, 0);
     ShowWindow(hDlg, SW_SHOW);*/
-  //  ZeroMemory(&msg, sizeof(msg));
+    //ZeroMemory(&msg, sizeof(msg));
     // メイン メッセージ ループ:　ユーザー操作(クリックやキー入力)を受け取り、処理を続ける仕組み
     while (msg.message != WM_QUIT)
     {
 
-        while (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
+        if(PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
         {
 
             TranslateMessage(&msg);

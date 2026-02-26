@@ -6,6 +6,8 @@
 Texture2D g_texture : register(t0); //テクスチャー
 SamplerState g_sampler : register(s0); //サンプラー
 
+Texture2D g_ToonTexture : register(t1);
+SamplerState g_Toonsampler : register(s1);
 //───────────────────────────────────────
 // コンスタントバッファ
 // DirectX 側から送信されてくる、ポリゴン頂点以外の諸情報の定義
@@ -87,6 +89,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
 float4 PS(VS_OUT inData) : SV_Target
 {
    // float4 light = float4(-1, 0.5, -0.7, 0);
+    //float3 toonMap = 
     float4 diffuse;
     float4 ambientColor = ambient;
     float4 ambentFactor = { 0.1, 0.1, 0.1, 1.0 };
@@ -127,46 +130,55 @@ float4 PS(VS_OUT inData) : SV_Target
     
     if (useTexture == 1)
     {
+        float4 texColor = g_texture.Sample(g_sampler, inData.uv);
         //テクスチャから色を取得
-        diffuseTerm = diffuse * g_texture.Sample(g_sampler, inData.uv);
-        ambientTerm = ambentFactor * g_texture.Sample(g_sampler, inData.uv);
+        diffuseTerm = diffuse * texColor;
+        ambientTerm = ambentFactor * texColor;
     }
     else
     {
-        diffuseTerm = diffuse * dTerm;
-        ambientTerm = ambentFactor * diffuseColor;
+        diffuseTerm = diffuse;
+        ambientTerm = diffuse * ambentFactor;
     }
+    
+    float2 toonUV = float2(ndotl, 0.5f);//nodotlをUVのx成分に使う
+    float4 toonColor = g_ToonTexture.Sample(g_Toonsampler, toonUV);
+    
+    diffuseTerm = diffuse * toonColor;
+    ambientTerm = ambentFactor * diffuse;
     
     
     //float4 color = diffuseTerm + specularTerm + ambientTerm;
-    float4 color = float4(ndotl, ndotl, ndotl, 1.0);
-    
-    if (ndotl > (float) 3 / 4)
-    {
-        color = float4(1, 1, 1, 1);
-    }
-    else if (ndotl > (float) 2 / 4)
-    {
-        color = float4(0.7,0.7,0.7,1);
-    }
-    else if (ndotl > (float) 1 / 4)
-    {
-        color = float4(0.4, 0.4, 0.4, 1);
-    }
-    else
-    {
-        color = float4(0.1, 0.1, 0.1, 1);
-    }
+    //float4 color = float4(ndotl, ndotl, ndotl, 1.0);
+    float4 color = diffuse;
+    //if (ndotl > (float) 3 / 4)
+    //{
+    //    color = float4(1, 1, 1, 1);
+    //}
+    //else if (ndotl > (float) 2 / 4)
+    //{
+    //    color = float4(0.7,0.7,0.7,1);
+    //}
+    //else if (ndotl > (float) 1 / 4)
+    //{
+    //    color = float4(0.4, 0.4, 0.4, 1);
+    //}
+    //else
+    //{
+    //    color = float4(0.1, 0.1, 0.1, 1);
+    //}
     
     // 視線ベクトル inData.eye.xyz;
     //面の法線      inData.normal.xyz;
     float3 Vvec = normalize(-inData.eyev.xyz);
     float3 Nvec = normalize(inData.normal.xyz);
     float VdotN = abs(dot(Nvec, Vvec));
-    if(VdotN < 0.5)
+    if(VdotN < 0.15)
     {
         color = float4(0, 0, 0, 1);
 
     }
+    
+   // return color * diffuseTerm + ambientTerm + specularTerm;
     return color;
 }
