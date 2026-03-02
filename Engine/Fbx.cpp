@@ -88,7 +88,7 @@ HRESULT Fbx::Load(std::string fileName)
 void Fbx::Draw(Transform& transform)
 {
 	//Quad‚ðƒAƒŒƒ“ƒW
-	Direct3D::SetShader(SHADER_3D);
+	Direct3D::SetShader(SHADER_OUT_LINE);
 	transform.Calculation();
 	//for (int i = 0;i < materialCount_;i++)
 	//{
@@ -167,6 +167,7 @@ void Fbx::Draw(Transform& transform)
 		//•`‰æ
 		Direct3D::pContext->DrawIndexed(indexCount_[i], 0, 0);
 	}
+	Direct3D::SetShader(SHADER_TOON);
 }
 
 void Fbx::DrawPseudoNormal(Transform& transform)
