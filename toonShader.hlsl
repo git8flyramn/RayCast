@@ -65,6 +65,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
     outData.normal = mul(normal, matNomal);
    
     // outData.normal.xyz = normalize(mul(n, matNomal).xyz);
+    uv.w = 0;
     outData.uv = uv;
     outData.eyev = outData.wpos - eyePosition;
     

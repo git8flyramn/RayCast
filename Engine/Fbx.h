@@ -38,8 +38,9 @@ public:
 	void    DrawPseudoNormal(Transform& transform);//ノーマルマップ描画を追加
 	void    DrawToon(Transform& transform);//トゥーンシェーダー描画を追加
 	void    Release();
-
+	
 	void InitVertex(FbxMesh* mesh);
+	   //InitIndex
 	void InitIndex(FbxMesh* mesh);
 	void InitConstantBuffer();
 	void InitMaterial(FbxNode* pNode);
@@ -54,7 +55,7 @@ private:
 		XMFLOAT4 diffuse;
 		XMFLOAT4 ambient;
 		XMFLOAT4 specular;
-		float    shiniess;
+		float    shininess;
 		XMFLOAT4 factor;
 	};
 
