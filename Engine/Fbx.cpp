@@ -233,10 +233,12 @@ void Fbx::DrawPseudoNormal(Transform& transform)
 		//ノーマルマップのテクスチャがある場合はセット
 		if (pMaterialList_[i].pNormalTexture)
 		{
+			ID3D11ShaderResourceView* pNormalSRV = pMaterialList_[i].pNormalTexture->GetSRV();
 			ID3D11SamplerState* pSampler = pMaterialList_[i].pNormalTexture->GetSampler();
 			Direct3D::pContext->PSSetSamplers(1, 1, &pSampler);
-			ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pNormalTexture->GetSRV();
-			Direct3D::pContext->PSSetShaderResources(1, 1, &pSRV);
+			Direct3D::pContext->PSSetShaderResources(1, 1, &pNormalSRV);
+			//ID3D11ShaderResourceView* pSRV = pMaterialList_[i].pNormalTexture->GetSRV();
+			
 
 		}
 		//描画
@@ -473,7 +475,7 @@ void Fbx::InitMaterial(FbxNode* pNode)
 				//テクスチャファイルが無いときの処理(エラー）
 			}
 			//ノーマルマップのテクスチャの取得
-			fs::path normalTexturePath = "texture.png";
+			fs::path normalTexturePath = "Normal2.png";
 			if (fs::is_regular_file(normalTexturePath))
 			{
 				pMaterialList_[i].pNormalTexture = new Texture;

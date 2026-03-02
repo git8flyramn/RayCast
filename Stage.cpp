@@ -68,10 +68,10 @@ void Stage::Initialize()
 	hball_ = Model::Load("Ball.fbx");
 	assert(hball_ >= 0);
 
-	hRoom_ = Model::Load("Room.fbx");
-	assert(hRoom_ >= 0); 
+	/*hRoom_ = Model::Load("Room.fbx");
+	assert(hRoom_ >= 0); */
 	
-	hGround_ = Model::Load("Ground.fbx");
+	hGround_ = Model::Load("Plane.fbx");
 	assert(hGround_ >= 0);
 
 	hDonut_ = Model::Load("Donut.fbx");
@@ -89,11 +89,11 @@ void Stage::Draw()
 	Model::SetTransform(hball_, ltr);
 	Model::Draw(hball_);
 	
-	Transform tr;
+	/*Transform tr;
 	tr.position_ = { 0,0,0 };
 	tr.rotate_ = { 0,180.0f,0 };
 	Model::SetTransform(hRoom_, tr);
-	Model::Draw(hRoom_);
+	Model::Draw(hRoom_);*/
 	/*for (int i = 0; i < ZSIZE; i++)
 	{
 		for (int j = 0; j < XSIZE; j++)
@@ -120,12 +120,13 @@ void Stage::Draw()
 	//tDount.rotate_.y += 0.1f;
 	Model::SetTransform(hDonut_, tDount);
 	Model::Draw(hDonut_);
+
 	//Model::DrawPseudoNormal(hDonut_);
 	Transform tGround;
-	tGround.scale_ = { 2.0f,2.0f,2.0f };
-	tGround.position_ = { 0,0.01f,0 };
+	tGround.scale_ = { 5,5,5};
+	tGround.position_ = { 0,0.0,0.0 };
 	Model::SetTransform(hGround_, tGround);
-	Model::Draw(hGround_);
+	Model::DrawPseudoNormal(hGround_);
 	
 	/*static Transform trans;
 	trans.scale_ = { 0.5f,0.5f,1.0f };
@@ -214,10 +215,14 @@ void Stage::Update()
 	{
 		isBump = !isBump;
 	}
-	
+    
+	static float scrollx = 0.0f;
 	CONSTANT_BUFFER_STAGE cb;
 	cb.lightPosition = Direct3D::GetLightPos();
 	XMStoreFloat4(&cb.eyePosition,Camera::GetPosition());
+
+	cb.scroll = { scrollx,0.0f,0.0f,0.0f };
+	scrollx += 0.0001f;
 	
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める

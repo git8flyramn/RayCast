@@ -22,7 +22,8 @@ enum BLOCK_TYPE
 struct CONSTANT_BUFFER_STAGE
 {
     XMFLOAT4 lightPosition;//光源の位置
-    XMFLOAT4 eyePosition;   //カメラの座標
+    XMFLOAT4 eyePosition;  //カメラの座標
+    XMFLOAT4 scroll;       //スクロール値(xscroll,yscroll,0,0);
 };
 // WATER,
 struct sData

@@ -1,13 +1,11 @@
 //───────────────────────────────────────
 // テクスチャ＆サンプラーデータのグローバル変数定義
 //───────────────────────────────────────
-
-//  Sample3D.hlsl (頂点シェーダ)
 Texture2D g_texture : register(t0); //テクスチャー
-Texture2D g_normalmap : register(t1); //サンプラー
+Texture2D g_normalmap : register(t1); //テクスチャー
 
-SamplerState g_sampler : register(s0);
-SamplerState g_normalsampler : register(s1);
+SamplerState g_sampler : register(s0); //サンプラー
+SamplerState g_normalSampler : register(s1); //サンプラー
 
 //───────────────────────────────────────
 // コンスタントバッファ
@@ -16,22 +14,23 @@ SamplerState g_normalsampler : register(s1);
 cbuffer global : register(b0)
 {
     row_major float4x4 matWVP; // ワールド・ビュー・プロジェクションの合成行列
-    row_major float4x4 matWolrd; //ワールド行列
-    row_major float4x4 matNomal; //法線変換行列
-    float4 diffuseColor;
-    float4 diffusefactor;
-    float4 specular; //スペキュラ
-    float4 shininess;
-    float4 ambient;
-    bool useTexture; //テクスチャを使うかどうか
-    
+    row_major float4x4 matWorld; // ワールド行列
+    row_major float4x4 matNormal; // 法線変換行列
+    float4 diffuseColor; // ディフューズ色
+    float4 diffusefactor; // ディフューズ係数
+    float4 specular; // スペキュラ色
+    float4 shininess; // シャイニネス
+    float4 ambient; // アンビエント色
+    bool useTexture; // テクスチャーを使うかどうか
+    float2 scroll;
 };
 
 cbuffer gStage : register(b1)
 {
     float4 lightPosition;
     float4 eyePosition;
-}
+};
+
 
 //───────────────────────────────────────
 // 頂点シェーダー出力＆ピクセルシェーダー入力データ構造体
@@ -39,60 +38,58 @@ cbuffer gStage : register(b1)
 struct VS_OUT
 {
                  //セマンティクス
-    float4 wpos : Position0; //ワールド座標
-    float4 spos : SP_POSITION; //スクリーン座標
+    float4 wpos : POSITION0; //ワールド座標
+    float4 spos : SV_POSITION; //スクリーン位置
     float2 uv : TEXCOORD; //UV座標
-    float4 color : COLOR; //色(明るさ)
     float4 normal : NORMAL; //法線ベクトル
-    float4 tangent : TANGENT;
-    float4 binormal : BINOMAL;
-    float4 eyev : POSITION1; //視線ポジション
+    float4 tangent : TANGENT; // ← 追加
+    float4 binormal : BINORMAL; // ← 追加
+    float4 eyev : POSITION1; //視線ベクトル
 };
 
 //───────────────────────────────────────
 // 頂点シェーダ
 //───────────────────────────────────────
-VS_OUT VS(float4 pos : POSITION, 
-          float4 uv  : TEXCOORD, 
+VS_OUT VS(float4 pos : POSITION,
+          float4 uv : TEXCOORD,
           float4 normal : NORMAL,
-          float4 tangent: TANGENT,
-          float4 binormal: BINORMAL)
+          float4 tangent : TANGENT,
+          float4 binormal : BINORMAL)
 {
 	//ピクセルシェーダーへ渡す情報
     VS_OUT outData;
 
-    //ローカル座標に、ワールド・ビュー・プロジェクション行列を掛けて
+	//ローカル座標に、ワールド・ビュー・プロジェクション行列をかけて
     //スクリーン座標に変換し、ピクセルシェーダーへ
     outData.spos = mul(pos, matWVP);
-	//ワールド座標も変換し、ピクセルシェーダーへ
-    outData.wpos = mul(pos, matWolrd);
+    //ワールド座標もピクセルシェーダーへ
+    outData.wpos = mul(pos, matWorld);
+
     
-    normal.w = 0;
-    outData.normal = mul(normal, matNomal);
+    normal.w = 0; //法線ベクトルのw成分は0にする
+    outData.normal = mul(normal, matNormal);
     
-    tangent.w = 0;
-    outData.tangent = mul(tangent, matNomal);
+    tangent.w = 0; //接線ベクトルのw成分は0にする
+    outData.tangent = mul(tangent, matNormal);
     
-    binormal.w = 0;
-    outData.binormal = mul(binormal, matNomal);
-    
-    
-    //uv.w = 0;
-    outData.uv = uv.xy;
-    outData.eyev = outData.wpos - eyePosition;
+    binormal.w = 0; //従法線ベクトルのw成分は0にする
+    outData.binormal = mul(binormal, matNormal);
     
     
-    //normal = mul(normal, matNomal); //法線ベクトルをワールドビュープロジェクション行列で変換
-    //normal = normalize(normal); //法線ベクトルの長さを正規化->1にする
-    //normal.w = 0;
     
+    uv.w = 0; //w成分は0にする
+    outData.uv = uv.xy; //UV座標はそのまま
+    outData.eyev = outData.wpos - eyePosition; //視線ベクトルを計算して渡す
+
+    //normal = mul(normal, matNormal); //法線ベクトルをワールド・ビュー・プロジェクション行列で変換
+    //normal = normalize(normal); //法線ベクトルを正規化=長さ1に)
+    //normal.w = 0; //w成分は0にする
     //float4 light = float4(-1, 0.5, -0.7, 0);
-    
     //light = normalize(light);
     //light.w = 0;
-    
-   // outData.color = clamp(dot(normal, light), 0, 1);
-    
+    //outData.color = clamp(dot(normal, light), 0, 1);
+
+	//まとめて出力
     return outData;
 }
 
@@ -102,52 +99,58 @@ VS_OUT VS(float4 pos : POSITION,
 float4 PS(VS_OUT inData) : SV_Target
 {
     //法線マップから法線を取得
-   // float3 normalMap = g_normalmap.Sample(g_normalsampler, inData.uv).xyz * 2.0 - 1.0;
-    float3 normalMap = g_normalmap.Sample(g_normalsampler, inData.uv).xyz;
+    //float3 normalMap = g_normalmap.Sample(g_normalSampler, inData.uv).xyz * 2.0 - 1.0;
+    float2 uvN = inData.uv + float2(scroll.x, 0.0);
+    float3 normalMapSample = g_normalmap.Sample(g_normalSampler, uvN).rgb;
+    float3 normalTangentSpace = normalMapSample * 2.0 - 1.0;
+    
+  //  float3 normalMap = g_normalmap.Sample(g_normalSampler, inData.uv).xyz;
    
     float3 T = normalize(inData.tangent.xyz);
     float3 B = normalize(inData.binormal.xyz);
     float3 N = normalize(inData.normal.xyz);
     float3x3 TBN = float3x3(T, B, N);
-    float3 wNormal = mul(normalMap, TBN); //ワールド空間の法線ベクトルを計算
+    float3 wNormal = mul(normalTangentSpace, TBN); //ワールド空間の法線ベクトルを計算    
     
-    
-    // float4 light = float4(-1, 0.5, -0.7, 0);
+    //float4 light = float4(-1, 0.5, -0.7, 0);
+    //return float4(1, 1, 0, 1);
     float4 diffuse;
     float4 ambientColor = ambient;
     float4 ambentFactor = { 0.1, 0.1, 0.1, 1.0 };
-    float3 dir = normalize(lightPosition.xyz - inData.wpos.xyz); //ピクセル位置のポリゴン3次元座標 = wpos
+    float3 dir = normalize(lightPosition.xyz - inData.wpos.xyz); //ピクセル位置のポリゴンの3次元座標＝wpos
+    
+
     
     float3 k = { 0.2f, 0.2f, 1.0f };
     float len = length(lightPosition.xyz - inData.wpos.xyz);
-    float dTerm = 1.0 / (k.x + k.y * len + k.z * len * len);//距離減衰計算
+    float dTerm = 1.0 / (k.x + k.y * len + k.z * len * len); //距離減衰計算
     //float dTerm = 1.0;
-   // float3 N = normalize(inData.normal.xyz);
+    
+    //float3 Nw = wNormal; //法線マップから取得した法線を使用
     diffuse = diffuseColor * diffusefactor * clamp(dot(wNormal, dir), 0, 1) * dTerm;
     
+
     float3 L = normalize(lightPosition.xyz - inData.wpos.xyz);
     float ndotl = saturate(dot(wNormal, L));
     float spec = 0.0;
-    
     if (ndotl > 0.0)
     {
+    
         float3 R = reflect(L, wNormal);
         float3 V = normalize(inData.eyev.xyz);
         spec = pow(saturate(dot(R, V)), 32.0) * ndotl;
-
     }
     float4 specularCol = specular * spec;
     
+    
     float4 diffuseTerm;
     float4 specularTerm = specularCol * dTerm;
-    
-    
+
     float4 ambientTerm;
     float4 color;
     if (useTexture == 1)
     {
-        //テクスチャから色を取得
-        diffuseTerm = diffuse * g_texture.Sample(g_sampler, inData.uv);
+        diffuseTerm = diffuse * g_texture.Sample(g_sampler, inData.uv); //テクスチャーから色を取得
         ambientTerm = ambentFactor * g_texture.Sample(g_sampler, inData.uv);
     }
     else
@@ -155,8 +158,13 @@ float4 PS(VS_OUT inData) : SV_Target
         diffuseTerm = diffuse * dTerm;
         ambientTerm = ambentFactor * diffuseColor;
     }
+    
+
     color = diffuseTerm + specularTerm + ambientTerm;
-    return float4(normalMap,1.0);
-   // return normalMap;
-   
+    //color = float4((N.x + 1.0) / 2.0, (N.y + 1.0) / 2.0, (N.z + 1.0) / 2.0, 1.0);
+    //float4 ret = float4(inData.uv.x, inData.uv.y, 0, 1);
+    //float3 NC = normalize(inData.normal.xyz);
+    //return float4(NC * 0.5 + 0.5, 1); // 法線可視化
+    return color;
+    //return float4(normalMap, 1.0);
 }
