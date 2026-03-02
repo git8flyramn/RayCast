@@ -74,10 +74,10 @@ void Stage::Initialize()
 	hGround_ = Model::Load("Ground.fbx");
 	assert(hGround_ >= 0);
 
-	hDonut_ = Model::Load("Donut.fbx");
+	hDonut_ = Model::Load("DONUT2.fbx");
 	assert(hDonut_ >= 0);
 	
-	Camera::SetPosition({ 0,0.8,-2.8 });
+	Camera::SetPosition({ 0.0,0.8,-2.8 });
 	Camera::SetTarget({ 0,0.8,0 });
 }
 
@@ -115,19 +115,19 @@ void Stage::Draw()
 	}*/
 
 	static Transform tDount;
-	tDount.scale_ = { 0.25,0.25,0.25 };
-	tDount.position_ = { 0,0.5,1 };
+	tDount.scale_ = { 0.2,0.2,0.2 };
+	tDount.position_ = { 0,0.5,0.0 };
 	tDount.rotate_.y += 0.1f;
 	Model::SetTransform(hDonut_, tDount);
 	Model::DrawToon(hDonut_);
 	//Model::DrawPseudoNormal(hDonut_);
 
 
-	Transform tGround;
-	tGround.scale_ = { 2.0f,2.0f,2.0f };
-	tGround.position_ = { 0,0.01f,0 };
-	Model::SetTransform(hGround_, tGround);
-	Model::Draw(hGround_);
+	//Transform tGround;
+	//tGround.scale_ = { 2.0f,2.0f,2.0f };
+	//tGround.position_ = { 0,0.01f,0 };
+	//Model::SetTransform(hGround_, tGround);
+	//Model::Draw(hGround_);
 	
 	/*static Transform trans;
 	trans.scale_ = { 0.5f,0.5f,1.0f };

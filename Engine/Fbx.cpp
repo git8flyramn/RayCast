@@ -81,7 +81,7 @@ HRESULT Fbx::Load(std::string fileName)
 	pFbxManager->Destroy();
 
 	pToonTexture_ = new Texture();
-	pToonTexture_->Load("toon.png");
+	pToonTexture_->Load("Asset//toon.png");
 	return S_OK;
 }
 
@@ -442,6 +442,7 @@ void Fbx::InitIndex(FbxMesh* mesh)
 	ppIndex_.resize(materialCount_);
 	indexCount_ = std::vector<int>(materialCount_);
 	//indexCount_.resize(materialCount_);
+	
 	for (int i = 0; i < materialCount_; i++)
 	{
 		//int count = 0;
@@ -526,7 +527,6 @@ void Fbx::InitMaterial(FbxNode* pNode)
 		FbxProperty  lProperty = pMaterial->FindProperty(FbxSurfaceMaterial::sDiffuse);
 		//テクスチャの数数
 		int fileTextureCount = lProperty.GetSrcObjectCount<FbxFileTexture>();
-
 		//テクスチャあり
 		if (fileTextureCount > 0)
 		{

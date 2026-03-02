@@ -104,18 +104,21 @@ float4 PS(VS_OUT inData) : SV_Target
    // float dTerm = 1.0;
     
     float3 N = normalize(inData.normal.xyz);
-    diffuse = diffuseColor * diffusefactor * clamp(dot(N, dir), 0, 1) * dTerm;
-    
     float3 L = normalize(lightPosition.xyz - inData.wpos.xyz);
-    float ndotl = saturate(dot(N, L));//N‚ÆL‚Ì“àÏ‚ð0`1‚ÉƒNƒ‰ƒ“ƒv
+    
+    float ndotl = saturate(dot(N, L)); //N‚ÆL‚Ì“àÏ‚ð0`1‚ÉƒNƒ‰ƒ“ƒv
+   // diffuse = diffuseColor * diffusefactor * clamp(dot(N, dir), 0, 1) * dTerm;
+    diffuse = diffuseColor * diffusefactor * ndotl * dTerm;
+   
+   
    
     float spec = 0.0;
     
     if (ndotl > 0.0)
     {
-        float3 R = reflect(L, N);
+        float3 R = reflect(-L, N);
         float3 V = normalize(-inData.eyev.xyz);
-        spec = pow(saturate(dot(R, V)), 32.0) * ndotl;
+        spec = pow(saturate(dot(R, V)), 32.0);
 
     }
     float4 specularCol = specular * spec;

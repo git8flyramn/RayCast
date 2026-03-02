@@ -92,7 +92,7 @@ HRESULT Direct3D::InitNormalShader()
         return hr;
     }
                                       
-    UINT offset[5] = { 0,16,32,48,64};
+    UINT offset[5] = {0,sizeof(DirectX::XMVECTOR),sizeof(DirectX::XMVECTOR) * 2,sizeof(DirectX::XMVECTOR) * 3,sizeof(DirectX::XMVECTOR) * 4 };
 
     //頂点インプットレイアウト
     D3D11_INPUT_ELEMENT_DESC layout[] = {
@@ -233,9 +233,9 @@ HRESULT Direct3D::InitShader3D()
     UINT offset[5] = { 0,sizeof(DirectX::XMVECTOR),sizeof(DirectX::XMVECTOR) * 2 };
     //頂点インプットレイアウト
     D3D11_INPUT_ELEMENT_DESC layout[] = {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA, 0 },//位置
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,sizeof(DirectX::XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0},//UV座標
-        { "NORMAL"  , 0, DXGI_FORMAT_R32G32B32_FLOAT,0,sizeof(DirectX::XMVECTOR) + sizeof(DirectX::XMVECTOR), D3D11_INPUT_PER_VERTEX_DATA, 0 }, //法線ベクトル
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,0, offset[0] , D3D11_INPUT_PER_VERTEX_DATA, 0},//位置
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,   0, offset[1], D3D11_INPUT_PER_VERTEX_DATA, 0},//UV座標
+        { "NORMAL"  , 0, DXGI_FORMAT_R32G32B32_FLOAT,0, offset[2], D3D11_INPUT_PER_VERTEX_DATA, 0}, //法線ベクトル
     };
 
     hr = pDevice->CreateInputLayout(layout, 3, pCompileVS->GetBufferPointer(),
@@ -301,7 +301,7 @@ HRESULT Direct3D::InitShader2D()
     //頂点インプットレイアウト
     D3D11_INPUT_ELEMENT_DESC layout[] = {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
-        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,  sizeof(DirectX::XMVECTOR), D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, sizeof(DirectX::XMVECTOR), D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
     };
 
     hr = pDevice->CreateInputLayout(layout, 2, pCompileVS->GetBufferPointer(),
@@ -335,7 +335,7 @@ HRESULT Direct3D::InitShader2D()
 
 void Direct3D::SetShader(SHADER_TYPE type)
 {
-    pContext->VSSetShader(shaderBundle[type].pVertexShader, NULL, 0);	//頂点シェーダー
+   pContext->VSSetShader(shaderBundle[type].pVertexShader, NULL, 0);	//頂点シェーダー
    pContext->PSSetShader(shaderBundle[type].pPixelShader, NULL, 0);	//ピクセルシェーダー
    pContext->IASetInputLayout(shaderBundle[type].pVertexLayout);	//頂点インプットレイアウト
    pContext->RSSetState(shaderBundle[type].pRasterizerState);		//ラスタライザー
@@ -442,17 +442,17 @@ void Direct3D::BeginDraw()
 
     //Imguiのフレーム開始
 
-   /* ImGui_ImplDX11_NewFrame();
+    ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
-    ImGui::NewFrame();*/
+    ImGui::NewFrame();
 
 }
 
 void Direct3D::EndDraw()
 {
-    /*ImGui::Button("Button");
+    ImGui::Button("Button");
     ImGui::Render();
-    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());*/
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
     //スワップ（バックバッファを表に表示する）
     pSwapChain->Present(0, 0);

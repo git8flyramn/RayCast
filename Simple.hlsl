@@ -106,15 +106,15 @@ float4 PS(VS_OUT inData) : SV_Target
     
     if(ndotl > 0.0)
     {
-        float3 R = reflect(L, N);
-        float3 V = normalize(inData.eyev.xyz);
+        float3 R = reflect(-L, N);
+        float3 V = normalize(-inData.eyev.xyz);
         spec = pow(saturate(dot(R, V)), 32.0) * ndotl;
 
     }
-    float4 specularCol = specular * spec;
+    float4 specularCol = specular * spec * dTerm;
     
     float4 diffuseTerm;
-    float4 specularTerm = specularCol * dTerm;
+    float4 specularTerm = specularCol;
     
     
     float4 ambientTerm;
