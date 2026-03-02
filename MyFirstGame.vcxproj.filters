@@ -213,6 +213,7 @@
     <FxCompile Include="Simple2D.hlsl" />
     <FxCompile Include="NormalMap.hlsl" />
     <FxCompile Include="toonShader.hlsl" />
+    <FxCompile Include="OutLineShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -136,8 +136,8 @@ void GameObject::Collision(GameObject* pTarget)
 	float thisR = this->pCollider_->GetRadius();
 	float tgtR = pTarget->pCollider_->GetRadius();
 	float thre = (thisR + tgtR) * (thisR + tgtR);
+	
 	//2つのコライダーの距離を測る
-
 	XMFLOAT3 thisP = this->transform_.position_;
 	XMFLOAT3 tgtP = pTarget->transform_.position_;
 	float dist = (thisP.x - tgtP.x) * (thisP.x - tgtP.x) +

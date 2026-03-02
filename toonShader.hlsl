@@ -6,8 +6,8 @@
 Texture2D g_texture : register(t0); //テクスチャー
 SamplerState g_sampler : register(s0); //サンプラー
 
-Texture2D g_ToonTexture : register(t1);
-SamplerState g_Toonsampler : register(s1);
+Texture2D g_ToonTexture : register(s1);
+SamplerState g_Toonsampler : register(t1);
 //───────────────────────────────────────
 // コンスタントバッファ
 // DirectX 側から送信されてくる、ポリゴン頂点以外の諸情報の定義

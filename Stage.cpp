@@ -3,7 +3,7 @@
 #include "vector"
 #include "Engine/Model.h"
 #include "resource.h"
-#include "Engine/Camera.h"
+#include "Engine/camera.h"
 #include "Engine/Input.h"
 #include <cassert>
 
@@ -68,7 +68,7 @@ void Stage::Initialize()
 	hball_ = Model::Load("Ball.fbx");
 	assert(hball_ >= 0);
 
-	hRoom_ = Model::Load("Room.fbx");
+	hRoom_ = Model::Load("box.fbx");
 	assert(hRoom_ >= 0); 
 	
 	hGround_ = Model::Load("Ground.fbx");
@@ -115,19 +115,19 @@ void Stage::Draw()
 	}*/
 
 	static Transform tDount;
-	tDount.scale_ = { 0.2,0.2,0.2 };
+	//tDount.scale_ = { 0.2,0.2,0.2 };
 	tDount.position_ = { 0,0.5,0.0 };
 	tDount.rotate_.y += 0.1f;
 	Model::SetTransform(hDonut_, tDount);
-	Model::DrawToon(hDonut_);
-	//Model::DrawPseudoNormal(hDonut_);
+	//Model::DrawToon(hDonut_);
+	Model::DrawPseudoNormal(hDonut_);
 
 
-	//Transform tGround;
-	//tGround.scale_ = { 2.0f,2.0f,2.0f };
-	//tGround.position_ = { 0,0.01f,0 };
-	//Model::SetTransform(hGround_, tGround);
-	//Model::Draw(hGround_);
+	Transform tGround;
+	tGround.scale_ = { 2.0f,2.0f,2.0f };
+	tGround.position_ = { 0,0.01f,0 };
+	Model::SetTransform(hGround_, tGround);
+	Model::Draw(hGround_);
 	
 	/*static Transform trans;
 	trans.scale_ = { 0.5f,0.5f,1.0f };
