@@ -183,28 +183,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         //   }*/
         //}
         Direct3D::EndDraw();
-
-      /*  pRootJob->DrawSub();
-        enemy->Draw();
-        pPlayer->Draw();*/
-    
-
-
-        //  trans.position_.x = 1.0f;
-       //  trans.rotate_.y  = 0.1f;
-       //  trans.Calculation();
-       //  fbx->Draw(trans);*/
-
-
-             /* static Transform trans;
-              trans.position_.x = 1.0f;
-              trans.position_.y += 0.1f;
-              trans.rotate_.z  = 0.0f;
-              trans.rotate_.y += +1.0f;
-              trans.Calculation();
-              fbx->Draw(trans);
-             Direct3D::EndDraw();*/
-
     }
     Model::Release();
     pRootJob->ReleaseSub();

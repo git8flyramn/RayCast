@@ -74,7 +74,7 @@ void Stage::Initialize()
 	hGround_ = Model::Load("Ground.fbx");
 	assert(hGround_ >= 0);
 
-	hDonut_ = Model::Load("DONUT2.fbx");
+	hDonut_ = Model::Load("Donut.fbx");
 	assert(hDonut_ >= 0);
 	
 	Camera::SetPosition({ 0.0,0.8,-2.8 });
@@ -125,14 +125,14 @@ void Stage::Draw()
 
 	Transform tGround;
 	tGround.scale_ = { 2.0f,2.0f,2.0f };
-	tGround.position_ = { 0,0.01f,0 };
-	Model::SetTransform(hGround_, tGround);
-	Model::Draw(hGround_);
+	tGround.position_ = { 0,0.0,0 };
+	/*Model::SetTransform(hGround_, tGround);
+	Model::Draw(hGround_);*/
 	
 	/*static Transform trans;
 	trans.scale_ = { 0.5f,0.5f,1.0f };
-	trans.Calculation();
-	XMMATRIX worldMatrix = XMMatrixIdentity();*/
+	trans.Calculation();*/
+	//XMMATRIX worldMatrix = XMMatrixIdentity();
 	
 
 	//ƒ{ƒbƒNƒX‚ð•~‚«‹l‚ß‚é

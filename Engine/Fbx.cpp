@@ -194,6 +194,7 @@ void Fbx::DrawPseudoNormal(Transform& transform)
 		//	cb.diffuse = pMaterialList_[i].diffuse;
 		//}
 		//コンスタントバッファにデータ転送
+
 		CONSTANT_BUFFER cb;
 		cb.matWVP = transform.GetWorldMatrix() * Camera::GetViewMatrix() * Camera::GetProjectionMatrix();
 		cb.matWolrd = transform.GetWorldMatrix();
