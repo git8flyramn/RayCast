@@ -68,7 +68,7 @@ void Stage::Initialize()
 	hball_ = Model::Load("Ball.fbx");
 	assert(hball_ >= 0);
 
-	hRoom_ = Model::Load("box.fbx");
+	hRoom_ = Model::Load("Room.fbx");
 	assert(hRoom_ >= 0); 
 	
 	hGround_ = Model::Load("Ground.fbx");

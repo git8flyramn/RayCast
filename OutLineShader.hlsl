@@ -41,7 +41,7 @@ struct VS_OUT
 {
                  //セマンティクス
     float4 wpos : Position0; //ワールド座標
-    float4 spos : SP_POSITION; //スクリーン座標
+    float4 spos : SV_POSITION; //スクリーン座標
     float2 uv : TEXCOORD; //UV座標
     float4 color : COLOR; //色(明るさ)
     float4 normal : NORMAL; //法線ベクトル
@@ -51,12 +51,12 @@ struct VS_OUT
 //───────────────────────────────────────
 // 頂点シェーダ
 //───────────────────────────────────────
-VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
+float4 VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL) : SV_POSITION
 {
     
     float4 outPos;
     normal.w = 0;
-    pos = pos + normal * 0.07f;
+    pos = pos + normal * 0.1;
     pos = mul(pos, matWVP);
     return pos;
 }
