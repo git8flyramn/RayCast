@@ -74,10 +74,10 @@ void Stage::Initialize()
 	hGround_ = Model::Load("Plane.fbx");
 	assert(hGround_ >= 0);
 
-	hDonut_ = Model::Load("Donut.fbx");
+	hDonut_ = Model::Load("hako.fbx");
 	assert(hDonut_ >= 0);
 	
-	Camera::SetPosition({ 0,0.8,-2.8 });
+	Camera::SetPosition({ 0,0.5,-2.8 });
 	Camera::SetTarget({ 0,0.8,0 });
 }
 
@@ -119,14 +119,15 @@ void Stage::Draw()
 	tDount.position_ = { 0,0.5,0 };
 	//tDount.rotate_.y += 0.1f;
 	Model::SetTransform(hDonut_, tDount);
-	Model::Draw(hDonut_);
-
-	//Model::DrawPseudoNormal(hDonut_);
+//	Model::Draw(hDonut_);
+    Model::DrawPseudoNormal(hDonut_);
+    
 	Transform tGround;
 	tGround.scale_ = { 5,5,5};
-	tGround.position_ = { 0,0.0,0.0 };
+	tGround.position_ = { 0,0.2,0.0 };
 	Model::SetTransform(hGround_, tGround);
-	Model::DrawPseudoNormal(hGround_);
+	Model::Draw(hDonut_);
+//	Model::DrawPseudoNormal(hGround_);
 	
 	/*static Transform trans;
 	trans.scale_ = { 0.5f,0.5f,1.0f };
