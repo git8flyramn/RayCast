@@ -115,11 +115,11 @@ void Stage::Draw()
 	}*/
 
 	static Transform tDount;
-	//tDount.scale_ = { 0.2,0.2,0.2 };
+	tDount.scale_ = { 0.2,0.2,0.2 };
 	tDount.position_ = { 0,0.5,0.0 };
 	tDount.rotate_.y += 0.1f;
 	Model::SetTransform(hDonut_, tDount);
-	//Model::DrawToon(hDonut_);
+	Model::DrawToon(hDonut_);
 	Model::DrawPseudoNormal(hDonut_);
 
 

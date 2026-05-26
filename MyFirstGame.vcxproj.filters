@@ -214,6 +214,7 @@
     <FxCompile Include="NormalMap.hlsl" />
     <FxCompile Include="toonShader.hlsl" />
     <FxCompile Include="OutLineShader.hlsl" />
+    <FxCompile Include="ShadowMap.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
