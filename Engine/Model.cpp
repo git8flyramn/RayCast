@@ -50,6 +50,11 @@ void Model::DrawToon(int hModel)
 	modelList[hModel]->pfbx_->DrawToon(modelList[hModel]->transform_);
 }
 
+void Model::DrawShadowMap(int hModel)
+{
+	modelList[hModel]->pfbx_->DrawShadow(modelList[hModel]->transform_);
+}
+
 void Model::Release()
 {
 	bool isReffered = false;//QÆ‚³‚ê‚Ä‚¢‚é‚©
@@ -73,6 +78,8 @@ void Model::Release()
 	}
 	modelList.clear(); //”z—ñ‚Ì’†g‚ğ‹ó‚É‚·‚é(”O‚Ì‚½‚ß‚É)
 }
+
+
 
 void Model::Raycast(int hModel, RayCastData& rayData)
 {

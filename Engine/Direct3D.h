@@ -48,9 +48,8 @@ namespace Direct3D
 	//描画終了
 	void EndDraw();
 
-	//シャドウマップのパススタート
+	//シャドウマップのパススタート Direct3Dの描画の開始の間に作動させる
 	void BeginShadowPass();
-
 	//シャドウマップのパス終了
 	void EndShadowPass();
 

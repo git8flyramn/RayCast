@@ -37,6 +37,7 @@ namespace Direct3D
     int screenHeight;//画面高さ
     ID3D11Texture2D* pShadowMapTexture = nullptr; //シャドウマップ用のテクスチャ
     ID3D11DepthStencilView* pShadowMapDSV = nullptr;   //シャドウマップ用の深度ステンシルビュー
+    ID3D11DepthStencilView** pShadowMapdev = nullptr;   //シャドウマップ用の深度ステンシルビュー
     ID3D11ShaderResourceView* pShadowMapSRV = nullptr; //シャドウマップ用のシェーダーリソースビュー
 }
 
@@ -273,7 +274,6 @@ HRESULT Direct3D::InitOutLineShader()
 HRESULT Direct3D::InitShadowShader()
 {
     HRESULT hr;
-
     // 頂点シェーダの作成（コンパイル）
     ID3DBlob* pCompileVS = nullptr;
 
@@ -330,7 +330,6 @@ HRESULT Direct3D::InitShadowShader()
         MessageBox(nullptr, L"ラスタライザステートの作成に失敗しました 3D", L"エラー", MB_OK);
         return hr;
     }
-
     return S_OK;
 }
 
@@ -604,6 +603,39 @@ void Direct3D::EndDraw()
 
     //スワップ（バックバッファを表に表示する）
     pSwapChain->Present(0, 0);
+}
+
+void Direct3D::BeginShadowPass()
+{
+    pContext->ClearDepthStencilView(pShadowMapDSV, D3D11_CLEAR_DEPTH, 1.0f, 0);
+    ID3D11RenderTargetView* nullRTV = nullptr;
+    pContext->OMGetRenderTargets(1, &nullRTV, pShadowMapdev);
+
+    D3D11_TEXTURE2D_DESC desc;
+    pShadowMapTexture->GetDesc(&desc);
+
+    D3D11_VIEWPORT vp;
+    vp.Width = (float)desc.Width;
+    vp.Height = (float)desc.Height;
+    vp.MinDepth = 0.0f;
+    vp.MaxDepth = 0.0f;
+    vp.TopLeftX = 0;
+    vp.TopLeftY = 0;
+    pContext->RSSetViewports(1, &vp);
+    SetShader(SHADER_SHADOWMAP);
+
+}
+
+void Direct3D::EndShadowPass()
+{
+    pContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
+    D3D11_VIEWPORT vp = {};
+    vp.Width = (float)screenWidth;
+    vp.Height = (float)screenHeight;
+    vp.MinDepth = 0.0f;
+    vp.MaxDepth = 1.0f;
+    pContext->RSSetViewports(1, &vp);
+
 }
 
 void Direct3D::Release()

@@ -68,13 +68,13 @@ void Stage::Initialize()
 	hball_ = Model::Load("Ball.fbx");
 	assert(hball_ >= 0);
 
-	hRoom_ = Model::Load("Room.fbx");
+	hRoom_ = Model::Load("Block.fbx");
 	assert(hRoom_ >= 0); 
 	
 	hGround_ = Model::Load("Ground.fbx");
 	assert(hGround_ >= 0);
 
-	hDonut_ = Model::Load("Donut.fbx");
+	hDonut_ = Model::Load("DONUT2.fbx");
 	assert(hDonut_ >= 0);
 	
 	Camera::SetPosition({ 0.0,0.8,-2.8 });

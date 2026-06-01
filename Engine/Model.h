@@ -17,6 +17,7 @@ namespace Model
 	void DrawPseudoNormal(int hModel);
 	void DrawToon(int hModel);
 	void Release();
+	void DrawShadowMap(int hModel);
 
 	void Raycast(int hModel, RayCastData& rayData);
 }

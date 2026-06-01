@@ -37,6 +37,7 @@ public:
 	void    Draw(Transform& transform);//sinple3D.hlslで描画する関数
 	void    DrawPseudoNormal(Transform& transform);//ノーマルマップ描画を追加
 	void    DrawToon(Transform& transform);//トゥーンシェーダー描画を追加
+	void    DrawShadow(Transform& transform); //シャドウマップ描画
 	void    Release();
 	
 	void InitVertex(FbxMesh* mesh);
@@ -70,8 +71,13 @@ private:
 		XMFLOAT4 specular;//鏡面反射の色
 		XMFLOAT4 shininess;//鏡面反射の鋭さ 4要素同じのが入ってる
 		XMFLOAT4 ambient; //環境光
-
 		BOOL materialFlag; //マテリアルがあるかないか
+
+	};
+
+	struct SHADOW_CONSTANT_BUFFR
+	{
+		XMMATRIX matLightWVP; //ライトのワールドビュー射影行列
 	};
 	struct VERTEX
 	{
@@ -86,6 +92,7 @@ private:
 	ID3D11Buffer* pVertexBuffer_;
 	ID3D11Buffer** pIndexBuffer_;
 	ID3D11Buffer* pConstantBuffer_;
+	ID3D11Buffer* pShadowConstantBuffer_;
 	std::vector<MATERIAL> pMaterialList_;
 	std::vector<int> indexCount_;//マテリアルごとのインデックス数
 
