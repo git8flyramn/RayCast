@@ -23,6 +23,7 @@ Stage::Stage(GameObject* parent) : GameObject(parent, "Stage"), pConstantBuffer_
 	hDonut_ = -1;
 	hRoom_ = -1;
 	hGround_ = -1;
+	LightType_ = -1;
 }
 
 Stage::~Stage()
@@ -67,25 +68,39 @@ void Stage::Initialize()
 	InitConstantBuffer();
 	hball_ = Model::Load("Ball.fbx");
 	assert(hball_ >= 0);
-
 	hRoom_ = Model::Load("Block.fbx");
 	assert(hRoom_ >= 0); 
-	
 	hGround_ = Model::Load("Ground.fbx");
 	assert(hGround_ >= 0);
-
 	hDonut_ = Model::Load("DONUT2.fbx");
 	assert(hDonut_ >= 0);
 	
 	Camera::SetPosition({ 0.0,0.8,-2.8 });
 	Camera::SetTarget({ 0,0.8,0 });
+
+	//サンプラーステートの作成
+	D3D11_SAMPLER_DESC sd = {};
+	sd.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
+	sd.AddressU = D3D11_TEXTURE_ADDRESS_BORDER;
+	sd.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
+	sd.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
+	sd.BorderColor[0] = 1.0f;
+	sd.BorderColor[1] = 1.0f;
+    sd.BorderColor[2] = 1.0f;
+	sd.BorderColor[3] = 1.0f;
+	sd.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;
+	
+	ID3D11SamplerState* pShadowSampler = nullptr;
+	HRESULT hr = Direct3D::pDevice->CreateSamplerState(&sd, &pShadowSampler);
+	Direct3D::pContext->PSSetSamplers(1, 1, &pShadowSampler);
+	SAFE_RELEASE(pShadowSampler);
 }
 
 void Stage::Draw()
 { 
 	Transform ltr;
 	ltr.position_ = { Direct3D::GetLightPos().x,Direct3D::GetLightPos().y,Direct3D::GetLightPos().z };
-	ltr.scale_ = { 0.1f,0.1f,0.1f };
+	ltr.scale_ = { 0.1,0.1,0.1 };
 	Model::SetTransform(hball_, ltr);
 	Model::Draw(hball_);
 	
@@ -115,13 +130,29 @@ void Stage::Draw()
 	}*/
 
 	static Transform tDount;
-	tDount.scale_ = { 0.2,0.2,0.2 };
-	tDount.position_ = { 0,0.5,0.0 };
+	tDount.scale_ = { 0.3f,0.3f,0.3f };
+	tDount.position_ = { 0,0.7,0.0 };
 	tDount.rotate_.y += 0.1f;
 	Model::SetTransform(hDonut_, tDount);
 	Model::DrawToon(hDonut_);
-	Model::DrawPseudoNormal(hDonut_);
+	
+	//1pass目はシャドウマップの描画
+	//ライト視点でドーナッツを描画してシャドウマップを作る
+	Direct3D::BeginShadowPass();
+	Model::DrawShadowMap(hDonut_);
+	Direct3D::EndShadowPass();
 
+	ID3D11ShaderResourceView* pShadowSRV = Direct3D::GetShadowMapSRV();
+	Direct3D::pContext->PSSetShaderResources(1, 1, &pShadowSRV);//スロット2にシャドウマップをセット
+
+	//2pass目は通常描画
+	Model::Draw(hball_);
+	Model::Draw(hRoom_);
+	Model::Draw(hDonut_);
+
+	//描画後はシャドウマップをnullにしておく(次のフレームでシャドウマップを描画するため)
+	ID3D11ShaderResourceView* nullSRV = nullptr;
+	Direct3D::pContext->PSSetShaderResources(1, 1, &nullSRV);
 
 	Transform tGround;
 	tGround.scale_ = { 2.0f,2.0f,2.0f };
@@ -223,9 +254,15 @@ void Stage::Update()
 		isBump = !isBump;
 	}
 	
-	CONSTANT_BUFFER_STAGE cb;
+	CONSTANT_BUFFER_STAGE cb = {};
 	cb.lightPosition = Direct3D::GetLightPos();
 	XMStoreFloat4(&cb.eyePosition,Camera::GetPosition());
+    cb.lighType = LightType_;
+	XMMATRIX lightV = Direct3D::GetLightViewMatrix();
+	XMMATRIX lightP = Direct3D::GetLightProjectionMatrix();
+	XMMATRIX lightVP = lightV * lightP;
+	XMStoreFloat4x4(&cb.matLightVP, lightVP);
+
 	
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める

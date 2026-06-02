@@ -3,8 +3,11 @@
 //───────────────────────────────────────
 
 //  Sample3D.hlsl (頂点シェーダ)
-Texture2D g_texture : register(t0); //テクスチャー
-SamplerState g_sampler : register(s0); //サンプラー
+Texture2D    g_texture       : register(t0); //テクスチャー
+SamplerState g_sampler       : register(s0); //サンプラー
+Texture2D   g_shadowMap      : register(t1); //テクスチャー
+SamplerState g_ShadowSampler : register(s1);
+//SampleComparisonState  g_ShadowSampler : register(s1);
 
 //───────────────────────────────────────
 // コンスタントバッファ
@@ -28,6 +31,9 @@ cbuffer gStage : register(b1)
 {
     float4 lightPosition;
     float4 eyePosition;
+    int lightType;
+    float3 _pad;
+    row_major float4x4 matLightVP; //ライトのビュー・プロジェクション
 }
 
 //───────────────────────────────────────
@@ -66,10 +72,12 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
     outData.uv = uv;
     outData.eyev = outData.wpos - eyePosition;
     
+    normal.w = 0;
+    normal = mul(normal, matNomal); //法線ベクトルをワールドビュープロジェクション行列で変換
+    uv.w = 0;
     
-    //normal = mul(normal, matNomal); //法線ベクトルをワールドビュープロジェクション行列で変換
     //normal = normalize(normal); //法線ベクトルの長さを正規化->1にする
-    //normal.w = 0;
+  
     
     //float4 light = float4(-1, 0.5, -0.7, 0);
     
@@ -133,5 +141,30 @@ float4 PS(VS_OUT inData) : SV_Target
         ambientTerm = ambentFactor * diffuseColor;
     }
     color = diffuseTerm + specularTerm + ambientTerm;
-    return color;
+    
+    //影判定
+    float shadow = 1.0f;//影の明るさ
+    
+    float4  lightClipPos = mul(inData.wpos, matLightVP);
+    float2 shadowUV;
+    shadowUV.x = lightClipPos.x / lightClipPos.w * 0.5 + 0.5;
+    shadowUV.y = -lightClipPos.y / lightClipPos.w * 0.5 + 0.5;
+    
+    if (shadowUV.x >= 0.0 && shadowUV.x <= 1.0 && shadowUV.y >= 0.0 && shadowUV.y <= 1.0)
+    {
+        float currentDepth = lightClipPos.z / lightClipPos.w; //現在のピクセルの深度
+        float bias = 0.01f;
+        float shadowMapDepth = g_shadowMap.SampleCmpLevelZero(g_ShadowSampler,shadowUV,currentDepth - bias);
+        //if ((currentDepth - bias) > shadowMapDepth)
+        //{
+        //    shadow - 0.0f;
+        //}
+        //else
+        //{
+        //    shadow = 1.0f;
+        //}
+        
+    }
+    color *= (0.3 * 0.7 * shadow);
+        return color;
 }

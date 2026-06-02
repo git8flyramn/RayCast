@@ -23,6 +23,9 @@ struct CONSTANT_BUFFER_STAGE
 {
     XMFLOAT4 lightPosition;//光源の位置
     XMFLOAT4 eyePosition;   //カメラの座標
+    int lighType;// 0:平行光源 1:点光源
+    XMFLOAT3 _pad;//16バイトアライメント用パディング
+    XMFLOAT4X4 matLightVP;//ライトのビュー射影行列
 };
 // WATER,
 struct sData
@@ -64,6 +67,7 @@ private:
     int hRoom_;
     int hGround_;
     int hDonut_;
+    int LightType_;
      void InitConstantBuffer();
      ID3D11Buffer* pConstantBuffer_;
 };

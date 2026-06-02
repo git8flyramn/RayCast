@@ -556,6 +556,8 @@ void Fbx::InitConstantBuffer()
 	{
 		MessageBox(NULL, L"シャドウコンスタントバッファの作成に失敗しました", L"エラー", MB_OK);
 	}
+
+
 }
 
 void Fbx::InitMaterial(FbxNode* pNode)
