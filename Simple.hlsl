@@ -154,15 +154,17 @@ float4 PS(VS_OUT inData) : SV_Target
     {
         float currentDepth = lightClipPos.z / lightClipPos.w; //現在のピクセルの深度
         float bias = 0.01f;
-        float shadowMapDepth = g_shadowMap.SampleCmpLevelZero(g_ShadowSampler,shadowUV,currentDepth - bias);
-        //if ((currentDepth - bias) > shadowMapDepth)
-        //{
-        //    shadow - 0.0f;
-        //}
-        //else
-        //{
-        //    shadow = 1.0f;
-        //}
+        float shadowMapDepth = g_shadowMap.Sample(g_ShadowSampler, inData.uv).r;
+        shadow = (currentDepth - bias) > shadowMapDepth ? 0.0f : 1.0f;
+       // float shadowMapDepth = g_shadowMap.SampleCmpLevelZero(g_ShadowSampler,shadowUV,currentDepth - bias);
+        if ((currentDepth - bias) > shadowMapDepth)
+        {
+            shadow = 0.0f;
+        }
+        else
+        {
+            shadow = 1.0f;
+        }
         
     }
     color *= (0.3 * 0.7 * shadow);
