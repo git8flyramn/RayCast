@@ -11,12 +11,16 @@
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
 #include <memory>
-#include <Audio.h>
+#include "Audio.h"
 #include <filesystem>
 
 namespace {
-	DirectX::AudioEngine* pAudioEngine = nullptr; //Audioのシステム自体
-	DirectX::SoundEffect* pSound = nullptr;//サウンドのメモリ(音声ファイルの内容が入る)
+	
+	//std::unique_ptr<DirectX::AudioEngine> pAudioEngine;//Audioのシステム自体
+	//std::unique_ptr<DirectX::SoundEffect> pSound;//サウンドのメモリ(音声ファイルの内容が入る)
+
+	//DirectX::AudioEngine* pAudioEngine = nullptr; //Audioのシステム自体
+	//DirectX::SoundEffect* pSound = nullptr;//サウンドのメモリ(音声ファイルの内容が入る)
 }
 
 
@@ -106,8 +110,12 @@ void Stage::Initialize()
 	SAFE_RELEASE(pShadowSampler);
 
 
-	std::filesystem::path filepath = "Assets//Audio//BGM.wav"; //オーディオエンジンの作成
-	pSound = new DirectX::SoundEffect(pAudioEngine, filepath.c_str());//サウンドエフェクトの作成
+	std::filesystem::path filepath1 = "Assets//Audio//SE1.wav"; //オーディオエンジンの作成
+	Audio::Load("SE1",filepath1);
+	
+	//pAudioEngine = std::make_unique<DirectX::AudioEngine>();
+	//pSound = std::make_unique<DirectX::SoundEffect>();
+	//pSound = std::make_unique<DirectX::SoundEffect(pAudioEngine, filepath.c_str());//サウンドエフェクトの作成
 
 }
 
@@ -287,17 +295,23 @@ void Stage::Update()
 	//コンスタントバッファ
 	Direct3D::pContext->VSSetConstantBuffers(1, 1, &pConstantBuffer_);	//頂点シェーダー用	
 	Direct3D::pContext->PSSetConstantBuffers(1, 1, &pConstantBuffer_);	//ピクセルシェーダー用
-
+	static int i = 0;
 	if(Input::IsKeyDown(DIK_SPACE))
 	{
-		pSound->Play();   
+		//pSound->Play();
+		switch (i)
+		{
+			//case1: Audio
+		default:
+			break;
+		}
+	
 	}
 }
 
 void Stage::Release()
 {
-	delete pSound;
-	delete pAudioEngine;
+
 }
 
 //BOOL Stage::localProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

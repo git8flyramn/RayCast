@@ -16,6 +16,7 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
+#include "Audio.h"
 
 #pragma comment(lib, "winmm.lib")
 
@@ -26,7 +27,6 @@ HWND hWnd = nullptr;
 #define MAX_LOADSTRING 100
 
 //グローバル変数の宣言
-
 const wchar_t* WIN_CLASS_NAME = L"SAMPLE_GAME_WINDOW";
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
@@ -103,6 +103,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     Camera::Initialize();
     Input::Initialize(hWnd); //入力の初期化
+    Audio::Initialize();
+
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MYFIRSTGAME));
 
     MSG msg = {};
@@ -150,6 +152,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         Camera::Update(); // カメラの更新
         Input::Update();
         pRootJob->UpdateSub();
+        Audio::Update();
         //pRootJobから、すべてのオブジェクトの描画
        
        
@@ -186,6 +189,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
     Model::Release();
     pRootJob->ReleaseSub();
+    Audio::Release();
     Input::Release();
     Direct3D::Release();
     return (int)msg.wParam;
