@@ -7,7 +7,6 @@ Texture2D    g_texture       : register(t0); //テクスチャー
 SamplerState g_sampler       : register(s0); //サンプラー
 Texture2D   g_shadowMap      : register(t1); //テクスチャー
 SamplerState g_ShadowSampler : register(s1);
-//SampleComparisonState  g_ShadowSampler : register(s1);
 
 //───────────────────────────────────────
 // コンスタントバッファ
@@ -150,13 +149,13 @@ float4 PS(VS_OUT inData) : SV_Target
     shadowUV.x = lightClipPos.x / lightClipPos.w * 0.5 + 0.5;
     shadowUV.y = -lightClipPos.y / lightClipPos.w * 0.5 + 0.5;
     
-    if (shadowUV.x >= 0.0 && shadowUV.x <= 1.0 && shadowUV.y >= 0.0 && shadowUV.y <= 1.0)
+    if (shadowUV.x >= 0.0 && shadowUV.x <= 1.0 && 
+        shadowUV.y >= 0.0 && shadowUV.y <= 1.0)
     {
         float currentDepth = lightClipPos.z / lightClipPos.w; //現在のピクセルの深度
-        float bias = 0.01f;
+        float bias = 0.005f;
         float shadowMapDepth = g_shadowMap.Sample(g_ShadowSampler, inData.uv).r;
-        shadow = (currentDepth - bias) > shadowMapDepth ? 0.0f : 1.0f;
-       // float shadowMapDepth = g_shadowMap.SampleCmpLevelZero(g_ShadowSampler,shadowUV,currentDepth - bias);
+        //シャドウマップから深度をサンプリング
         if ((currentDepth - bias) > shadowMapDepth)
         {
             shadow = 0.0f;
