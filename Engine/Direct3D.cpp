@@ -66,10 +66,10 @@ HRESULT Direct3D::InitShader()
         return E_FAIL;
     }
 
-    if (FAILED(InitShadowShader()))
+  /*  if (FAILED(InitShadowShader()))
     {
         return E_FAIL;
-    }
+    }*/
     return S_OK;
 }
 
@@ -714,7 +714,7 @@ HRESULT Direct3D::InitShadowMap(int width, int height)
     desc.BindFlags            = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
     desc.CPUAccessFlags       = 0;
     desc.MiscFlags            = 0;
-    hr = pDevice->CreateTexture2D(&desc, nullptr, &pShadowMapTexture);
+    hr = pDevice->CreateTexture2D(&desc, NULL, &pShadowMapTexture);
     if (FAILED(hr))
     {
         MessageBox(nullptr, L"ShadowMapTexture‚Ìì¬‚É¸”s‚µ‚Ü‚µ‚½", L"eƒGƒ‰[", MB_OK);

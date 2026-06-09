@@ -10,6 +10,14 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_dx11.h"
 #include "imgui/imgui_impl_win32.h"
+#include <memory>
+#include <Audio.h>
+#include <filesystem>
+
+namespace {
+	DirectX::AudioEngine* pAudioEngine = nullptr; //Audioのシステム自体
+	DirectX::SoundEffect* pSound = nullptr;//サウンドのメモリ(音声ファイルの内容が入る)
+}
 
 
 namespace
@@ -89,11 +97,18 @@ void Stage::Initialize()
     sd.BorderColor[2] = 1.0f;
 	sd.BorderColor[3] = 1.0f;
 	sd.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;
+	sd.MinLOD = 0;
+	sd.MaxLOD = D3D11_FLOAT32_MAX;
 	
 	ID3D11SamplerState* pShadowSampler = nullptr;
 	HRESULT hr = Direct3D::pDevice->CreateSamplerState(&sd, &pShadowSampler);
 	Direct3D::pContext->PSSetSamplers(1, 1, &pShadowSampler);
 	SAFE_RELEASE(pShadowSampler);
+
+
+	std::filesystem::path filepath = "Assets//Audio//BGM.wav"; //オーディオエンジンの作成
+	pSound = new DirectX::SoundEffect(pAudioEngine, filepath.c_str());//サウンドエフェクトの作成
+
 }
 
 void Stage::Draw()
@@ -272,10 +287,17 @@ void Stage::Update()
 	//コンスタントバッファ
 	Direct3D::pContext->VSSetConstantBuffers(1, 1, &pConstantBuffer_);	//頂点シェーダー用	
 	Direct3D::pContext->PSSetConstantBuffers(1, 1, &pConstantBuffer_);	//ピクセルシェーダー用
+
+	if(Input::IsKeyDown(DIK_SPACE))
+	{
+		pSound->Play();   
+	}
 }
 
 void Stage::Release()
 {
+	delete pSound;
+	delete pAudioEngine;
 }
 
 //BOOL Stage::localProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
